@@ -1,0 +1,67 @@
+import flask
+from flask_sqlalchemy import SQLAlchemy
+import random
+from sqlalchemy.sql.expression import func
+import os
+
+app = flask.Flask(__name__)
+
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_USER = os.getenv("DB_USER", "dbuser")
+DB_PWD = os.getenv("DB_PWD", "dbpassword")
+DB_NAME = os.getenv("DB_NAME", "world")
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{}:{}@{}/{}'.format(DB_USER, DB_PWD, DB_HOST, DB_NAME)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+
+class World(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    randomnumber = db.Column(db.Integer)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "randomNumber": self.randomnumber
+        }
+
+
+@app.route('/json')
+def json_serialization():
+    return flask.jsonify({"message": "Hello, World!"})
+
+
+@app.route("/db")
+def single_db_query():
+    random_id = random.randint(1, 10000)
+    world = World.query.get(random_id)
+
+    return flask.jsonify(world.serialize())
+
+
+@app.route("/queries")
+def multiple_db_queries():
+    query_count_str = flask.request.args.get('queries', 1)
+
+    try:
+        query_count = max(min(int(query_count_str), 500), 1)
+    except ValueError:
+        query_count = 1
+
+    worlds = [World.query.order_by(func.random()).first().serialize() for _ in range(query_count)]
+
+    return flask.jsonify(worlds)
+
+
+@app.route("/plain")
+def plain_text():
+    response_text = "Hello, World!"
+    response = flask.Response(response_text)
+    response.headers['Content-Type'] = 'text/plain'
+    return response
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
