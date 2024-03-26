@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  flask:
+    build: ./python
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=postgres
+
+  db:
+    hostname: postgres
+    build: ./postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
