@@ -7,8 +7,8 @@ import os
 app = flask.Flask(__name__)
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_USER = os.getenv("DB_USER", "dbuser")
-DB_PWD = os.getenv("DB_PWD", "dbpassword")
+DB_USER = os.getenv("DB_USER", "postgres")
+DB_PWD = os.getenv("DB_PWD", "postgres")
 DB_NAME = os.getenv("DB_NAME", "world")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{}:{}@{}/{}'.format(DB_USER, DB_PWD, DB_HOST, DB_NAME)
@@ -35,6 +35,7 @@ def json_serialization():
 
 @app.route("/db")
 def single_db_query():
+    print(app.config['SQLALCHEMY_DATABASE_URI'])
     random_id = random.randint(1, 10000)
     world = World.query.get(random_id)
 
@@ -64,4 +65,4 @@ def plain_text():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", debug=True)

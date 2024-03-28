@@ -1,0 +1,26 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY . /app
+
+ARG REQUIREMENTS_FILE
+
+RUN pip install --no-cache-dir -r $REQUIREMENTS_FILE
+
+EXPOSE 5001
+
+ENV FLASK_APP=app.py
+
+#RUN pip install --no-cache-dir opentelemetry-api \
+#    opentelemetry-sdk \
+#    opentelemetry-instrumentation-flask \
+#    opentelemetry-instrumentation-requests \
+#    opentelemetry-exporter-otlp
+#
+## Define environment variable to enable OpenTelemetry instrumentation
+#ENV OTEL_TRACES_EXPORTER=console
+#ENV OTEL_METRICS_EXPORTER=console
+
+
+CMD ["opentelemetry-instrument", "flask", "run"]

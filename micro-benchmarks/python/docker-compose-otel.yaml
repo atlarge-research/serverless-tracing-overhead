@@ -1,0 +1,20 @@
+version: '3.8'
+name: micro-benchmark-python-otel
+services:
+  flask:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+      args:
+        - REQUIREMENTS_FILE=requirements-otel.txt
+        - OPENTELEMETRY=true
+    ports:
+      - "5001:5000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=postgres
+      - FLASK_RUN_PORT=5000
+      - FLASK_RUN_HOST=0.0.0.0
+      - OTEL_TRACES_EXPORTER=console
+      - OTEL_METRICS_EXPORTER=console

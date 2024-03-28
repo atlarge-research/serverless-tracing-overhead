@@ -1,0 +1,15 @@
+version: '3.8'
+name: micro-benchmark-python
+services:
+  flask:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=postgres
+      - FLASK_RUN_PORT=5000
+      - FLASK_RUN_HOST=0.0.0.0

@@ -1,7 +1,7 @@
 CREATE DATABASE world;
 
-CREATE USER dbuser WITH ENCRYPTED PASSWORD 'dbpassword';
-GRANT ALL PRIVILEGES ON DATABASE world TO dbuser;
+-- CREATE USER dbuser WITH ENCRYPTED PASSWORD 'dbpassword';
+-- GRANT ALL PRIVILEGES ON DATABASE world TO dbuser;
 
 \c world;
 
