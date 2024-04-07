@@ -11,23 +11,12 @@ make go
 
 https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#single-database-query
 
-Steps:
-
-* Write the program
-* Benchmark it somehow (measure the execution time over 1000 requests for example)
-* Add instrumentation
-* Benchmark it again
-* Compare
-* Plot
-
 
 # Benchmarker
 * k6
 * Parse the results
 * Plot the results
 
-# Setup TODO
+# TODO
 
-* PostgreSQL docker with table and content
-* Flask app
-* 
+* README

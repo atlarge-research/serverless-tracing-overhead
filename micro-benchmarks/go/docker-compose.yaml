@@ -3,17 +3,20 @@ name: micro-benchmark-go
 services:
   go:
     build:
-      context: ./go
+      context: .
       dockerfile: Dockerfile
     ports:
       - "5100:5100"
-    depends_on:
-      - db
     environment:
       - DB_HOST=postgres
       - APP_PORT=5100
+    volumes:
+      - go-server:/root
     networks:
       - telemetry
+
+volumes:
+  go-server:
 
 networks:
   telemetry:

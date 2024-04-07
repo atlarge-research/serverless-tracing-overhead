@@ -3,38 +3,39 @@ name: micro-benchmark-go-otel
 services:
   go:
     build:
-      context: ./go
+      context: .
       dockerfile: Dockerfile
+      args:
+        - GO_FILE_NAME=server-otel
     ports:
       - "5101:5100"
-    depends_on:
-      - db
     environment:
       - DB_HOST=postgres
       - APP_PORT=5100
     volumes:
-      - go-server:/root
+      - otel:/root
+    networks:
+      - telemetry
 
   go-auto:
     image: otel/autoinstrumentation-go
     privileged: true
     pid: "host"
     environment:
-      - OTEL_GO_AUTO_TARGET_EXE=/root/server
-      - OTEL_SERVICE_NAME=go
+      - OTEL_GO_AUTO_TARGET_EXE=/root/server-otel
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
+      - OTEL_GO_AUTO_INCLUDE_DB_STATEMENT=true
+      - OTEL_SERVICE_NAME=go-otel
       - OTEL_PROPAGATORS=tracecontext,baggage
-      - OTEL_TRACES_EXPORTER=otlp
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger:4318
-#      - OTEL_METRICS_EXPORTER=console
     volumes:
-      - go-server:/root
+      - otel:/root
       - /proc:/host/proc
     networks:
       - telemetry
 
+volumes:
+  otel:
+
 networks:
   telemetry:
     external: true
-
-volumes:
-  go-server:

@@ -20,6 +20,7 @@ services:
       - "16686:16686"  # Jaeger UI
     environment:
       - COLLECTOR_OTLP_ENABLED=true
+      - LOG_LEVEL=debug
     networks:
       - telemetry
 

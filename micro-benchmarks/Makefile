@@ -1,9 +1,8 @@
 SHELL := /bin/bash
 
 DOCKER_COMPOSE_FOLDER         := docker-compose
-OTEL_COLLECTOR_DOCKER_COMPOSE := otel-collector.yaml
 JAEGER_DOCKER_COMPOSE         := $(DOCKER_COMPOSE_FOLDER)/jaeger.yaml
-COMMON_DOCKER_COMPOSE         := $(DOCKER_COMPOSE_FOLDER)/common.yaml
+POSTGRES_DOCKER_COMPOSE       := $(DOCKER_COMPOSE_FOLDER)/postgres.yaml
 PYTHON_DOCKER_COMPOSE         := python/docker-compose.yaml
 PYTHON_OTEL_DOCKER_COMPOSE    := python/docker-compose-otel.yaml
 GO_DOCKER_COMPOSE             := go/docker-compose.yaml
@@ -11,23 +10,22 @@ GO_OTEL_DOCKER_COMPOSE        := go/docker-compose-otel.yaml
 
 # Function to build docker-compose
 define docker_build
-	docker-compose -f $(COMMON_DOCKER_COMPOSE) -f $1 build --no-cache
+	docker-compose -f $1 build --no-cache
 endef
 
 # Function to run docker-compose
 define docker_compose
-	docker-compose -f $(COMMON_DOCKER_COMPOSE) -f $1 up --force-recreate $(if $2,$2,)
+	docker-compose -f $1 up --force-recreate $(if $2,$2,)
 endef
 
 # All
-all: jaeger python-all go-all
+all: psql jaeger python-all go-all
 
-# OpenTelemetry Collector. Use Jaeger all-in-one instead
-otel-collector:
-	docker-compose -f $(OTEL_COLLECTOR_DOCKER_COMPOSE) up --force-recreate -d
+psql:
+	$(call docker_compose,$(POSTGRES_DOCKER_COMPOSE),-d)
 
 jaeger:
-	docker-compose -f $(JAEGER_DOCKER_COMPOSE) up --force-recreate -d
+	$(call docker_compose,$(JAEGER_DOCKER_COMPOSE),-d)
 
 # Python targets
 python-build:
@@ -56,6 +54,8 @@ go-build-otel:
 
 go-compose-otel:
 	$(call docker_compose,$(GO_OTEL_DOCKER_COMPOSE),-d)
+
+go-otel: go-build-otel go-compose-otel
 
 go-all: go-build go-build-otel go-compose go-compose-otel
 
