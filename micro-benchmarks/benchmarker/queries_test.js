@@ -18,9 +18,9 @@ let options = {
 
 Object.assign(
     options.scenarios,
-    // generateScenarios('python', PORTS.python),
-    // generateScenarios('pythonOtel', PORTS.pythonOtel),
-    // generateScenarios('go', PORTS.go),
+    generateScenarios('python', PORTS.python),
+    generateScenarios('pythonOtel', PORTS.pythonOtel),
+    generateScenarios('go', PORTS.go),
     generateScenarios('goOtel', PORTS.goOtel),
 );
 export { options };
