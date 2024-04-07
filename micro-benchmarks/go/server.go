@@ -35,6 +35,7 @@ func main() {
 	http.HandleFunc("/json", jsonHandler())
 	http.HandleFunc("/db", dbHandler(db))
 	http.HandleFunc("/queries", queriesHandler(db))
+	http.HandleFunc("/updates", updateHandler(db))
 
 	// Get Port number
 	portNumber := os.Getenv("APP_PORT")
@@ -131,6 +132,59 @@ func queriesHandler(db *sql.DB) http.HandlerFunc {
 		setResponseHeaders(w, len(jsonResponse))
 		w.Write(jsonResponse)
 	}
+}
+
+// queriesHandler handles requests to the /update route
+func updateHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Retrieve the queries parameter
+		numQueries := getQueryCount(r)
+
+		if numQueries < 1 {
+			numQueries = 1
+		} else if numQueries > 500 {
+			numQueries = 500
+		}
+
+		worlds := make([]World, 0, numQueries)
+
+		// Start transaction
+		tx, err := db.Begin()
+		if err != nil {
+			http.Error(w, "Database transaction start error", http.StatusInternalServerError)
+			return
+		}
+		defer tx.Rollback()
+
+		for i := 0; i < numQueries; i++ {
+			// Select a random World object
+			world := World{}
+			if err := tx.QueryRow("SELECT id, randomNumber FROM World ORDER BY RANDOM() LIMIT 1").Scan(&world.ID, &world.RandomNumber); err != nil {
+				http.Error(w, "Database query error", http.StatusInternalServerError)
+				return
+			}
+
+			// Update randomNumber
+			world.RandomNumber = rand.Intn(10000) + 1
+			if _, err := tx.Exec("UPDATE World SET randomNumber = $1 WHERE id = $2", world.RandomNumber, world.ID); err != nil {
+				http.Error(w, "Database update error", http.StatusInternalServerError)
+				return
+			}
+
+			worlds = append(worlds, world)
+		}
+
+		// Commit transaction
+		if err := tx.Commit(); err != nil {
+			http.Error(w, "Database transaction commit error", http.StatusInternalServerError)
+			return
+		}
+
+		// Response
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(worlds)
+	}
+
 }
 
 func setResponseHeaders(w http.ResponseWriter, contentLength int) {

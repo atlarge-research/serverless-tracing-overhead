@@ -1,10 +1,13 @@
 SHELL := /bin/bash
 
-COMMON_DOCKER_COMPOSE := common.yaml
-PYTHON_DOCKER_COMPOSE := python/docker-compose.yaml
-PYTHON_OTEL_DOCKER_COMPOSE := python/docker-compose-otel.yaml
-GO_DOCKER_COMPOSE := go/docker-compose.yaml
-GO_OTEL_DOCKER_COMPOSE := go/docker-compose-otel.yaml
+DOCKER_COMPOSE_FOLDER         := docker-compose
+OTEL_COLLECTOR_DOCKER_COMPOSE := otel-collector.yaml
+JAEGER_DOCKER_COMPOSE         := $(DOCKER_COMPOSE_FOLDER)/jaeger.yaml
+COMMON_DOCKER_COMPOSE         := $(DOCKER_COMPOSE_FOLDER)/common.yaml
+PYTHON_DOCKER_COMPOSE         := python/docker-compose.yaml
+PYTHON_OTEL_DOCKER_COMPOSE    := python/docker-compose-otel.yaml
+GO_DOCKER_COMPOSE             := go/docker-compose.yaml
+GO_OTEL_DOCKER_COMPOSE        := go/docker-compose-otel.yaml
 
 # Function to build docker-compose
 define docker_build
@@ -17,7 +20,14 @@ define docker_compose
 endef
 
 # All
-all: python-all go-all
+all: jaeger python-all go-all
+
+# OpenTelemetry Collector. Use Jaeger all-in-one instead
+otel-collector:
+	docker-compose -f $(OTEL_COLLECTOR_DOCKER_COMPOSE) up --force-recreate -d
+
+jaeger:
+	docker-compose -f $(JAEGER_DOCKER_COMPOSE) up --force-recreate -d
 
 # Python targets
 python-build:
@@ -39,13 +49,13 @@ go-build:
 	$(call docker_build,$(GO_DOCKER_COMPOSE))
 
 go-compose:
-	$(call docker_compose,$(GO_DOCKER_COMPOSE))
+	$(call docker_compose,$(GO_DOCKER_COMPOSE),-d)
 
 go-build-otel:
-	$(call docker_build,$(GO_OTEL_DOCKER_COMPOSE)-d)
+	$(call docker_build,$(GO_OTEL_DOCKER_COMPOSE))
 
 go-compose-otel:
-	$(call docker_compose,$(GO_OTEL_DOCKER_COMPOSE)-d)
+	$(call docker_compose,$(GO_OTEL_DOCKER_COMPOSE),-d)
 
 go-all: go-build go-build-otel go-compose go-compose-otel
 

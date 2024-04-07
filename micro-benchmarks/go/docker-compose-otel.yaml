@@ -14,8 +14,6 @@ services:
       - APP_PORT=5100
     volumes:
       - go-server:/root
-    networks:
-      - otel-network
 
   go-auto:
     image: otel/autoinstrumentation-go
@@ -25,16 +23,18 @@ services:
       - OTEL_GO_AUTO_TARGET_EXE=/root/server
       - OTEL_SERVICE_NAME=go
       - OTEL_PROPAGATORS=tracecontext,baggage
-      - OTEL_TRACES_EXPORTER=console
-      - OTEL_METRICS_EXPORTER=console
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=jaeger:4318
+#      - OTEL_METRICS_EXPORTER=console
     volumes:
       - go-server:/root
       - /proc:/host/proc
     networks:
-      - otel-network
+      - telemetry
 
 networks:
-  otel-network:
+  telemetry:
+    external: true
 
 volumes:
   go-server:

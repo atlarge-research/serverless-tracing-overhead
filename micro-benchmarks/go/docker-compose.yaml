@@ -12,3 +12,9 @@ services:
     environment:
       - DB_HOST=postgres
       - APP_PORT=5100
+    networks:
+      - telemetry
+
+networks:
+  telemetry:
+    external: true

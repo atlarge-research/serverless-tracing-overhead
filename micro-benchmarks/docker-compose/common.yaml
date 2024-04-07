@@ -3,8 +3,8 @@ services:
   db:
     hostname: postgres
     build:
-      context: postgres
-      dockerfile: Dockerfile
+      context: ../postgres
+      dockerfile: ../postgres/Dockerfile
     ports:
       - "10000-10100:5432"
     volumes:
@@ -12,6 +12,12 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    networks:
+      - telemetry
 
 volumes:
   postgres_data:
+
+networks:
+  telemetry:
+    external: true

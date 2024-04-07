@@ -27,6 +27,9 @@ class World(db.Model):
             "randomNumber": self.randomnumber
         }
 
+    def to_dict(self):
+        return {'id': self.id, 'randomNumber': self.randomNumber}
+
 
 @app.route('/json')
 def json_serialization():
@@ -62,6 +65,26 @@ def plain_text():
     response = flask.Response(response_text)
     response.headers['Content-Type'] = 'text/plain'
     return response
+
+
+@app.route('/updates', methods=['GET'])
+def updates():
+    query_count = flask.request.args.get('queries', 1, type=int)
+    query_count = min(max(query_count, 1), 500)  # Query count should be between 1 and 500
+
+    worlds = []
+    for _ in range(query_count):
+        # Select a random object
+        random_id = random.randint(1, 10000)
+        world = World.query.filter_by(id=random_id).first()
+
+        # Update the random number of the World object
+        world.randomNumber = random.randint(1, 10000)
+        worlds.append(world.to_dict())
+
+    db.session.commit()
+
+    return flask.jsonify(worlds)
 
 
 if __name__ == "__main__":
