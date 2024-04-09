@@ -6,10 +6,10 @@ export const options = {
     constant_request_rate: {
       executor: 'constant-arrival-rate',
       rate: __ENV.RPS,
-      timeUnit: '1s',
+      timeUnit: `1s`,
       duration: `${__ENV.DURATION}s`,
-      preAllocatedVUs: 100,
-      maxVUs: 2000,
+      preAllocatedVUs: 1000,
+      maxVUs: 5000,
     },
   },
 };

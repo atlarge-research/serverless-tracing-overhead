@@ -33,8 +33,9 @@ def run_test(rps, duration, url):
 
 
 def monitor_cpu_usage(container_id, duration):
-    # Calculate the sleep durations for the 1/3, 1/2, and 2/3 intervals
+    # Calculate the sleep durations for six interval
     measurement_points = [duration / 3, duration / 2, 2 * duration / 3]
+    # measurement_points = [duration / 6, duration / 3, duration / 2, 2 * duration / 3, 5 * duration / 6]
     last_sleep_time = 0
     cpu_usage_percentages = []
 
@@ -49,11 +50,21 @@ def monitor_cpu_usage(container_id, duration):
         cpu_usage_percentages.append(cpu_usage)
         log_to_file(f"CPU usage at point {point}s: {cpu_usage}")
 
-    # Return the max
-    return max(cpu_usage_percentages)
+    return check_cpu_measurements(cpu_usage_percentages)
 
 
-def calibrate(host, port, endpoint, container_id, max_rps, duration):
+def check_cpu_measurements(measurements, threshold=80, required_percentage=50):
+    # Check how many are over the threshold
+    over_threshold_count = sum(measurement > threshold for measurement in measurements)
+    actual_required_count = len(measurements) * (required_percentage / 100.0)
+
+    # Check if it exceeds the required percentage to be over the limit
+    exceeds_threshold = over_threshold_count >= actual_required_count
+
+    return exceeds_threshold
+
+
+def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_increment, duration):
     rps = initial_rps
     url = f"http://{host}:{port}/{endpoint}"
     reached_target = False
@@ -61,14 +72,14 @@ def calibrate(host, port, endpoint, container_id, max_rps, duration):
         print(f"Testing with {rps} RPS for {duration} seconds, targeting {url}, on container {container_id}")
         log_to_file(f"Testing with {rps} RPS for {duration} seconds, targeting {url}, on container {container_id}")
 
-        # Start monitoring CPU usage in the background at the halfway point of the duration
-        # threading.Thread(target=monitor_cpu_usage_in_background, args=(container_id, duration)).start()
         # Run the K6 test
         threading.Thread(target=run_test, args=(rps, duration, url)).start()
 
-        max_cpu_usage = monitor_cpu_usage(container_id, duration)
+        # max_cpu_usage = monitor_cpu_usage(container_id, duration)
+        exceeds_usage = monitor_cpu_usage(container_id, duration)
 
-        if max_cpu_usage >= target_cpu_usage:
+        # if max_cpu_usage >= target_cpu_usage:
+        if exceeds_usage:
             log_to_file(f"Reached target CPU utilization with {rps} RPS\n")
             reached_target = True
             break
@@ -96,54 +107,52 @@ scenarios = [
     # Standard Python
     # {"language": "python", "endpoint": "plain", "port": python_port, "container_id": python_flask_container},
     # {"language": "python", "endpoint": "json", "port": python_port, "container_id": python_flask_container},
-    # {"language": "python", "endpoint": "db", "port": python_port, "container_id": python_flask_container},
-    # {"language": "python", "endpoint": "queries", "port": python_port, "container_id": python_flask_container},
-    # {"language": "python", "endpoint": "updates", "port": python_port, "container_id": python_flask_container},
+    {"language": "python", "endpoint": "db", "port": python_port, "container_id": python_flask_container},
+    {"language": "python", "endpoint": "queries", "port": python_port, "container_id": python_flask_container},
+    {"language": "python", "endpoint": "updates", "port": python_port, "container_id": python_flask_container},
     # # Python OTEL
     # {"language": "python", "endpoint": "plain", "port": python_otel_port, "container_id": python_otel_flask_container},
     # {"language": "python", "endpoint": "json", "port": python_otel_port, "container_id": python_otel_flask_container},
-    # {"language": "python", "endpoint": "db", "port": python_otel_port, "container_id": python_otel_flask_container},
-    # {"language": "python", "endpoint": "queries", "port": python_otel_port, "container_id": python_otel_flask_container},
-    # {"language": "python", "endpoint": "updates", "port": python_otel_port, "container_id": python_otel_flask_container},
+    {"language": "python", "endpoint": "db", "port": python_otel_port, "container_id": python_otel_flask_container},
+    {"language": "python", "endpoint": "queries", "port": python_otel_port, "container_id": python_otel_flask_container},
+    {"language": "python", "endpoint": "updates", "port": python_otel_port, "container_id": python_otel_flask_container},
     # GO
-    {"language": "go", "endpoint": "plain", "port": go_port, "container_id": go_container},
-    {"language": "go", "endpoint": "json", "port": go_port, "container_id": go_container},
+    # {"language": "go", "endpoint": "plain", "port": go_port, "container_id": go_container},
+    # {"language": "go", "endpoint": "json", "port": go_port, "container_id": go_container},
     {"language": "go", "endpoint": "db", "port": go_port, "container_id": go_container},
     {"language": "go", "endpoint": "queries", "port": go_port, "container_id": go_container},
     {"language": "go", "endpoint": "updates", "port": go_port, "container_id": go_container},
     # GO OTEL
-    {"language": "go", "endpoint": "plain", "port": go_otel_port, "container_id": go_otel_container},
-    {"language": "go", "endpoint": "json", "port": go_otel_port, "container_id": go_otel_container},
+    # {"language": "go", "endpoint": "plain", "port": go_otel_port, "container_id": go_otel_container},
+    # {"language": "go", "endpoint": "json", "port": go_otel_port, "container_id": go_otel_container},
     {"language": "go", "endpoint": "db", "port": go_otel_port, "container_id": go_otel_container},
     {"language": "go", "endpoint": "queries", "port": go_otel_port, "container_id": go_otel_container},
     {"language": "go", "endpoint": "updates", "port": go_otel_port, "container_id": go_otel_container},
 ]
 
-initial_rps = 1000  # Starting RPS
-rps_increment = 100  # Increment RPS by this amount each iteration
 target_cpu_usage = 80.0
 current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_file_path = f"cpu_utilization_log_{current_time}.txt"
 
 
 def main():
-    # For python, make a separate one for GO
     with open(log_file_path, "w") as log_file:  # Clear the log file and start fresh
         log_file.write("RPS, CPU Usage (%)\n")
-    # print(get_cpu_usage(python_flask_container))
-    # print(get_cpu_usage(python_otel_flask_container))
-    # print(get_cpu_usage(go_container))
-    # print(get_cpu_usage(go_otel_container))
     host = "localhost"
+    initial_rps = 300  # Starting RPS
     max_rps = 2000
+    rps_increment = 100
     duration = 60  # Seconds
 
     for scenario in scenarios:
+        if scenario["language"] == "go":
+            max_rps = 3000
+            initial_rps = 1000
+            rps_increment = 200
+
         log_to_file(f"=====Running scenario {scenario}=====")
-        # if scenario["language"] == "go":
-        #     max_rps =
         reached_target, rps = calibrate(host, scenario["port"], scenario["endpoint"], scenario["container_id"], max_rps,
-                                        duration)
+                                        initial_rps, rps_increment, duration)
         # Add the target RPS if target was reached, otherwise add 0
         if reached_target:
             scenario["targetRPS"] = rps

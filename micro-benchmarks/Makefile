@@ -40,7 +40,7 @@ python-build-otel:
 python-compose-otel:
 	$(call docker_compose,$(PYTHON_OTEL_DOCKER_COMPOSE),-d)
 
-python-all: python-compose python-compose-otel
+python-all: python-build python-build-otel python-compose python-compose-otel
 
 # Go targets
 go-build:
