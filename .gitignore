@@ -1,2 +1,9 @@
 .aider*
 .idea
+node_modules
+package-lock.json
+package.json
+.terraform*
+*.csv
+*.zip
+*.png
