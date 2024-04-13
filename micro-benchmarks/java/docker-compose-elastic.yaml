@@ -1,0 +1,28 @@
+version: '3.8'
+name: micro-benchmark-java-elastic
+services:
+  spring:
+    build:
+      context: ./spring
+      dockerfile: spring-jpa.dockerfile
+      args:
+        ELASTIC_APM: true
+    ports:
+      - "5202:8080"
+    environment:
+      JAVA_TOOL_OPTIONS: "-javaagent:/spring/elastic-apm-agent.jar"
+      ELASTIC_APM_ENABLED: True
+      ELASTIC_APM_SERVICE_NAME: java-elastic
+      ELASTIC_APM_SERVER_URL: http://apm-server:8200
+      ELASTIC_APM_TRANSACTION_SAMPLE_RATE: 1.0
+#      OTEL_SERVICE_NAME: "java-elastic"
+#      OTEL_TRACES_EXPORTER: "otlp"
+#      OTEL_LOGS_EXPORTER: "none"
+#      OTEL_METRICS_EXPORTER: "none"
+#      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
+    networks:
+      - telemetry
+
+networks:
+  telemetry:
+    external: true

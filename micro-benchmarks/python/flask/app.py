@@ -67,7 +67,7 @@ def multiple_db_queries():
     return flask.jsonify(worlds)
 
 
-@app.route("/plain")
+@app.route("/plaintext")
 def plain_text():
     response_text = "Hello, World!"
     response = flask.Response(response_text)

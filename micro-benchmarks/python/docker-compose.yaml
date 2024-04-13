@@ -3,7 +3,7 @@ name: micro-benchmark-python
 services:
   flask:
     build:
-      context: .
+      context: ./flask
       dockerfile: Dockerfile
     ports:
       - "5000:5000"

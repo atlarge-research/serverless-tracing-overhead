@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
-import { PORTS, HOST, scenarioHelperConcurrency } from './common.js'
+import { PORTS, HOST, ENDPOINTS, scenarioHelperConcurrency } from './common.js'
 
 let startTime = { value: 0 };
 
@@ -27,7 +27,7 @@ export { options };
 const endpoint = "json"
 
 export function test() {
-    let res = http.get(`${HOST}:${__ENV.PORT}/${endpoint}`);
+    let res = http.get(`${HOST}:${__ENV.PORT}/${ENDPOINTS.json}`);
     check(res, {
         'is status 200': (r) => r.status === 200,
         'is content type application/json': (r) => r.headers['Content-Type'] === 'application/json',

@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
-import { PORTS, HOST, scenarioHelperQueryCount } from './common.js'
+import {PORTS, HOST, ENDPOINTS, scenarioHelperQueryCount } from './common.js'
 
 let startTime = { value: 0 };
 
@@ -25,10 +25,8 @@ Object.assign(
 );
 export { options };
 
-const endpoint = "updates"
-
 export function test() {
-    let res = http.get(`${HOST}:${__ENV.PORT}/${endpoint}?queries=${__ENV.QUERY_COUNT}`);
+    let res = http.get(`${HOST}:${__ENV.PORT}/${ENDPOINTS.updates}?queries=${__ENV.QUERY_COUNT}`);
     check(res, {
         'is status 200': (r) => r.status === 200,
     });

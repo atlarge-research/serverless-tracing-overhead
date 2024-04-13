@@ -10,13 +10,8 @@ services:
     environment:
       - DB_HOST=postgres
       - APP_PORT=5100
-    volumes:
-      - go-server:/root
     networks:
       - telemetry
-
-volumes:
-  go-server:
 
 networks:
   telemetry:

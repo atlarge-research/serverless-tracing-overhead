@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
-import {PORTS, HOST, scenarioHelperConcurrency} from './common.js'
+import {PORTS, HOST, ENDPOINTS, scenarioHelperConcurrency} from './common.js'
 
 let startTime = { value: 0 };
 
@@ -24,10 +24,8 @@ Object.assign(
 );
 export { options };
 
-const endpoint = "db"
-
 export function test() {
-    let res = http.get(`${HOST}:${__ENV.PORT}/${endpoint}`);
+    let res = http.get(`${HOST}:${__ENV.PORT}/${ENDPOINTS.db}`);
     check(res, {
         'is status 200': (r) => r.status === 200,
     });

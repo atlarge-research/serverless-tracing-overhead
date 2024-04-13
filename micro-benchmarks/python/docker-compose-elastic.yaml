@@ -3,7 +3,7 @@ name: micro-benchmark-python-elastic
 services:
   flask:
     build:
-      context: .
+      context: ./flask
       dockerfile: Dockerfile
       args:
         REQUIREMENTS_FILE: requirements-elastic.txt

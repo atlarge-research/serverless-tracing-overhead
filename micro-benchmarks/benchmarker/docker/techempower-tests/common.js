@@ -7,6 +7,14 @@ export const PORTS = {
     go: 5100,
     goOtel: 5101,
 };
+
+export const ENDPOINTS = {
+    plaintext: "plaintext",
+    json: "json",
+    db: "db",
+    queries: "queries",
+    updates: "updates",
+}
 export const HOST = "http://localhost";
 
 export const TEST_ENDPOINTS = {

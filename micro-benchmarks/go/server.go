@@ -32,7 +32,7 @@ func main() {
 	}
 	defer db.Close()
 
-	http.HandleFunc("/plain", plaintextHandler())
+	http.HandleFunc("/plaintext", plaintextHandler())
 	http.HandleFunc("/json", jsonHandler())
 	http.HandleFunc("/db", dbHandler(db))
 	http.HandleFunc("/queries", queriesHandler(db))
@@ -57,7 +57,7 @@ func main() {
 	}
 }
 
-// plaintextHandler handles requests to the /plain route
+// plaintextHandler handles requests to the /plaintext route
 func plaintextHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/plain")

@@ -16,8 +16,6 @@ services:
       - ELASTIC_APM_SERVER_URL=http://apm-server:8200
       - ELASTIC_APM_TRANSACTION_SAMPLE_RATE=1.0
       - ELASTIC_APM_ENABLED=true
-#    volumes:
-#      - otel:/root
     networks:
       - telemetry
 
