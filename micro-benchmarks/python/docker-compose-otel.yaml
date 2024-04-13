@@ -6,8 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - REQUIREMENTS_FILE=requirements-otel.txt
-        - OPENTELEMETRY=true
+        REQUIREMENTS_FILE: requirements-otel.txt
+        OPENTELEMETRY: true
     ports:
       - "5001:5000"
     environment:

@@ -4,7 +4,15 @@ import random
 from sqlalchemy.sql.expression import func
 import os
 
+
 app = flask.Flask(__name__)
+
+ELASTIC_APM_ENABLED = os.getenv("ELASTIC_APM_ENABLED", "False")
+
+if ELASTIC_APM_ENABLED == "True" or ELASTIC_APM_ENABLED == "true":
+    from elasticapm.contrib.flask import ElasticAPM
+    apm = ElasticAPM(app)
+
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_USER = os.getenv("DB_USER", "postgres")

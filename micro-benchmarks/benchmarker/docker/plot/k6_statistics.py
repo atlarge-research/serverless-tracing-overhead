@@ -7,17 +7,21 @@ path = '../results/2024-04-03/json_2024-04-03_16-51.csv'
 PLOTS_DIR = "plots"
 
 class K6Statistics:
-    def __init__(self, csv_file_path):
-        self.csv_file_path = csv_file_path
-        self.file_name = csv_file_path.split('/')[-1]
-        self.data = pd.read_csv(csv_file_path)
-
-        # Data
-        self.throughput_data = self.data[self.data['metric_name'] == 'http_reqs']
-        self.performance_data = self.data[self.data['metric_name'] == 'http_req_duration']
-        self.requests_per_second = self.data[self.data['metric_name'] == 'http_reqs'][
-            'timestamp'].value_counts().sort_index()
-        self.http_req_durations = self.data[self.data['metric_name'] == 'http_req_duration']['metric_value']
+    def __init__(self, csv_file_path, cpu_file_path=""):
+        # self.csv_file_path = csv_file_path
+        # self.cpu_file_path = cpu_file_path
+        # self.file_name = csv_file_path.split('/')[-1]
+        # self.data = pd.read_csv(csv_file_path)
+        #
+        # # Data
+        # self.throughput_data = self.data[self.data['metric_name'] == 'http_reqs']
+        # self.performance_data = self.data[self.data['metric_name'] == 'http_req_duration']
+        # self.requests_per_second = self.data[self.data['metric_name'] == 'http_reqs'][
+        #     'timestamp'].value_counts().sort_index()
+        # self.http_req_durations = self.data[self.data['metric_name'] == 'http_req_duration']['metric_value']
+        # CPU Data
+        self.cpu_data = pd.read_csv(cpu_file_path)
+        self.cpu_data['CPU_Percentage'] = self.cpu_data['CPU_Percentage'].str.rstrip('%').astype('float')
 
     def save_or_show_plot(self, save_plot):
         if not os.path.exists(PLOTS_DIR):
@@ -53,7 +57,10 @@ class K6Statistics:
         combined_pivot = pd.concat([requests_summary, aggregated_metrics], axis=1)
 
         # Calculate total requests for each scenario
-        combined_pivot['total_requests'] = combined_pivot[['successful', 'failed']].sum(axis=1)
+        try:
+            combined_pivot['total_requests'] = combined_pivot[['successful', 'failed']].sum(axis=1)
+        except KeyError:
+            combined_pivot['total_requests'] = combined_pivot[['successful']].sum(axis=1)
 
         # Order the columns
         # column_order = ['successful', 'failed', 'total_requests']
@@ -215,6 +222,33 @@ class K6Statistics:
 
         plt.grid(axis='y', linestyle='--')
         fig.tight_layout()
+
+        plt.show()
+
+    def plot_cpu_usage(self, containers, start_time=None, end_time=None):
+        df = self.cpu_data
+
+        if start_time:
+            df = df[df['Timestamp'] >= start_time]
+        if end_time:
+            df = df[df['Timestamp'] <= end_time]
+
+        plt.figure(figsize=(10, 6))
+
+        for container in containers:
+            container_df = df[df['Container'] == container]
+            plt.plot(container_df['Timestamp'], container_df['CPU_Percentage'], label=container)
+
+        plt.xlabel('Timestamp')
+        plt.ylabel('CPU Usage (%)')
+        plt.title('CPU Usage Over Time')
+
+        plt.legend()
+
+        # Adjusting Y-tick rates for better readability
+        plt.locator_params(axis='y', nbins=10)
+        # plt.ylim(0, 100)
+        # plt.yticks(range(0, 100, 10))
 
         plt.show()
 

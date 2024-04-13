@@ -1,7 +1,7 @@
-FROM golang:1.19-alpine AS builder
+FROM golang:1.21 AS builder
 
+ARG USE_APM=false
 ARG GO_FILE_NAME=server
-ENV GO_FILE_NAME=$GO_FILE_NAME
 
 WORKDIR /app
 

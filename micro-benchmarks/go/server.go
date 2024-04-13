@@ -12,6 +12,7 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
+	"go.elastic.co/apm/module/apmhttp"
 )
 
 type Message struct {
@@ -43,7 +44,14 @@ func main() {
 		portNumber = "5100"
 	}
 	portNumber = fmt.Sprintf(":%s", portNumber)
-	err = http.ListenAndServe(portNumber, nil)
+
+	apmEnabled := os.Getenv("ELASTIC_APM_ENABLED") == "true"
+	var handler http.Handler = nil
+	if apmEnabled {
+		handler = apmhttp.Wrap(http.DefaultServeMux)
+	}
+
+	err = http.ListenAndServe(portNumber, handler)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}

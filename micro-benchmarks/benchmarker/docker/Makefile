@@ -6,6 +6,7 @@ export K6_WEB_DASHBOARD=true
 
 RESULTS_DIR := results/$(DATE)
 TECHEMPOWER_TEST_DIR := techempower-tests
+TESTS_DIR := tests
 JSON_TEST := json
 PLAINTEXT_TEST := plaintext
 DB_TEST := db
@@ -15,26 +16,31 @@ RESULT_FILE_PREFIX := testresults
 
 # Target-specific variable values
 plain: RESULT_FILE_PREFIX := plaintext
-plain: TEST_FILENAME := $(TECHEMPOWER_TEST_DIR)/plain_test.js
+te-plain: TEST_FILENAME := $(TECHEMPOWER_TEST_DIR)/plain_test.js
 
 json: RESULT_FILE_PREFIX := json
-json: TEST_FILENAME := $(TECHEMPOWER_TEST_DIR)/json_test.js
+te-json: TEST_FILENAME   := $(TECHEMPOWER_TEST_DIR)/json_test.js
 
 db: RESULT_FILE_PREFIX := db
-db: TEST_FILENAME := $(TECHEMPOWER_TEST_DIR)/db_test.js
+te-db: TEST_FILENAME := $(TECHEMPOWER_TEST_DIR)/db_test.js
 
 queries: RESULT_FILE_PREFIX := queries
-queries: TEST_FILENAME := $(TECHEMPOWER_TEST_DIR)/queries_test.js
+te-queries: TEST_FILENAME := $(TECHEMPOWER_TEST_DIR)/queries_test.js
 
 updates: RESULT_FILE_PREFIX := updates
-updates: TEST_FILENAME := $(TECHEMPOWER_TEST_DIR)/updates_test.js
+te-updates: TEST_FILENAME := $(TECHEMPOWER_TEST_DIR)/updates_test.js
+
+test: RESULT_FILE_PREFIX := test
+test: TEST_FILENAME := $(TESTS_DIR)/test.js
 
 define run_test
 	mkdir -p $(RESULTS_DIR)
 	k6 run --out csv=$(RESULTS_DIR)/$(RESULT_FILE_PREFIX)_$(DATETIME).csv $(TEST_FILENAME)
 endef
 
-all: plain json db queries updates
 
-plain json db queries updates:
+# te = TechEmpower
+te-all: te-plain te-json te-db te-queries te-updates
+
+te-plain te-json te-db te-queries te-updates test:
 	$(call run_test)

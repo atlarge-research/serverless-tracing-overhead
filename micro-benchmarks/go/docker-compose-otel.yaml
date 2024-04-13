@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - GO_FILE_NAME=server-otel
+        GO_FILE_NAME: server-otel
     ports:
       - "5101:5100"
     environment:

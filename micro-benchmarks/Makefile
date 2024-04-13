@@ -2,11 +2,18 @@ SHELL := /bin/bash
 
 DOCKER_COMPOSE_FOLDER         := docker-compose
 JAEGER_DOCKER_COMPOSE         := $(DOCKER_COMPOSE_FOLDER)/jaeger.yaml
+ELASTIC_DOCKER_COMPOSE        := $(DOCKER_COMPOSE_FOLDER)/telemetry.yaml
 POSTGRES_DOCKER_COMPOSE       := $(DOCKER_COMPOSE_FOLDER)/postgres.yaml
+# Python
 PYTHON_DOCKER_COMPOSE         := python/docker-compose.yaml
 PYTHON_OTEL_DOCKER_COMPOSE    := python/docker-compose-otel.yaml
+PYTHON_ELASTIC_DOCKER_COMPOSE := python/docker-compose-elastic.yaml
+# Go
 GO_DOCKER_COMPOSE             := go/docker-compose.yaml
 GO_OTEL_DOCKER_COMPOSE        := go/docker-compose-otel.yaml
+GO_ELASTIC_DOCKER_COMPOSE     := go/docker-compose-elastic.yaml
+# Java
+JAVA_DOCKER_COMPOSE           := java/docker-compose.yaml
 
 # Function to build docker-compose
 define docker_build
@@ -27,20 +34,23 @@ psql:
 jaeger:
 	$(call docker_compose,$(JAEGER_DOCKER_COMPOSE),-d)
 
+elastic:
+	$(call docker_compose,$(ELASTIC_DOCKER_COMPOSE),-d)
+
 # Python targets
 python-build:
 	$(call docker_build,$(PYTHON_DOCKER_COMPOSE))
 
-python-compose:
+python:
 	$(call docker_compose,$(PYTHON_DOCKER_COMPOSE),-d)
 
 python-build-otel:
 	$(call docker_build,$(PYTHON_OTEL_DOCKER_COMPOSE))
 
-python-compose-otel:
+python-otel:
 	$(call docker_compose,$(PYTHON_OTEL_DOCKER_COMPOSE),-d)
 
-python-all: python-build python-build-otel python-compose python-compose-otel
+python-all: python-build python-build-otel python python-otel
 
 # Go targets
 go-build:
@@ -52,10 +62,29 @@ go-compose:
 go-build-otel:
 	$(call docker_build,$(GO_OTEL_DOCKER_COMPOSE))
 
-go-compose-otel:
+go-otel:
 	$(call docker_compose,$(GO_OTEL_DOCKER_COMPOSE),-d)
 
-go-otel: go-build-otel go-compose-otel
+go-otel: go-build-otel go-otel
 
-go-all: go-build go-build-otel go-compose go-compose-otel
+go-all: go-build go-build-otel go-compose go-otel
 
+# Elastic
+python-elastic:
+	$(call docker_compose,$(PYTHON_ELASTIC_DOCKER_COMPOSE),-d)
+
+python-elastic-build:
+	$(call docker_build,$(PYTHON_ELASTIC_DOCKER_COMPOSE))
+
+go-elastic:
+	$(call docker_compose,$(GO_ELASTIC_DOCKER_COMPOSE),-d)
+
+go-elastic-build:
+	$(call docker_build,$(GO_ELASTIC_DOCKER_COMPOSE))
+
+# Java
+java-spring:
+	$(call docker_compose,$(JAVA_DOCKER_COMPOSE),-d)
+
+java-spring-build:
+	$(call docker_build,$(JAVA_DOCKER_COMPOSE))

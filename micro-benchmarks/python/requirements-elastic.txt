@@ -1,0 +1,5 @@
+Flask
+flask_sqlalchemy
+psycopg2-binary
+# elasticapm
+elastic-apm[flask]
