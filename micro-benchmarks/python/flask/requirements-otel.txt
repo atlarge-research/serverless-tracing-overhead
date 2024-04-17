@@ -1,6 +1,4 @@
-Flask
-flask_sqlalchemy
-psycopg2-binary
+-r requirements.txt
 opentelemetry-api==1.24.0
 opentelemetry-sdk==1.24.0
 opentelemetry-exporter-otlp==1.24.0

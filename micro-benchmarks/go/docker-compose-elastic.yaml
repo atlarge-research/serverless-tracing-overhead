@@ -1,17 +1,18 @@
 version: '3.8'
-name: micro-benchmark-go-elastic
+name: micro-benchmark
 services:
-  go:
+  go-elastic:
+    hostname: go-elastic
     build:
       context: .
       dockerfile: Dockerfile
       args:
         USE_APM: "true"
     ports:
-      - "5102:5100"
+      - "5120-5129:8080"
     environment:
       - DB_HOST=postgres
-      - APP_PORT=5100
+      - APP_PORT=8080
       - ELASTIC_APM_SERVICE_NAME=go-elastic
       - ELASTIC_APM_SERVER_URL=http://apm-server:8200
       - ELASTIC_APM_TRANSACTION_SAMPLE_RATE=1.0

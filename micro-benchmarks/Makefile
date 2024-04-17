@@ -3,15 +3,15 @@ SHELL := /bin/bash
 .PHONY: all app-all psql jaeger elastic python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java-spring java-spring-otel java-spring-elastic
 
 # Directories
-DOCKER_COMPOSE_FOLDER         := docker-compose
-PYTHON_FOLDER                 := python
-GO_FOLDER                     := go
-JAVA_FOLDER                   := java
+TELEMETRY_FOLDER := telemetry
+PYTHON_FOLDER    := python
+GO_FOLDER        := go
+JAVA_FOLDER      := java
 
 # Docker Compose Files
-POSTGRES_DOCKER_COMPOSE       := $(DOCKER_COMPOSE_FOLDER)/postgres.yaml
-JAEGER_DOCKER_COMPOSE         := $(DOCKER_COMPOSE_FOLDER)/jaeger.yaml
-ELASTIC_DOCKER_COMPOSE        := $(DOCKER_COMPOSE_FOLDER)/telemetry.yaml
+POSTGRES_DOCKER_COMPOSE       := $(TELEMETRY_FOLDER)/postgres.yaml
+JAEGER_DOCKER_COMPOSE         := $(TELEMETRY_FOLDER)/jaeger.yaml
+ELASTIC_DOCKER_COMPOSE        := $(TELEMETRY_FOLDER)/telemetry.yaml
 
 PYTHON_DOCKER_COMPOSE         := $(PYTHON_FOLDER)/docker-compose.yaml
 PYTHON_OTEL_DOCKER_COMPOSE    := $(PYTHON_FOLDER)/docker-compose-otel.yaml

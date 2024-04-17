@@ -1,5 +1,5 @@
 version: '3.7'
-name: opentelemetry
+name: telemetry
 services:
   jaeger:
     image: jaegertracing/all-in-one:latest

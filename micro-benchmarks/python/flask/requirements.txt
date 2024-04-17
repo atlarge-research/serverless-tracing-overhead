@@ -1,3 +1,5 @@
-Flask
+Flask==3.0.3
 flask_sqlalchemy
 psycopg2-binary
+gunicorn
+jinja2

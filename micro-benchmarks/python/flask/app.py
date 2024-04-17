@@ -7,6 +7,7 @@ import os
 
 app = flask.Flask(__name__)
 
+
 ELASTIC_APM_ENABLED = os.getenv("ELASTIC_APM_ENABLED", "False")
 
 if ELASTIC_APM_ENABLED == "True" or ELASTIC_APM_ENABLED == "true":

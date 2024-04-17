@@ -1,12 +1,13 @@
 version: '3.8'
-name: micro-benchmark-java
+name: micro-benchmark
 services:
-  spring:
+  java-spring-standard:
+    hostname: java-spring-standard
     build:
       context: ./spring
       dockerfile: spring-jpa.dockerfile
     ports:
-      - "5200:8080"
+      - "5200-5209:8080"
     networks:
       - telemetry
 

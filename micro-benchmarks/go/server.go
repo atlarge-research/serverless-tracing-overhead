@@ -41,7 +41,7 @@ func main() {
 	// Get Port number
 	portNumber := os.Getenv("APP_PORT")
 	if portNumber == "" {
-		portNumber = "5100"
+		portNumber = "8080"
 	}
 	portNumber = fmt.Sprintf(":%s", portNumber)
 

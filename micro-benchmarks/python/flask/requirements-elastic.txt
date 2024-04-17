@@ -1,5 +1,2 @@
-Flask
-flask_sqlalchemy
-psycopg2-binary
-# elasticapm
+-r requirements.txt
 elastic-apm[flask]

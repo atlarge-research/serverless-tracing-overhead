@@ -1,14 +1,15 @@
 version: '3.8'
-name: micro-benchmark-java-elastic
+name: micro-benchmark
 services:
-  spring:
+  java-spring-elastic:
+    hostname: java-spring-elastic
     build:
       context: ./spring
       dockerfile: spring-jpa.dockerfile
       args:
         ELASTIC_APM: true
     ports:
-      - "5202:8080"
+      - "5220-5229:8080"
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/spring/elastic-apm-agent.jar"
       ELASTIC_APM_ENABLED: True

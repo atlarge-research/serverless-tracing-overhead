@@ -3,8 +3,8 @@
 # Check if OpenTelemetry instrumentation is enabled
 if [ "$OPENTELEMETRY" = "true" ]; then
   # Run the application with OpenTelemetry instrumentation
-  exec opentelemetry-instrument flask run
+  exec opentelemetry-instrument gunicorn app:app -c gunicorn_conf.py
 else
   # Run the application without OpenTelemetry instrumentation
-  exec flask run
+  exec gunicorn app:app -c gunicorn_conf.py
 fi

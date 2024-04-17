@@ -1,4 +1,5 @@
-version: '2.2'
+version: '3.8'
+name: telemetry
 services:
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
@@ -13,6 +14,8 @@ services:
 
   apm-server:
     image: docker.elastic.co/apm/apm-server:7.17.20
+    deploy:
+      replicas: 5
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -21,7 +24,7 @@ services:
     cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
     cap_drop: ["ALL"]
     ports:
-    - "8200:8200"
+    - "8200-8220:8200"
     networks:
     - telemetry
     command: >

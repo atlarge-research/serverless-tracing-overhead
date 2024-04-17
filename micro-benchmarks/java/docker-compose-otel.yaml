@@ -1,14 +1,15 @@
 version: '3.8'
-name: micro-benchmark-java-otel
+name: micro-benchmark
 services:
-  spring:
+  java-spring-otel:
+    hostname: java-spring-otel
     build:
       context: ./spring
       dockerfile: spring-jpa.dockerfile
       args:
         OPENTELEMETRY: true
     ports:
-      - "5201:8080"
+      - "5210-5219:8080"
     environment:
       JAVA_TOOL_OPTIONS: "-javaagent:/spring/opentelemetry-javaagent.jar"
       OTEL_SERVICE_NAME: "java-otel"

@@ -25,7 +25,7 @@ WORKDIR /root/
 
 COPY --from=builder /app/$GO_FILE_NAME .
 
-EXPOSE 5100
+EXPOSE 8080
 
 RUN ls -la
 
