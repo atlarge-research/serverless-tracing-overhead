@@ -15,7 +15,7 @@ services:
   apm-server:
     image: docker.elastic.co/apm/apm-server:7.17.20
     deploy:
-      replicas: 5
+      replicas: 1
     depends_on:
       elasticsearch:
         condition: service_healthy
@@ -86,4 +86,4 @@ volumes:
 
 networks:
   telemetry:
-    external: true
+    name: telemetry

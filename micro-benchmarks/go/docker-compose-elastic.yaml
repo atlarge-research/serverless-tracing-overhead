@@ -8,6 +8,10 @@ services:
       dockerfile: Dockerfile
       args:
         USE_APM: "true"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
     ports:
       - "5120-5129:8080"
     environment:
@@ -19,6 +23,7 @@ services:
       - ELASTIC_APM_ENABLED=true
     networks:
       - telemetry
+    restart: always
 
 networks:
   telemetry:

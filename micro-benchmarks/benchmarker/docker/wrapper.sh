@@ -1,9 +1,15 @@
 #!/bin/bash
 
+DATE=$(date +'%Y-%m-%d')
+DATETIME=$(date +'%Y-%m-%d_%H-%M')
+
 MONITOR_SCRIPT="./cpu.sh"
+RESULTS_DIR="results/$DATE"
+
 K6_TEST_NAME=$1
 
-K6_TEST="make ${K6_TEST_NAME}"
+mkdir -p $RESULTS_DIR
+K6_TEST="k6 run --out csv=$RESULTS_DIR/$DATETIME.csv $K6_TEST_NAME"
 
 # Start the monitoring script in the background
 bash $MONITOR_SCRIPT &

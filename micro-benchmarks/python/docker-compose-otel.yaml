@@ -9,6 +9,10 @@ services:
       args:
         REQUIREMENTS_FILE: requirements-otel.txt
         OPENTELEMETRY: true
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
     ports:
       - "5020-5029:8080"
     environment:
@@ -18,9 +22,11 @@ services:
 #      - OPENTELEMETRY_ENABLED=True
       - OTEL_SERVICE_NAME=python-otel
       - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4317
     networks:
       - telemetry
+    restart: always
 
 networks:
   telemetry:

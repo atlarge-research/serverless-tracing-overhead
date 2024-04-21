@@ -8,6 +8,10 @@ services:
       dockerfile: Dockerfile
       args:
         GO_FILE_NAME: server-otel
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
     ports:
       - "5110-5119:8080"
     environment:
@@ -17,6 +21,7 @@ services:
       - otel:/root
     networks:
       - telemetry
+    restart: always
 
   go-auto:
     image: otel/autoinstrumentation-go

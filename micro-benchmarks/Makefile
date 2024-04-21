@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: all app-all psql jaeger elastic python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java-spring java-spring-otel java-spring-elastic
+.PHONY: all app-all psql jaeger telemetry python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java-spring java-spring-otel java-spring-elastic
 
 # Directories
 TELEMETRY_FOLDER := telemetry
@@ -11,7 +11,7 @@ JAVA_FOLDER      := java
 # Docker Compose Files
 POSTGRES_DOCKER_COMPOSE       := $(TELEMETRY_FOLDER)/postgres.yaml
 JAEGER_DOCKER_COMPOSE         := $(TELEMETRY_FOLDER)/jaeger.yaml
-ELASTIC_DOCKER_COMPOSE        := $(TELEMETRY_FOLDER)/telemetry.yaml
+TELEMETRY_DOCKER_COMPOSE      := $(TELEMETRY_FOLDER)/telemetry.yaml
 
 PYTHON_DOCKER_COMPOSE         := $(PYTHON_FOLDER)/docker-compose.yaml
 PYTHON_OTEL_DOCKER_COMPOSE    := $(PYTHON_FOLDER)/docker-compose-otel.yaml
@@ -35,20 +35,24 @@ define docker_compose
 	@docker-compose -f $1 up --force-recreate -d
 endef
 
+define docker_down
+	@docker-compose -f $1 down --volumes --remove-orphans
+endef
+
 
 # All together
-all: psql elastic app-all
+all: telemetry psql app-all
 
 app-all: python-all go-all java-all
+
+telemetry:
+	$(call docker_compose,$(TELEMETRY_DOCKER_COMPOSE))
 
 psql:
 	$(call docker_compose,$(POSTGRES_DOCKER_COMPOSE))
 
 jaeger:
 	$(call docker_compose,$(JAEGER_DOCKER_COMPOSE))
-
-elastic:
-	$(call docker_compose,$(ELASTIC_DOCKER_COMPOSE))
 
 # Python Targets
 python-all: python python-otel python-elastic
@@ -94,6 +98,21 @@ java-spring-otel:
 java-spring-elastic:
 	$(call docker_build,$(JAVA_ELASTIC_DOCKER_COMPOSE))
 	$(call docker_compose,$(JAVA_ELASTIC_DOCKER_COMPOSE))
+
+# Destroy all Docker Compose resources
+destroy:
+	$(call docker_down,$(TELEMETRY_DOCKER_COMPOSE))
+	$(call docker_down,$(POSTGRES_DOCKER_COMPOSE))
+	$(call docker_down,$(JAEGER_DOCKER_COMPOSE))
+	$(call docker_down,$(PYTHON_DOCKER_COMPOSE))
+	$(call docker_down,$(PYTHON_OTEL_DOCKER_COMPOSE))
+	$(call docker_down,$(PYTHON_ELASTIC_DOCKER_COMPOSE))
+	$(call docker_down,$(GO_DOCKER_COMPOSE))
+	$(call docker_down,$(GO_OTEL_DOCKER_COMPOSE))
+	$(call docker_down,$(GO_ELASTIC_DOCKER_COMPOSE))
+	$(call docker_down,$(JAVA_DOCKER_COMPOSE))
+	$(call docker_down,$(JAVA_OTEL_DOCKER_COMPOSE))
+	$(call docker_down,$(JAVA_ELASTIC_DOCKER_COMPOSE))
 
 # Help
 help:

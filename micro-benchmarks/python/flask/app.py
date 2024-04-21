@@ -39,7 +39,6 @@ class World(db.Model):
     def to_dict(self):
         return {'id': self.id, 'randomNumber': self.randomNumber}
 
-
 @app.route('/json')
 def json_serialization():
     return flask.jsonify({"message": "Hello, World!"})
@@ -47,7 +46,6 @@ def json_serialization():
 
 @app.route("/db")
 def single_db_query():
-    print(app.config['SQLALCHEMY_DATABASE_URI'])
     random_id = random.randint(1, 10000)
     world = World.query.get(random_id)
 

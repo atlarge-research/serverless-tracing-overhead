@@ -6,6 +6,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
     ports:
       - "5100-5109:8080"
     environment:
@@ -13,6 +17,7 @@ services:
       - APP_PORT=8080
     networks:
       - telemetry
+    restart: always
 
 networks:
   telemetry:

@@ -8,6 +8,10 @@ services:
       dockerfile: spring-jpa.dockerfile
       args:
         OPENTELEMETRY: true
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
     ports:
       - "5210-5219:8080"
     environment:
@@ -19,6 +23,7 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4318"
     networks:
       - telemetry
+    restart: always
 
 networks:
   telemetry:

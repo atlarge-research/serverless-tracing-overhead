@@ -8,6 +8,10 @@ services:
       dockerfile: Dockerfile
       args:
         REQUIREMENTS_FILE: requirements-elastic.txt
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
     ports:
       - "5010-5019:8080"
     environment:
@@ -20,6 +24,7 @@ services:
       - ELASTIC_APM_TRANSACTION_SAMPLE_RATE=1.0
     networks:
       - telemetry
+    restart: always
 
 networks:
   telemetry:

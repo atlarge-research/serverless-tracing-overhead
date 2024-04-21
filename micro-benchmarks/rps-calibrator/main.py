@@ -4,6 +4,7 @@ import time
 from datetime import datetime
 import threading
 import utils
+import random
 
 # Configuration
 client = docker.from_env()
@@ -97,14 +98,14 @@ def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_incr
 
 target_cpu_usage = 80.0
 current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_file_path = f"cpu_utilization_log_{current_time}.txt"
+log_file_path = f"results/cpu_utilization_log_{current_time}.txt"
 
 
 def main():
     print("Running calibrator...")
     with open(log_file_path, "w") as log_file:
         log_file.write("RPS, CPU Usage (%)\n")
-    initial_rps = 400  # Starting RPS
+    initial_rps = 200  # Starting RPS
     max_rps = 5000
     rps_increment = 200
     duration = 60  # Seconds
@@ -112,11 +113,13 @@ def main():
     port = 8080
 
     # Generate scenarios
-    endpoints = ["json", "queries"]
-    exclude_configs = ['elastic']
+    endpoints = ["json", "db", "updates"]
+    exclude_configs = []
 
     scenarios = utils.generate_scenarios(utils.configuration, endpoints,
                                          exclude_configs=exclude_configs)
+    # Shuffle the list so the order of scenarios won't impact results anyhow
+    random.shuffle(scenarios)
 
     print("Running scenarios:")
     for scenario in scenarios:
