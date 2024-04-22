@@ -27,16 +27,16 @@ JAVA_ELASTIC_DOCKER_COMPOSE   := $(JAVA_FOLDER)/docker-compose-elastic.yaml
 
 # Helper to build docker-compose
 define docker_build
-	@docker-compose -f $1 build --no-cache
+	@docker compose -f $1 build --no-cache
 endef
 
 # Helper to run docker-compose
 define docker_compose
-	@docker-compose -f $1 up --force-recreate -d
+	@docker compose -f $1 up --force-recreate -d
 endef
 
 define docker_down
-	@docker-compose -f $1 down --volumes --remove-orphans
+	@docker compose -f $1 down --volumes --remove-orphans
 endef
 
 
