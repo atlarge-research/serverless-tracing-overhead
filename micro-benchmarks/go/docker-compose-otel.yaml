@@ -35,7 +35,7 @@ services:
       - OTEL_PROPAGATORS=tracecontext,baggage
     volumes:
       - otel:/app
-#      - /proc:/host/proc
+      - /proc:/host/proc
     depends_on:
       - go-otel
     networks:
