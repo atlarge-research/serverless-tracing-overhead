@@ -33,6 +33,7 @@ services:
       - OTEL_GO_AUTO_INCLUDE_DB_STATEMENT=true
       - OTEL_SERVICE_NAME=go-otel
       - OTEL_PROPAGATORS=tracecontext,baggage
+      - OTEL_GO_AUTO_SHOW_VERIFIER_LOG=true
     volumes:
       - otel:/app
       - /proc:/host/proc
