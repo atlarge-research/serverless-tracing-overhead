@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: all app-all psql jaeger telemetry python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java-spring java-spring-otel java-spring-elastic
+.PHONY: all app-all psql jaeger telemetry rps-calibrator python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java-spring java-spring-otel java-spring-elastic
 
 # Directories
 TELEMETRY_FOLDER := telemetry
@@ -24,6 +24,8 @@ GO_ELASTIC_DOCKER_COMPOSE     := $(GO_FOLDER)/docker-compose-elastic.yaml
 JAVA_DOCKER_COMPOSE           := $(JAVA_FOLDER)/docker-compose.yaml
 JAVA_OTEL_DOCKER_COMPOSE      := $(JAVA_FOLDER)/docker-compose-otel.yaml
 JAVA_ELASTIC_DOCKER_COMPOSE   := $(JAVA_FOLDER)/docker-compose-elastic.yaml
+
+CALIBRATOR_DOCKER_COMPOSE     := rps-calibrator/docker-compose.yaml
 
 # Helper to build docker-compose
 define docker_build
@@ -99,6 +101,10 @@ java-spring-elastic:
 	$(call docker_build,$(JAVA_ELASTIC_DOCKER_COMPOSE))
 	$(call docker_compose,$(JAVA_ELASTIC_DOCKER_COMPOSE))
 
+rps-calibrator:
+	$(call docker_build,$(CALIBRATOR_DOCKER_COMPOSE))
+	$(call docker_compose,$(CALIBRATOR_DOCKER_COMPOSE))
+
 # Destroy all Docker Compose resources
 destroy:
 	$(call docker_down,$(TELEMETRY_DOCKER_COMPOSE))
@@ -113,6 +119,7 @@ destroy:
 	$(call docker_down,$(JAVA_DOCKER_COMPOSE))
 	$(call docker_down,$(JAVA_OTEL_DOCKER_COMPOSE))
 	$(call docker_down,$(JAVA_ELASTIC_DOCKER_COMPOSE))
+	$(call docker_down,$(CALIBRATOR_DOCKER_COMPOSE))
 
 # Help
 help:
