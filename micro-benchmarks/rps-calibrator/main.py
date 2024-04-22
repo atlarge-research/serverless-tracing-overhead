@@ -98,7 +98,7 @@ def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_incr
 
 target_cpu_usage = 80.0
 current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_file_path = f"results/cpu_utilization_log_{current_time}.txt"
+log_file_path = f"cpu_utilization_log_{current_time}.txt"
 
 
 def main():
