@@ -40,7 +40,6 @@ services:
       - go-otel
     networks:
       - telemetry
-    restart: always
 
 volumes:
   otel:
