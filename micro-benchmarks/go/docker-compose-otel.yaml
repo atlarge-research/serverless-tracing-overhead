@@ -24,7 +24,7 @@ services:
     restart: always
 
   go-auto:
-    image: otel/autoinstrumentation-go
+    image: otel/autoinstrumentation-go:v0.12.0-alpha
     privileged: true
     pid: "host"
     environment:
