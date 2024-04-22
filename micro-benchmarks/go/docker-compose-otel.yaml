@@ -32,8 +32,7 @@ services:
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
       - OTEL_GO_AUTO_INCLUDE_DB_STATEMENT=true
       - OTEL_SERVICE_NAME=go-otel
-      - OTEL_PROPAGATORS=tracecontext,baggage
-      - OTEL_GO_AUTO_SHOW_VERIFIER_LOG=true
+      - OTEL_PROPAGATORS=tracecontext
     volumes:
       - otel:/app
       - /proc:/host/proc
@@ -41,6 +40,7 @@ services:
       - go-otel
     networks:
       - telemetry
+    restart: always
 
 volumes:
   otel:
