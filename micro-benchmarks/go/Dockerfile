@@ -5,8 +5,8 @@ ARG GO_FILE_NAME=server
 
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
+COPY duplicate/go.mod ./
+COPY duplicate/go.sum ./
 
 RUN go mod download
 

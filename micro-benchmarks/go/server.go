@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"log"
 	"math/rand"
 	"net/http"
@@ -13,6 +15,13 @@ import (
 
 	_ "github.com/lib/pq"
 	"go.elastic.co/apm/module/apmhttp"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+	"go.opentelemetry.io/otel/sdk/resource"
+	"go.opentelemetry.io/otel/sdk/trace"
+	"go.opentelemetry.io/otel/semconv/v1.21.0"
 )
 
 type Message struct {
@@ -24,7 +33,48 @@ type World struct {
 	RandomNumber int `json:"randomNumber"`
 }
 
+func initTracer() *trace.TracerProvider {
+	ctx := context.Background()
+
+	collectorEndpoint := os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
+	serviceName := os.Getenv("OTEL_SERVICE_NAME")
+
+	log.Println(collectorEndpoint)
+	log.Println(serviceName)
+
+	exporter, err := otlptrace.New(
+		ctx,
+		otlptracehttp.NewClient(
+			otlptracehttp.WithEndpoint(collectorEndpoint),
+			otlptracehttp.WithInsecure(),
+		),
+	)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to create exporter: %v", err)
+		os.Exit(1)
+	}
+
+	tp := trace.NewTracerProvider(
+		trace.WithBatcher(exporter),
+		trace.WithResource(
+			resource.NewWithAttributes(
+				semconv.SchemaURL,
+				semconv.ServiceNameKey.String(serviceName),
+			),
+		),
+	)
+	otel.SetTracerProvider(tp)
+
+	return tp
+}
+
 func main() {
+	opentelemetryEnabled := os.Getenv("OPENTELEMETRY_ENABLED") == "true"
+	log.Println("OpenTelemetry enabled:", opentelemetryEnabled)
+	if opentelemetryEnabled {
+		initTracer()
+	}
+
 	dsn := getDatabaseDSN()
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
@@ -32,11 +82,13 @@ func main() {
 	}
 	defer db.Close()
 
-	http.HandleFunc("/plaintext", plaintextHandler())
-	http.HandleFunc("/json", jsonHandler())
-	http.HandleFunc("/db", dbHandler(db))
-	http.HandleFunc("/queries", queriesHandler(db))
-	http.HandleFunc("/updates", updateHandler(db))
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/plaintext", plaintextHandler())
+	mux.HandleFunc("/json", jsonHandler())
+	mux.HandleFunc("/db", dbHandler(db))
+	mux.HandleFunc("/queries", queriesHandler(db))
+	mux.HandleFunc("/updates", updateHandler(db))
 
 	// Get Port number
 	portNumber := os.Getenv("APP_PORT")
@@ -46,9 +98,14 @@ func main() {
 	portNumber = fmt.Sprintf(":%s", portNumber)
 
 	apmEnabled := os.Getenv("ELASTIC_APM_ENABLED") == "true"
-	var handler http.Handler = nil
+
+	var handler http.Handler = mux
 	if apmEnabled {
-		handler = apmhttp.Wrap(http.DefaultServeMux)
+		handler = apmhttp.Wrap(mux)
+	}
+
+	if opentelemetryEnabled {
+		handler = otelhttp.NewHandler(mux, "otelHandler")
 	}
 
 	err = http.ListenAndServe(portNumber, handler)

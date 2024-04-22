@@ -79,7 +79,7 @@ go:
 	$(call docker_compose,$(GO_DOCKER_COMPOSE))
 
 go-otel:
-	#$(call docker_build,$(GO_OTEL_DOCKER_COMPOSE))
+	$(call docker_build,$(GO_OTEL_DOCKER_COMPOSE))
 	$(call docker_compose,$(GO_OTEL_DOCKER_COMPOSE))
 
 go-elastic:

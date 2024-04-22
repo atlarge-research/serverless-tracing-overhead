@@ -6,8 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        GO_FILE_NAME: server-otel
     deploy:
       resources:
         limits:
@@ -17,32 +15,34 @@ services:
     environment:
       - DB_HOST=postgres
       - APP_PORT=8080
-    volumes:
-      - otel:/app
+      - OPENTELEMETRY_ENABLED=true
+      - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4318
+      - OTEL_SERVICE_NAME=go-otel
     networks:
       - telemetry
     restart: always
 
-  go-auto:
-    image: otel/autoinstrumentation-go:v0.12.0-alpha
-    privileged: true
-    pid: "host"
-    environment:
-      - OTEL_GO_AUTO_TARGET_EXE=/app/server-otel
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
-      - OTEL_GO_AUTO_INCLUDE_DB_STATEMENT=true
-      - OTEL_SERVICE_NAME=go-otel
-      - OTEL_PROPAGATORS=tracecontext
-    volumes:
-      - otel:/app
-      - /proc:/host/proc
-    depends_on:
-      - go-otel
-    networks:
-      - telemetry
+#  go-auto:
+#    image: otel/autoinstrumentation-go
+#    privileged: true
+#    pid: "host"
+#    environment:
+#      - OTEL_GO_AUTO_TARGET_EXE=/app/server-otel
+#      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
+#      - OTEL_GO_AUTO_INCLUDE_DB_STATEMENT=true
+#      - OTEL_SERVICE_NAME=go-otel
+#      - OTEL_PROPAGATORS=tracecontext,baggage
+#    volumes:
+#      - otel:/app
+##      - /proc:/host/proc
+#    depends_on:
+#      - go-otel
+#    networks:
+#      - telemetry
 
-volumes:
-  otel:
+#volumes:
+#  otel:
+
 
 networks:
   telemetry:
