@@ -36,6 +36,8 @@ services:
     volumes:
       - otel:/app
 #      - /proc:/host/proc
+    depends_on:
+      - go-otel
     networks:
       - telemetry
 
