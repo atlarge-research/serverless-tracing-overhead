@@ -22,28 +22,6 @@ services:
       - telemetry
     restart: always
 
-#  go-auto:
-#    image: otel/autoinstrumentation-go
-#    privileged: true
-#    pid: "host"
-#    environment:
-#      - OTEL_GO_AUTO_TARGET_EXE=/app/server-otel
-#      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
-#      - OTEL_GO_AUTO_INCLUDE_DB_STATEMENT=true
-#      - OTEL_SERVICE_NAME=go-otel
-#      - OTEL_PROPAGATORS=tracecontext,baggage
-#    volumes:
-#      - otel:/app
-##      - /proc:/host/proc
-#    depends_on:
-#      - go-otel
-#    networks:
-#      - telemetry
-
-#volumes:
-#  otel:
-
-
 networks:
   telemetry:
     external: true
