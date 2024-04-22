@@ -45,9 +45,9 @@ def generate_scenarios(configuration, endpoints, exclude_configs=None):
 
 
 configuration = {
-    "python": ["standard", "otel", "elastic"],
+    "python": ["flask-standard", "flask-otel", "flask-elastic"],
     "go": ["standard", "otel", "elastic"],
-    "java": ["standard", "otel", "elastic"]
+    "java": ["spring-standard", "spring-otel", "spring-elastic"]
 }
 
 
