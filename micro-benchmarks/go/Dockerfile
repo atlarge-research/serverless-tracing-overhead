@@ -21,7 +21,7 @@ ENV GO_FILE_NAME=$GO_FILE_NAME
 
 RUN apk --no-cache add ca-certificates
 
-WORKDIR /root/
+WORKDIR /app/
 
 COPY --from=builder /app/$GO_FILE_NAME .
 
