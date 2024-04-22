@@ -105,9 +105,9 @@ def main():
     print("Running calibrator...")
     with open(log_file_path, "w") as log_file:
         log_file.write("RPS, CPU Usage (%)\n")
-    initial_rps = 200  # Starting RPS
+    initial_rps = 100  # Starting RPS
     max_rps = 5000
-    rps_increment = 200
+    rps_increment = 100
     duration = 60  # Seconds
     timeunit = "1s"
     port = 8080
