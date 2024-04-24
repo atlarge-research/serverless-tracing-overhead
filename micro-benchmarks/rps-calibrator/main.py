@@ -1,3 +1,4 @@
+import os.path
 import subprocess
 import docker
 import time
@@ -72,6 +73,11 @@ def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_incr
     url = f"http://{host}:{port}/{endpoint}"
     reached_target = False
     while rps <= max_rps:
+        # Recreate the test environment
+        # utils.run_make('destroy')
+        # utils.run_make('all')
+        # time.sleep(30)  # Wait for everything to settle
+
         print(f"Testing with {rps} RPS for {duration} seconds, targeting {url}, on container {container_id}")
         log_to_file(f"Testing with {rps} RPS for {duration} seconds, targeting {url}, on container {container_id}")
 
@@ -98,17 +104,21 @@ def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_incr
 
 target_cpu_usage = 80.0
 current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_file_path = f"cpu_utilization_log_{current_time}.txt"
+results_dir = "results"
+log_file_path = f"{results_dir}/cpu_utilization_log_{current_time}.txt"
+csv_file_path = f"{results_dir}/rps_calibration_results.csv"
 
 
 def main():
     print("Running calibrator...")
+    if not os.path.isdir(results_dir):
+        os.makedirs(results_dir)
     with open(log_file_path, "w") as log_file:
         log_file.write("RPS, CPU Usage (%)\n")
     initial_rps = 200  # Starting RPS
-    max_rps = 5000
+    max_rps = 200
     rps_increment = 200
-    duration = 60  # Seconds
+    duration = 1  # Seconds
     timeunit = "1s"
     port = 8080
 
@@ -142,7 +152,14 @@ def main():
     for scenario in scenarios:
         log_to_file(scenario)
 
+    log_to_file("\n\n=====CSV FORMAT=====\n\n")
+    # Write to experiment file
+    utils.write_to_csv(scenarios, log_file_path, append=True)
+    # Write to common CSV
+    utils.write_to_csv(scenarios, csv_file_path, append=True)
+
 
 if __name__ == "__main__":
+
     main()
 

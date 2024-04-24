@@ -1,8 +1,8 @@
 version: '3.8'
 name: micro-benchmark
 services:
-  java-spring-standard:
-    hostname: java-spring-standard
+  java-standard:
+    hostname: java-standard
     build:
       context: ./spring
       dockerfile: spring-jpa.dockerfile

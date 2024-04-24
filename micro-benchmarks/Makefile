@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: all app-all psql jaeger telemetry rps-calibrator python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java-spring java-spring-otel java-spring-elastic
+.PHONY: all benchmark app-all psql jaeger telemetry rps-calibrator python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java java-otel java-elastic
 
 # Directories
 TELEMETRY_FOLDER := telemetry
@@ -13,6 +13,10 @@ POSTGRES_DOCKER_COMPOSE       := $(TELEMETRY_FOLDER)/postgres.yaml
 JAEGER_DOCKER_COMPOSE         := $(TELEMETRY_FOLDER)/jaeger.yaml
 TELEMETRY_DOCKER_COMPOSE      := $(TELEMETRY_FOLDER)/telemetry.yaml
 
+## Benchmark
+BENCHMARK_DOCKER_COMPOSE      := benchmarker/docker/docker-compose.yaml
+
+## Applications
 PYTHON_DOCKER_COMPOSE         := $(PYTHON_FOLDER)/docker-compose.yaml
 PYTHON_OTEL_DOCKER_COMPOSE    := $(PYTHON_FOLDER)/docker-compose-otel.yaml
 PYTHON_ELASTIC_DOCKER_COMPOSE := $(PYTHON_FOLDER)/docker-compose-elastic.yaml
@@ -56,6 +60,11 @@ psql:
 jaeger:
 	$(call docker_compose,$(JAEGER_DOCKER_COMPOSE))
 
+# Benchmark
+benchmark:
+	$(call docker_build,$(BENCHMARK_DOCKER_COMPOSE))
+	$(call docker_compose,$(BENCHMARK_DOCKER_COMPOSE))
+
 # Python Targets
 python-all: python python-otel python-elastic
 
@@ -87,17 +96,17 @@ go-elastic:
 	$(call docker_compose,$(GO_ELASTIC_DOCKER_COMPOSE))
 
 # Java Targets
-java-all: java-spring java-spring-otel java-spring-elastic
+java-all: java java-otel java-elastic
 
-java-spring:
+java:
 	$(call docker_build,$(JAVA_DOCKER_COMPOSE))
 	$(call docker_compose,$(JAVA_DOCKER_COMPOSE))
 
-java-spring-otel:
+java-otel:
 	$(call docker_build,$(JAVA_OTEL_DOCKER_COMPOSE))
 	$(call docker_compose,$(JAVA_OTEL_DOCKER_COMPOSE))
 
-java-spring-elastic:
+java-elastic:
 	$(call docker_build,$(JAVA_ELASTIC_DOCKER_COMPOSE))
 	$(call docker_compose,$(JAVA_ELASTIC_DOCKER_COMPOSE))
 
@@ -138,6 +147,6 @@ help:
 	@echo "  go-otel              - Build and run the Go Docker Compose setup with OpenTelemetry"
 	@echo "  go-elastic           - Build and run the Go Docker Compose setup with Elastic APM"
 	@echo "  java-all             - Build and run all Java configurations (standard, OpenTelemetry, Elastic APM)"
-	@echo "  java-spring          - Build and run the standard Java Docker Compose setup"
-	@echo "  java-spring-otel     - Build and run the Java Docker Compose setup with OpenTelemetry"
-	@echo "  java-spring-elastic  - Build and run the Java Docker Compose setup with Elastic APM"
+	@echo "  java          - Build and run the standard Java Docker Compose setup"
+	@echo "  java-otel     - Build and run the Java Docker Compose setup with OpenTelemetry"
+	@echo "  java-elastic  - Build and run the Java Docker Compose setup with Elastic APM"

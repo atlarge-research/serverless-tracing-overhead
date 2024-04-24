@@ -1,8 +1,8 @@
 version: '3.8'
 name: micro-benchmark
 services:
-  java-spring-otel:
-    hostname: java-spring-otel
+  java-otel:
+    hostname: java-otel
     build:
       context: ./spring
       dockerfile: spring-jpa.dockerfile

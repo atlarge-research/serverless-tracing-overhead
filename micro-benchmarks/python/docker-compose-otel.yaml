@@ -1,8 +1,8 @@
 version: '3.8'
 name: micro-benchmark
 services:
-  python-flask-otel:
-    hostname: python-flask-otel
+  python-otel:
+    hostname: python-otel
     build:
       context: ./flask
       dockerfile: Dockerfile

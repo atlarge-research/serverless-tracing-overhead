@@ -1,0 +1,24 @@
+{
+    "rps": {
+        "json": {
+            "python": 400,
+            "java": 4120,
+            "go": 4320
+        },
+        "db": {
+            "python": 240,
+            "java": 1440,
+            "go": 400
+        },
+        "queries": {
+            "python": 200,
+            "java": 1400,
+            "go": 400
+        },
+        "updates": {
+            "python": 200,
+            "java": 1400,
+            "go": 400
+        }
+    }
+}

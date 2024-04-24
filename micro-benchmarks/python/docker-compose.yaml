@@ -1,8 +1,8 @@
 version: '3.8'
 name: micro-benchmark
 services:
-  python-flask-standard:
-    hostname: python-flask-standard
+  python-standard:
+    hostname: python-standard
     build:
       context: ./flask
       dockerfile: Dockerfile

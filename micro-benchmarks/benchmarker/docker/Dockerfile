@@ -3,6 +3,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 COPY tests/tests.js ./tests.js
+COPY tests/*.json .
 COPY cpu.sh .
 COPY wrapper.sh .
 
@@ -25,4 +26,3 @@ RUN tar -xzf $K6_VERSION.tar.gz
 RUN mv $K6_VERSION/k6 /usr/bin/k6
 
 CMD ["./wrapper.sh", "tests.js"]
-#CMD ["sleep", "60000"]

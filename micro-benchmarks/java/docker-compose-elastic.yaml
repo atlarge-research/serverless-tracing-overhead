@@ -1,8 +1,8 @@
 version: '3.8'
 name: micro-benchmark
 services:
-  java-spring-elastic:
-    hostname: java-spring-elastic
+  java-elastic:
+    hostname: java-elastic
     build:
       context: ./spring
       dockerfile: spring-jpa.dockerfile
