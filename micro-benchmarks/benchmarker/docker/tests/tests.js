@@ -35,7 +35,7 @@ languages.forEach(lang => {
                 maxVUs: 2000,
                 exec: 'testEndpoint',
                 env: { APP_NAME: appName, ENDPOINT: endpoint },
-                tags: { testName: `${appName}_${endpoint}` },
+                tags: { testName: `${appName}-${endpoint}` },
                 gracefulStop: `${gracefulStop}s`
             };
             startTime += testDuration + gracefulStop;
