@@ -25,7 +25,7 @@ languages.forEach(lang => {
         const appName = `${lang}-${type}`;
         endpoints.forEach(endpoint => {
             const scenarioName = `${appName}-${endpoint}`;
-            let rps = rpsRates["rps"][endpoint][lang]
+            const rps = rpsRates["rps"][endpoint][lang];
             options.scenarios[scenarioName] = {
                 executor: 'constant-arrival-rate',
                 rate: rps,
@@ -36,7 +36,12 @@ languages.forEach(lang => {
                 maxVUs: 2000,
                 exec: 'testEndpoint',
                 env: { APP_NAME: appName, ENDPOINT: endpoint },
-                tags: { testName: `${appName}-${endpoint}`, appName: appName, endpoint: endpoint, rps: rps },
+                tags: {
+                    testName: `${appName}-${endpoint}`,
+                    appName: `${appName}`,
+                    endpoint: `${endpoint}`,
+                    rps: `${rps}`
+                },
                 gracefulStop: `${gracefulStop}s`
             };
             startTime += testDuration + gracefulStop;
