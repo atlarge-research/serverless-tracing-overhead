@@ -18,7 +18,7 @@ export let options = {
 
 const testDuration = 60; // In seconds
 let startTime = 0; // In seconds
-const gracefulStop = 15 // In seconds
+const gracefulStop = 0 // In seconds
 
 languages.forEach(lang => {
     appTypes.forEach(type => {
