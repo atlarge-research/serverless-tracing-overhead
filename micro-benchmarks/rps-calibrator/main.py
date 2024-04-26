@@ -115,15 +115,15 @@ def main():
         os.makedirs(results_dir)
     with open(log_file_path, "w") as log_file:
         log_file.write("RPS, CPU Usage (%)\n")
-    initial_rps = 200  # Starting RPS
-    max_rps = 200
-    rps_increment = 200
-    duration = 1  # Seconds
+    initial_rps = 100  # Starting RPS
+    max_rps = 5000
+    rps_increment = 100
+    duration = 60  # Seconds
     timeunit = "1s"
     port = 8080
 
     # Generate scenarios
-    endpoints = ["json", "db", "updates"]
+    endpoints = ["json", "db", "updates", "queries"]
     exclude_configs = []
 
     scenarios = utils.generate_scenarios(utils.configuration, endpoints,
