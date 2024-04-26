@@ -40,7 +40,8 @@ languages.forEach(lang => {
                     testName: `${appName}-${endpoint}`,
                     appName: `${appName}`,
                     endpoint: `${endpoint}`,
-                    rps: `${rps}`
+                    rps: `${rps}`,
+                    language: `${lang}`
                 },
                 gracefulStop: `${gracefulStop}s`
             };
