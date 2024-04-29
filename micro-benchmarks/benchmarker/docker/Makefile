@@ -2,8 +2,6 @@ SHELL := /bin/bash
 DATE := $(shell date +%Y-%m-%d)
 DATETIME := $(shell date +%Y-%m-%d_%H-%M)
 
-export K6_WEB_DASHBOARD=true
-
 RESULTS_DIR := results/$(DATE)
 TECHEMPOWER_TEST_DIR := techempower-tests
 TESTS_DIR := tests

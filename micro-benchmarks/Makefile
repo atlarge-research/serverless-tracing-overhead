@@ -55,6 +55,7 @@ telemetry:
 	$(call docker_compose,$(TELEMETRY_DOCKER_COMPOSE))
 
 psql:
+	$(call docker_build,$(POSTGRES_DOCKER_COMPOSE))
 	$(call docker_compose,$(POSTGRES_DOCKER_COMPOSE))
 
 jaeger:
