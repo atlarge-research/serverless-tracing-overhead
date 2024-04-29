@@ -66,6 +66,7 @@ def write_to_csv(scenarios, filename, append=False, exclude_headers=None):
         with open(filename, 'w') as file:
             writer = csv.DictWriter(file, fieldnames=headers)
             writer.writeheader()
+            file.close()
 
     # Write to file
     write_mode = "a" if append else "w"
@@ -75,6 +76,7 @@ def write_to_csv(scenarios, filename, append=False, exclude_headers=None):
         for row in scenarios:
             row_filtered = {k: v for k, v in row.items() if k not in exclude_headers}
             writer.writerow(row_filtered)
+            file.close()
 
 
 configuration = {
