@@ -51,6 +51,8 @@ def generate_scenarios(configuration, endpoints, exclude_configs=None):
 
 
 def write_to_csv(scenarios, filename, append=False, exclude_headers=None):
+    if exclude_headers is None:
+        exclude_headers = []
     # Add a random "experiment_id" to the experiment
     experiment_id = str(uuid.uuid4())
     for row in scenarios:
@@ -72,7 +74,6 @@ def write_to_csv(scenarios, filename, append=False, exclude_headers=None):
     write_mode = "a" if append else "w"
     with open(filename, write_mode, newline='') as file:
         writer = csv.DictWriter(file, fieldnames=headers)
-        # Write the headers if we are not appending to a file
         for row in scenarios:
             row_filtered = {k: v for k, v in row.items() if k not in exclude_headers}
             writer.writerow(row_filtered)
