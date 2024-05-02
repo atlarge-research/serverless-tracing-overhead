@@ -79,7 +79,7 @@ def write_to_csv(scenarios, filename, append=False, exclude_headers=None):
 
 
 configuration = {
-    "python": ["flask-standard", "flask-otel", "flask-elastic"],
+    "python": ["standard", "otel", "elastic"],
     "go": ["standard", "otel", "elastic"],
-    "java": ["spring-standard", "spring-otel", "spring-elastic"]
+    "java": ["standard", "otel", "elastic"]
 }

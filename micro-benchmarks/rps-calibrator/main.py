@@ -73,11 +73,6 @@ def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_incr
     url = f"http://{host}:{port}/{endpoint}"
     reached_target = False
     while rps <= max_rps:
-        # Recreate the test environment
-        # utils.run_make('destroy')
-        # utils.run_make('all')
-        # time.sleep(30)  # Wait for everything to settle
-
         print(f"Testing with {rps} RPS for {duration} seconds, targeting {url}, on container {container_id}")
         log_to_file(f"Testing with {rps} RPS for {duration} seconds, targeting {url}, on container {container_id}")
 
