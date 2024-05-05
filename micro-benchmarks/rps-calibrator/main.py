@@ -10,6 +10,8 @@ import random
 # Configuration
 client = docker.from_env()
 
+QUERIES_ENDPOINT_CONFIG = 10
+
 
 def get_cpu_usage(container_id):
     client = docker.from_env()
@@ -70,7 +72,12 @@ def check_cpu_measurements(measurements, threshold=80, required_percentage=50):
 
 def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_increment, duration, timeunit="1s"):
     rps = initial_rps
-    url = f"http://{host}:{port}/{endpoint}"
+
+    if endpoint is "queries":
+        url = f"http://{host}:{port}/{endpoint}?queries={QUERIES_ENDPOINT_CONFIG}"
+    else:
+        url = f"http://{host}:{port}/{endpoint}"
+
     reached_target = False
     while rps <= max_rps:
         print(f"Testing with {rps} RPS for {duration} seconds, targeting {url}, on container {container_id}")
@@ -119,6 +126,7 @@ def main():
 
     # Generate scenarios
     endpoints = ["json", "db", "updates", "queries"]
+    endpoints = ["queries"]
     exclude_configs = []
 
     scenarios = utils.generate_scenarios(utils.configuration, endpoints,
@@ -155,6 +163,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()
-

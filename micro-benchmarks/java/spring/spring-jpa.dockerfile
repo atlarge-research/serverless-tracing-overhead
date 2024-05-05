@@ -42,6 +42,6 @@ RUN if [ "$OPENTELEMETRY" = "true" ]; then \
     ; fi
 
 ARG ELASTIC_APM=false
-COPY --from=docker.elastic.co/observability/apm-agent-java:latest /usr/agent/elastic-apm-agent.jar /spring/elastic-apm-agent.jar
+COPY --from=docker.elastic.co/observability/apm-agent-java:1.49.0 /usr/agent/elastic-apm-agent.jar /spring/elastic-apm-agent.jar
 
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseG1GC", "-XX:+DisableExplicitGC", "-XX:+UseStringDeduplication", "-Dlogging.level.root=INFO", "-jar", "app.jar", "--spring.profiles.active=jpa"]
