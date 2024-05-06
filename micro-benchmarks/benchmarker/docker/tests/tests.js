@@ -25,7 +25,7 @@ languages.forEach(lang => {
         const appName = `${lang}-${type}`;
         endpoints.forEach(endpoint => {
             const scenarioName = `${appName}-${endpoint}`;
-            const rps = rpsRates["rps"][endpoint][lang];
+            const rps = rpsRates[appName][endpoint];
             options.scenarios[scenarioName] = {
                 executor: 'constant-arrival-rate',
                 rate: rps,
