@@ -8,6 +8,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - telemetry
+    restart: always
 
 networks:
   telemetry:
