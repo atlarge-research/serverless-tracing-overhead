@@ -43,7 +43,7 @@ def monitor_cpu_usage(container_id, duration):
     # Calculate the sleep durations for five intervals
     # measurement_points = [duration / 6, duration / 3, duration / 2, 2 * duration / 3, 5 * duration / 6]
     # Wait 10 seconds for load to go up
-    measurement_points = [(i + 2) * (60 / 12) for i in range(10)]
+    measurement_points = [(i + 2) * (60 / 12) for i in range(9)]
     last_sleep_time = 0
     cpu_usage_percentages = []
 
