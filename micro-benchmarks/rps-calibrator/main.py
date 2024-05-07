@@ -150,7 +150,8 @@ def main():
 
         # Change RPS Increment to 50 for Updates and Queries endpoint
         if scenario["endpoint"] is "updates" or scenario["endpoint"] is "queries":
-            rps_increment = 50
+            initial_rps = 25
+            rps_increment = 25
 
         # Change RPS increment to 200 for JSON endpoint for Go and Java
         if scenario["endpoint"] is "json" and scenario["language"] is not "python":
