@@ -41,7 +41,9 @@ def monitor_cpu_usage(container_id, duration):
     # Calculate the sleep durations for three intervals
     # measurement_points = [duration / 3, duration / 2, 2 * duration / 3]
     # Calculate the sleep durations for five intervals
-    measurement_points = [duration / 6, duration / 3, duration / 2, 2 * duration / 3, 5 * duration / 6]
+    # measurement_points = [duration / 6, duration / 3, duration / 2, 2 * duration / 3, 5 * duration / 6]
+    # Wait 10 seconds for load to go up
+    measurement_points = [(i + 2) * (60 / 12) for i in range(10)]
     last_sleep_time = 0
     cpu_usage_percentages = []
 
@@ -56,10 +58,10 @@ def monitor_cpu_usage(container_id, duration):
         cpu_usage_percentages.append(cpu_usage)
         log_to_file(f"CPU usage at point {point}s: {cpu_usage}")
 
-    return check_cpu_measurements(cpu_usage_percentages, required_percentage=40)
+    return check_cpu_measurements(cpu_usage_percentages)
 
 
-def check_cpu_measurements(measurements, threshold=80, required_percentage=50):
+def check_cpu_measurements_old(measurements, threshold=80, required_percentage=50):
     # Check how many are over the threshold
     over_threshold_count = sum(measurement > threshold for measurement in measurements)
     actual_required_count = len(measurements) * (required_percentage / 100.0)
@@ -68,6 +70,12 @@ def check_cpu_measurements(measurements, threshold=80, required_percentage=50):
     exceeds_threshold = over_threshold_count >= actual_required_count
 
     return exceeds_threshold
+
+
+def check_cpu_measurements(measurements, threshold=75):
+    average_cpu_usage = sum(measurements) / len(measurements)
+    log_to_file(f"Average CPU Usage: {average_cpu_usage}")
+    return average_cpu_usage > threshold
 
 
 def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_increment, duration, timeunit="1s"):
