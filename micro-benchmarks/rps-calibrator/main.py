@@ -134,7 +134,6 @@ def main():
 
     # Generate scenarios
     endpoints = ["json", "db", "updates", "queries"]
-    endpoints = ["queries"]
     exclude_configs = []
 
     scenarios = utils.generate_scenarios(utils.configuration, endpoints,
@@ -148,6 +147,14 @@ def main():
 
     for scenario in scenarios:
         host = scenario["host"]
+
+        # Change RPS Increment to 50 for Updates and Queries endpoint
+        if scenario["endpoint"] is "updates" or scenario["endpoint"] is "queries":
+            rps_increment = 50
+
+        # Change RPS increment to 200 for JSON endpoint for Go and Java
+        if scenario["endpoint"] is "json" and scenario["language"] is not "python":
+            rps_increment = 200
 
         log_to_file(f"=====Running scenario {scenario}=====")
         reached_target, rps = calibrate(host, port, scenario["endpoint"],

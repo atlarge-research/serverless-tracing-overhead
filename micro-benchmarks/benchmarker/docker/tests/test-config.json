@@ -18,39 +18,39 @@
         "updates": 100
     },
     "java-standard": {
-        "json": 2200,
-        "db": 1200,
-        "queries": 300,
-        "updates": 700
+        "json": 2400,
+        "db": 1400,
+        "queries": 350,
+        "updates": 800
     },
     "java-otel": {
-        "json": 1400,
-        "db": 800,
-        "queries": 250,
-        "updates": 500
+        "json": 1600,
+        "db": 1000,
+        "queries": 300,
+        "updates": 600
     },
     "java-elastic": {
-        "json": 1400,
-        "db": 800,
-        "queries": 250,
-        "updates": 500
+        "json": 1600,
+        "db": 1000,
+        "queries": 300,
+        "updates": 600
     },
     "go-standard": {
         "json": 4200,
-        "db": 450,
-        "queries": 300,
-        "updates": 250
+        "db": 600,
+        "queries": 250,
+        "updates": 400
     },
     "go-otel": {
         "json": 1875,
-        "db": 400,
-        "queries": 300,
+        "db": 500,
+        "queries": 250,
         "updates": 250
     },
     "go-elastic": {
         "json": 2180,
-        "db": 400,
-        "queries": 300,
-        "updates": 250
+        "db": 500,
+        "queries": 250,
+        "updates": 300
     }
 }
