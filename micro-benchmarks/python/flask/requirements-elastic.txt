@@ -1,2 +1,2 @@
 -r requirements.txt
-elastic-apm[flask]
+elastic-apm[flask]==6.22.0
