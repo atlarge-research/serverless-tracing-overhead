@@ -42,8 +42,8 @@ def monitor_cpu_usage(container_id, duration):
     # measurement_points = [duration / 3, duration / 2, 2 * duration / 3]
     # Calculate the sleep durations for five intervals
     # measurement_points = [duration / 6, duration / 3, duration / 2, 2 * duration / 3, 5 * duration / 6]
-    # Wait 10 seconds for load to go up
-    measurement_points = [(i + 2) * (60 / 12) for i in range(9)]
+    # Wait 10 seconds for load to go up, considering the duration is 60 seconds
+    measurement_points = [(i + 2) * (duration / 12) for i in range(9)]
     last_sleep_time = 0
     cpu_usage_percentages = []
 
@@ -75,11 +75,12 @@ def check_cpu_measurements_old(measurements, threshold=80, required_percentage=5
 def check_cpu_measurements(measurements, threshold=75):
     average_cpu_usage = sum(measurements) / len(measurements)
     log_to_file(f"Average CPU Usage: {average_cpu_usage}")
-    return average_cpu_usage > threshold
+    return average_cpu_usage > threshold, average_cpu_usage
 
 
 def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_increment, duration, timeunit="1s"):
     rps = initial_rps
+    avg_cpu_usage = 0
 
     if endpoint is "queries":
         url = f"http://{host}:{port}/{endpoint}?queries={QUERIES_ENDPOINT_CONFIG}"
@@ -95,7 +96,7 @@ def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_incr
         threading.Thread(target=run_test, args=(rps, duration, url, timeunit)).start()
 
         # Check CPU usage
-        exceeds_usage = monitor_cpu_usage(container_id, duration)
+        exceeds_usage, avg_cpu_usage = monitor_cpu_usage(container_id, duration)
 
         # if max_cpu_usage >= target_cpu_usage:
         if exceeds_usage:
@@ -109,7 +110,7 @@ def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_incr
         log_to_file(
             f"Did not reach target CPU Utilization for port {port} and endpoint {endpoint} and container_id {container_id}\n")
 
-    return reached_target, rps
+    return reached_target, rps, avg_cpu_usage
 
 
 target_cpu_usage = 80.0
@@ -162,14 +163,17 @@ def main():
             rps_increment = 200
 
         log_to_file(f"=====Running scenario {scenario}=====")
-        reached_target, rps = calibrate(host, port, scenario["endpoint"],
-                                        scenario["container_id"], max_rps,
-                                        initial_rps, rps_increment, duration, timeunit)
+        reached_target, rps, avg_cpu_usage = calibrate(host, port, scenario["endpoint"],
+                                                       scenario["container_id"], max_rps,
+                                                       initial_rps, rps_increment, duration, timeunit)
         # Add the target RPS if target was reached, otherwise add 0
         if reached_target:
             scenario["targetRPS"] = rps
         else:
             scenario["targetRPS"] = 0
+
+        # Add the CPU Usage
+        scenario["avgCPUUsage"] = avg_cpu_usage
 
     log_to_file("\n\n=====FINAL RESULTS=====\n\n")
     for scenario in scenarios:
