@@ -32,25 +32,25 @@
     "java-elastic": {
         "json": 2100,
         "db": 1400,
-        "queries": 375,
+        "queries": 325,
         "updates": 850
     },
     "go-standard": {
         "json": 4000,
         "db": 300,
-        "queries": 175,
-        "updates": 225
+        "queries": 150,
+        "updates": 200
     },
     "go-otel": {
         "json": 1960,
         "db": 260,
-        "queries": 125,
-        "updates": 225
+        "queries": 150,
+        "updates": 200
     },
     "go-elastic": {
         "json": 2290,
         "db": 290,
         "queries": 150,
-        "updates": 225
+        "updates": 200
     }
 }
