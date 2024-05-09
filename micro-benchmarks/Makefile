@@ -9,7 +9,7 @@ GO_FOLDER        := go
 JAVA_FOLDER      := java
 
 # Docker Compose Files
-POSTGRES_DOCKER_COMPOSE       := $(TELEMETRY_FOLDER)/postgres.yaml
+POSTGRES_DOCKER_COMPOSE       := postgres/postgres.yaml
 JAEGER_DOCKER_COMPOSE         := $(TELEMETRY_FOLDER)/jaeger.yaml
 TELEMETRY_DOCKER_COMPOSE      := $(TELEMETRY_FOLDER)/telemetry.yaml
 
