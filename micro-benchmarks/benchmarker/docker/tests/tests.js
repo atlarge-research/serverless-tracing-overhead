@@ -4,7 +4,6 @@ import {check} from 'k6';
 const configFile = "test-config.json"
 
 const languages = ['python', 'java', 'go'];
-// const languages = ['java', 'go'];
 const appTypes = ['standard', 'otel', 'elastic'];
 const endpoints = ['json', 'db', 'updates', 'queries'];
 
