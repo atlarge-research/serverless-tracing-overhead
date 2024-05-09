@@ -31,7 +31,7 @@ endpoints.forEach(endpoint => {
                 duration: `${testDuration}s`,
                 startTime: `${startTime}s`,
                 timeUnit: '1s',
-                preAllocatedVUs: 500,
+                preAllocatedVUs: 2000,
                 maxVUs: 2000,
                 exec: 'testEndpoint',
                 env: { APP_NAME: appName, ENDPOINT: endpoint },

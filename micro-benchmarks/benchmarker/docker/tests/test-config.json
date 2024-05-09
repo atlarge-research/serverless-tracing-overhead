@@ -2,7 +2,7 @@
     "python-standard": {
         "json": 390,
         "db": 200,
-        "queries": 40,
+        "queries": 45,
         "updates": 165
     },
     "python-otel": {
@@ -14,7 +14,7 @@
     "python-elastic": {
         "json": 200,
         "db": 100,
-        "queries": 20,
+        "queries": 25,
         "updates": 100
     },
     "java-standard": {
@@ -26,13 +26,13 @@
     "java-otel": {
         "json": 2225,
         "db": 1350,
-        "queries": 350,
+        "queries": 325,
         "updates": 850
     },
     "java-elastic": {
         "json": 2050,
         "db": 1400,
-        "queries": 350,
+        "queries": 375,
         "updates": 850
     },
     "go-standard": {
