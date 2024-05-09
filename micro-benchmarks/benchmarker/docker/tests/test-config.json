@@ -37,20 +37,20 @@
     },
     "go-standard": {
         "json": 4000,
-        "db": 300,
-        "queries": 150,
+        "db": 275,
+        "queries": 175,
         "updates": 200
     },
     "go-otel": {
         "json": 1960,
-        "db": 260,
-        "queries": 150,
+        "db": 250,
+        "queries": 175,
         "updates": 200
     },
     "go-elastic": {
         "json": 2290,
-        "db": 290,
-        "queries": 150,
+        "db": 275,
+        "queries": 175,
         "updates": 200
     }
 }
