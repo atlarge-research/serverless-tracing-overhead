@@ -3,8 +3,10 @@ FROM postgres:16.2
 EXPOSE 5432
 
 # Copy initialization scripts
-#COPY ./init-scripts/ /docker-entrypoint-initdb.d/
-#RUN #chown postgres:postgres /docker-entrypoint-initdb.d/init.sql
+COPY ./init-scripts/ /docker-entrypoint-initdb.d/
+
+# Ensure scripts are readable
+RUN chmod -R a+r /docker-entrypoint-initdb.d/
 
 # Create a directory for custom configuration
 RUN mkdir -p /etc/postgresql/conf.d
