@@ -1,13 +1,16 @@
 FROM postgres:16.2
+USER postgres
 
 EXPOSE 5432
 
 # Copy initialization scripts
 COPY ./init-scripts/ /docker-entrypoint-initdb.d/
+RUN chown postgres:postgres /docker-entrypoint-initdb.d/init.sql
 
 # Create a directory for custom configuration
 RUN mkdir -p /etc/postgresql/conf.d
 COPY ./postgresql.conf /etc/postgresql/conf.d/postgresql.conf
 COPY ./pg_hba.conf /etc/postgresql/conf.d/pg_hba.conf
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["postgres", "-c", "config_file=/etc/postgresql/conf.d/postgresql.conf", "-c", "hba_file=/etc/postgresql/conf.d/pg_hba.conf"]
