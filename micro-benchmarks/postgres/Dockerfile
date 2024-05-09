@@ -4,6 +4,7 @@ EXPOSE 5432
 
 # Copy initialization scripts
 COPY ./init-scripts/ /docker-entrypoint-initdb.d/
+RUN chmod +x /docker-entrypoint-initdb.d/init_world_db.sql
 
 # Create a directory for custom configuration
 RUN mkdir -p /etc/postgresql/conf.d
