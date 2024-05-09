@@ -3,12 +3,9 @@ import {check} from 'k6';
 
 const configFile = "test-config.json"
 
-// const languages = ['python', 'java', 'go'];
-const languages = ['java', 'go'];
+const languages = ['python', 'java', 'go'];
 const appTypes = ['standard', 'otel', 'elastic'];
-// const appTypes = ['standard'];
 const endpoints = ['json', 'db', 'updates', 'queries'];
-// const endpoints = ['json'];
 
 const queriesAmount = 10;
 
@@ -22,10 +19,10 @@ const testDuration = 60; // In seconds
 let startTime = 0;       // In seconds
 const gracefulStop = 15  // In seconds
 
-languages.forEach(lang => {
-    appTypes.forEach(type => {
-        const appName = `${lang}-${type}`;
-        endpoints.forEach(endpoint => {
+endpoints.forEach(endpoint => {
+    languages.forEach(lang => {
+        appTypes.forEach(type => {
+            const appName = `${lang}-${type}`;
             const scenarioName = `${appName}-${endpoint}`;
             const rps = rpsRates[appName][endpoint];
             options.scenarios[scenarioName] = {
