@@ -6,6 +6,10 @@ services:
     build:
       context: ../postgres
       dockerfile: ../postgres/Dockerfile
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
     ports:
       - "10000-10100:5432"
     volumes:

@@ -20,7 +20,7 @@
     "java-standard": {
         "json": 3850,
         "db": 1850,
-        "queries": 425,
+        "queries": 400,
         "updates": 1150
     },
     "java-otel": {
