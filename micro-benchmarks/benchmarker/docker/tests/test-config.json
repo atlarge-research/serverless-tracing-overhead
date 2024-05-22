@@ -1,13 +1,13 @@
 {
     "python-standard": {
-        "json": 375,
+        "json": 390,
         "db": 200,
         "queries": 50,
-        "updates": 150
+        "updates": 165
     },
     "python-otel": {
-        "json": 225,
-        "db": 150,
+        "json": 245,
+        "db": 170,
         "queries": 50,
         "updates": 125
     },
@@ -18,39 +18,39 @@
         "updates": 100
     },
     "java-standard": {
-        "json": 3850,
-        "db": 1850,
+        "json": 3965,
+        "db": 1945,
         "queries": 450,
-        "updates": 1150
+        "updates": 1190
     },
     "java-otel": {
-        "json": 2225,
-        "db": 1350,
+        "json": 2800,
+        "db": 1395,
         "queries": 350,
-        "updates": 850
+        "updates": 900
     },
     "java-elastic": {
-        "json": 2050,
-        "db": 1400,
+        "json": 2450,
+        "db": 1460,
         "queries": 350,
-        "updates": 850
+        "updates": 900
     },
     "go-standard": {
         "json": 4000,
-        "db": 250,
-        "queries": 150,
-        "updates": 200
+        "db": 270,
+        "queries": 180,
+        "updates": 220
     },
     "go-otel": {
-        "json": 1825,
-        "db": 200,
-        "queries": 150,
+        "json": 1960,
+        "db": 260,
+        "queries": 180,
         "updates": 200
     },
     "go-elastic": {
-        "json": 2050,
-        "db": 250,
-        "queries": 150,
-        "updates": 200
+        "json": 2290,
+        "db": 290,
+        "queries": 170,
+        "updates": 210
     }
 }
