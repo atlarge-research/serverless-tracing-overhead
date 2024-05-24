@@ -160,6 +160,7 @@ def main():
 
         # Change RPS increment to 200 for JSON endpoint for Go and Java
         if scenario["endpoint"] == "json" and scenario["language"] != "python":
+            initial_rps = 200
             rps_increment = 200
 
         log_to_file(f"=====Running scenario {scenario}=====")
