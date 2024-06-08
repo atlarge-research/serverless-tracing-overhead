@@ -9,7 +9,7 @@ spring:
     password: ${database.password}
 
 database:
-  name: hello_world
+  name: world
   host: postgres
   port: 5432
   username: postgres
@@ -33,7 +33,7 @@ spring:
 spring.data.mongodb:
   host: tfb-database
   port: 27017
-  database: hello_world
+  database: world
 
 ---
 spring:

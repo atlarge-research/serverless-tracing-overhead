@@ -9,8 +9,8 @@ export const options = {
       timeUnit: `${__ENV.TIMEUNIT}`,
       duration: `${__ENV.DURATION}s`,
       preAllocatedVUs: 500,
-      maxVUs: 1000,
-      gracefulStop: '10s'
+      maxVUs: 2000,
+      gracefulStop: '15s'
     },
   },
 };
