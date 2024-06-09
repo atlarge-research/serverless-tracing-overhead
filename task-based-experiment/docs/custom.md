@@ -9,3 +9,6 @@ Storage stop:
 
 Regression tests:
 `./sebs.py benchmark regression test --config config/openwhisk.json --deployment openwhisk`
+
+Regression tests NodeJS:
+`./sebs.py benchmark regression test --config config/openwhisk-node.json --deployment openwhisk`

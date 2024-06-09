@@ -39,6 +39,47 @@ class minio_storage {
     return this.client.fGetObject(bucket, file, filepath);
   };
 
+  downloadDirectory(bucket, prefix, downloadPath) {
+    const self = this;
+    const objectsStream = this.client.listObjects(bucket, prefix, true);
+  
+    return new Promise((resolve, reject) => {
+      objectsStream.on('data', function(obj) {
+        const fileName = obj.name;
+        const filePath = path.join(downloadPath, fileName);
+  
+        console.log(`Preparing to download ${fileName} to ${filePath}`);
+  
+        fs.mkdir(path.dirname(filePath), { recursive: true }, (err) => {
+          if (err) {
+            console.error('Error creating directory:', err);
+            reject(err);
+            return;
+          }
+  
+          self.download(bucket, fileName, filePath)
+            .then(() => {
+              console.log(`Successfully downloaded ${fileName} to ${filePath}`);
+            })
+            .catch((err) => {
+              console.error(`Error downloading ${fileName}:`, err);
+              reject(err);
+            });
+        });
+      });
+  
+      objectsStream.on('error', function(err) {
+        console.error('Error while listing objects:', err);
+        reject(err);
+      });
+  
+      objectsStream.on('end', function() {
+        console.log('Completed downloading directory');
+        resolve();
+      });
+    });
+  }  
+
   uploadStream(bucket, file) {
     var write_stream = new stream.PassThrough();
     let uniqueName = this.unique_name(file);
