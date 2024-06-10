@@ -1,0 +1,280 @@
+{
+  "_invocations": {
+    "120.uploader-nodejs-12": {
+      "0b76e580645c4332b6e580645c73327e": {
+        "billing": {
+          "_billed_time": null,
+          "_gb_seconds": 0,
+          "_memory": null
+        },
+        "output": {
+          "begin": 1717955854.54,
+          "compute_time": 26168.99,
+          "end": 1717955854.566,
+          "is_cold": false,
+          "request_id": "0b76e580645c4332b6e580645c73327e",
+          "result": {
+            "bucket": "sebs-benchmarks-7270a64e",
+            "key": "120.uploader-0-output/800px-Jammlich_crop.006c0d1a.jpg",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Jammlich_crop.jpg/800px-Jammlich_crop.jpg"
+          },
+          "results_time": 0
+        },
+        "provider_times": {
+          "execution": 0,
+          "initialization": 0
+        },
+        "request_id": "0b76e580645c4332b6e580645c73327e",
+        "stats": {
+          "cold_start": false,
+          "failure": false,
+          "memory_used": null
+        },
+        "times": {
+          "benchmark": 26000,
+          "client": 49316,
+          "client_begin": "2024-06-09 19:57:34.524979",
+          "client_end": "2024-06-09 19:57:34.574295",
+          "http_first_byte_return": 0.049242,
+          "http_startup": 0.002638,
+          "initialization": 0
+        }
+      },
+      "178389cdb9e444ad8389cdb9e444ad1e": {
+        "billing": {
+          "_billed_time": null,
+          "_gb_seconds": 0,
+          "_memory": null
+        },
+        "output": {
+          "begin": 1717955854.49,
+          "compute_time": 26859.97,
+          "end": 1717955854.517,
+          "is_cold": false,
+          "request_id": "178389cdb9e444ad8389cdb9e444ad1e",
+          "result": {
+            "bucket": "sebs-benchmarks-7270a64e",
+            "key": "120.uploader-0-output/800px-Jammlich_crop.b0ab67e3.jpg",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Jammlich_crop.jpg/800px-Jammlich_crop.jpg"
+          },
+          "results_time": 0
+        },
+        "provider_times": {
+          "execution": 0,
+          "initialization": 0
+        },
+        "request_id": "178389cdb9e444ad8389cdb9e444ad1e",
+        "stats": {
+          "cold_start": false,
+          "failure": false,
+          "memory_used": null
+        },
+        "times": {
+          "benchmark": 27000,
+          "client": 47426,
+          "client_begin": "2024-06-09 19:57:34.476898",
+          "client_end": "2024-06-09 19:57:34.524324",
+          "http_first_byte_return": 0.047355,
+          "http_startup": 0.002596,
+          "initialization": 0
+        }
+      },
+      "6350b133769444eb90b1337694c4eb68": {
+        "billing": {
+          "_billed_time": null,
+          "_gb_seconds": 0,
+          "_memory": null
+        },
+        "output": {
+          "begin": 1717955854.379,
+          "compute_time": 31600.948,
+          "end": 1717955854.411,
+          "is_cold": false,
+          "request_id": "6350b133769444eb90b1337694c4eb68",
+          "result": {
+            "bucket": "sebs-benchmarks-7270a64e",
+            "key": "120.uploader-0-output/800px-Jammlich_crop.5bb465ea.jpg",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Jammlich_crop.jpg/800px-Jammlich_crop.jpg"
+          },
+          "results_time": 0
+        },
+        "provider_times": {
+          "execution": 0,
+          "initialization": 0
+        },
+        "request_id": "6350b133769444eb90b1337694c4eb68",
+        "stats": {
+          "cold_start": false,
+          "failure": false,
+          "memory_used": null
+        },
+        "times": {
+          "benchmark": 32000,
+          "client": 69892,
+          "client_begin": "2024-06-09 19:57:34.349743",
+          "client_end": "2024-06-09 19:57:34.419635",
+          "http_first_byte_return": 0.06981,
+          "http_startup": 0.00548,
+          "initialization": 0
+        }
+      },
+      "b59bc9fe9ea5436b9bc9fe9ea5136b70": {
+        "billing": {
+          "_billed_time": null,
+          "_gb_seconds": 0,
+          "_memory": null
+        },
+        "output": {
+          "begin": 1717955854.268,
+          "compute_time": 68710.974,
+          "end": 1717955854.337,
+          "is_cold": true,
+          "request_id": "b59bc9fe9ea5436b9bc9fe9ea5136b70",
+          "result": {
+            "bucket": "sebs-benchmarks-7270a64e",
+            "key": "120.uploader-0-output/800px-Jammlich_crop.12d5ff29.jpg",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Jammlich_crop.jpg/800px-Jammlich_crop.jpg"
+          },
+          "results_time": 0
+        },
+        "provider_times": {
+          "execution": 0,
+          "initialization": 0
+        },
+        "request_id": "b59bc9fe9ea5436b9bc9fe9ea5136b70",
+        "stats": {
+          "cold_start": true,
+          "failure": false,
+          "memory_used": null
+        },
+        "times": {
+          "benchmark": 69000,
+          "client": 2467156,
+          "client_begin": "2024-06-09 19:57:31.881434",
+          "client_end": "2024-06-09 19:57:34.348590",
+          "http_first_byte_return": 2.467033,
+          "http_startup": 0.003269,
+          "initialization": 0
+        }
+      },
+      "f2c80e9bb3ae4774880e9bb3ae677422": {
+        "billing": {
+          "_billed_time": null,
+          "_gb_seconds": 0,
+          "_memory": null
+        },
+        "output": {
+          "begin": 1717955854.439,
+          "compute_time": 29283.751,
+          "end": 1717955854.469,
+          "is_cold": false,
+          "request_id": "f2c80e9bb3ae4774880e9bb3ae677422",
+          "result": {
+            "bucket": "sebs-benchmarks-7270a64e",
+            "key": "120.uploader-0-output/800px-Jammlich_crop.89950bc9.jpg",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Jammlich_crop.jpg/800px-Jammlich_crop.jpg"
+          },
+          "results_time": 0
+        },
+        "provider_times": {
+          "execution": 0,
+          "initialization": 0
+        },
+        "request_id": "f2c80e9bb3ae4774880e9bb3ae677422",
+        "stats": {
+          "cold_start": false,
+          "failure": false,
+          "memory_used": null
+        },
+        "times": {
+          "benchmark": 30000,
+          "client": 55754,
+          "client_begin": "2024-06-09 19:57:34.420427",
+          "client_end": "2024-06-09 19:57:34.476181",
+          "http_first_byte_return": 0.055681,
+          "http_startup": 0.0052,
+          "initialization": 0
+        }
+      }
+    }
+  },
+  "_metrics": {},
+  "begin_time": 1717955851.789403,
+  "config": {
+    "deployment": {
+      "credentials": {},
+      "experimentalManifest": false,
+      "name": "openwhisk",
+      "removeCluster": false,
+      "resources": {
+        "benchmarks": "sebs-benchmarks-7270a64e",
+        "docker_password": "",
+        "docker_registry": "",
+        "docker_username": "",
+        "resources_id": "7270a64e",
+        "storage": {
+          "access_key": "0-ut8ZlONPA1bsdsC-D2jkVpkeBIWqxg_noyVqQL5oM",
+          "address": "192.168.1.101:9011",
+          "input_buckets": [],
+          "instance_id": "d75a8964d5e212f9d0c662abb94b64281e384c74482dc84f2867ebf28d0dcaf2",
+          "mapped_port": 9011,
+          "output_buckets": [],
+          "secret_key": "8a856a2dfb72c6a1dfa0393d2ab4e10a8085ed30d7c3f124e737e50a9288b56e",
+          "type": "minio"
+        }
+      },
+      "shutdownStorage": false,
+      "wskBypassSecurity": "true",
+      "wskExec": "wsk"
+    },
+    "experiments": {
+      "download_results": false,
+      "experiments": {
+        "eviction-model": {
+          "function_copy_idx": 0,
+          "invocations": 1,
+          "repetitions": 5,
+          "sleep": 1
+        },
+        "invocation-overhead": {
+          "N": 20,
+          "code_begin": 1048576,
+          "code_end": 261619712,
+          "code_points": 20,
+          "payload_begin": 1024,
+          "payload_end": 6251000,
+          "payload_points": 20,
+          "repetitions": 5,
+          "type": "payload"
+        },
+        "network-ping-pong": {
+          "invocations": 50,
+          "repetitions": 1000,
+          "threads": 1
+        },
+        "perf-cost": {
+          "benchmark": "110.dynamic-html",
+          "concurrent-invocations": 5,
+          "experiments": [
+            "warm"
+          ],
+          "input-size": "test",
+          "memory-sizes": [
+            128,
+            256
+          ],
+          "repetitions": 50
+        }
+      },
+      "flags": {},
+      "runtime": {
+        "language": "nodejs",
+        "version": "12"
+      },
+      "update_code": false,
+      "update_storage": false
+    }
+  },
+  "end_time": 1717955854.574679,
+  "result_bucket": null
+}

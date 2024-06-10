@@ -5,24 +5,20 @@
       "update_storage": false,
       "download_results": false,
       "runtime": {
-        "language": "nodejs",
-        "version": "12"
+        "language": "python",
+        "version": "3.7"
       },
       "type": "invocation-overhead",
       "perf-cost": {
-        "benchmark": "110.dynamic-html",
+        "benchmark": "640.video-processing-opentelemetry",
         "experiments": [
-          "cold",
-          "warm",
-          "burst",
-          "sequential"
+          "warm"
         ],
         "input-size": "test",
-        "repetitions": 50,
-        "concurrent-invocations": 50,
+        "repetitions": 1000,
+        "concurrent-invocations": 10,
         "memory-sizes": [
-          128,
-          256
+          512
         ]
       },
       "network-ping-pong": {

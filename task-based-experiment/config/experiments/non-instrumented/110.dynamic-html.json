@@ -15,11 +15,10 @@
         "warm"
       ],
       "input-size": "test",
-      "repetitions": 50,
-      "concurrent-invocations": 5,
+      "repetitions": 1000,
+      "concurrent-invocations": 10,
       "memory-sizes": [
-        128,
-        256
+        128
       ]
     },
     "network-ping-pong": {

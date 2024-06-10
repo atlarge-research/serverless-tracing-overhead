@@ -10,16 +10,15 @@
     },
     "type": "invocation-overhead",
     "perf-cost": {
-      "benchmark": "110.dynamic-html",
+      "benchmark": "610.dynamic-html-otel",
       "experiments": [
         "warm"
       ],
       "input-size": "test",
-      "repetitions": 50,
-      "concurrent-invocations": 5,
+      "repetitions": 1000,
+      "concurrent-invocations": 10,
       "memory-sizes": [
-        128,
-        256
+        128
       ]
     },
     "network-ping-pong": {
