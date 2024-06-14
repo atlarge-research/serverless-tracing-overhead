@@ -4,7 +4,7 @@ Storage start:
 ```
 ./sebs.py storage start minio --port 9011 --output-json out_storage.json
 
-jq --argfile file1 out_storage.json '.deployment.openwhisk.storage = $file1 | .deployment.openwhisk.storage.address = "192.168.1.101:9011"' config/example.json > config/openwhisk.json
+jq --argfile file1 out_storage.json '.deployment.openwhisk.storage = $file1 | .deployment.openwhisk.storage.address = "192.168.1.104:9011"' config/example.json > config/openwhisk.json
 ```
 
 

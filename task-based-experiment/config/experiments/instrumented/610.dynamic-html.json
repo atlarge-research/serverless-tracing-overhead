@@ -82,11 +82,11 @@
         "password": ""
       },
       "storage": {
-        "address": "192.168.1.101:9011",
+        "address": "192.168.1.104:9011",
         "mapped_port": 9011,
-        "access_key": "0-ut8ZlONPA1bsdsC-D2jkVpkeBIWqxg_noyVqQL5oM",
-        "secret_key": "8a856a2dfb72c6a1dfa0393d2ab4e10a8085ed30d7c3f124e737e50a9288b56e",
-        "instance_id": "d75a8964d5e212f9d0c662abb94b64281e384c74482dc84f2867ebf28d0dcaf2",
+        "access_key": "OgJjOc1o3FDRI69AQnGYu7CPpkP1MYVlbsAyuO2Z9zc",
+        "secret_key": "aa353d11689199c338e379a499ca29391f9ae4413a47d05b83399779f9b59ac3",
+        "instance_id": "55c5edf784d4793fcfe823a75d3346159689641c68e994fae0eb16d75571c3fb",
         "output_buckets": [],
         "input_buckets": [],
         "type": "minio"

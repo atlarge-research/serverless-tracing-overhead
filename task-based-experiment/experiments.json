@@ -214,7 +214,7 @@
         "resources_id": "7270a64e",
         "storage": {
           "access_key": "0-ut8ZlONPA1bsdsC-D2jkVpkeBIWqxg_noyVqQL5oM",
-          "address": "192.168.1.101:9011",
+          "address": "192.168.1.104:9011",
           "input_buckets": [],
           "instance_id": "d75a8964d5e212f9d0c662abb94b64281e384c74482dc84f2867ebf28d0dcaf2",
           "mapped_port": 9011,

@@ -13,7 +13,7 @@ const provider = new NodeTracerProvider({
   }),
 });
 const exporter = new CollectorTraceExporter({
-  url: 'http://192.168.1.101:4317',
+  url: 'http://192.168.1.104:4317',
 });
 provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
 provider.register();

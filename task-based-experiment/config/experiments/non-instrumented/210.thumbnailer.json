@@ -82,7 +82,7 @@
           "password": ""
         },
         "storage": {
-          "address": "192.168.1.101:9011",
+          "address": "192.168.1.104:9011",
           "mapped_port": 9011,
           "access_key": "0-ut8ZlONPA1bsdsC-D2jkVpkeBIWqxg_noyVqQL5oM",
           "secret_key": "8a856a2dfb72c6a1dfa0393d2ab4e10a8085ed30d7c3f124e737e50a9288b56e",
