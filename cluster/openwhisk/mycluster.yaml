@@ -28,7 +28,7 @@ whisk:
     actionsSequenceMaxlength: 50
     actions:
       memory:
-        max: "3096 MB"
+        max: "1024 MB"
 
 nginx:
   httpsNodePort: 31001
