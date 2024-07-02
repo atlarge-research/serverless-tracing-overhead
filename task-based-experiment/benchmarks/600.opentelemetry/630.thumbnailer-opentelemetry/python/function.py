@@ -49,7 +49,6 @@ def resize_image(image_bytes, w, h):
             image.thumbnail((w, h))
             out = io.BytesIO()
             image.save(out, format='jpeg')
-            # necessary to rewind to the beginning of the buffer
             out.seek(0)
             resized_size = out.getbuffer().nbytes
             span.set_attribute("resized_size", resized_size)
