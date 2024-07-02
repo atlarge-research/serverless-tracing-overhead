@@ -1,8 +1,12 @@
-.PHONY: all python-nodejs non-instrumented-python instrumented-python non-instrumented-nodejs instrumented-nodejs
+.PHONY: all python nodejs python-nodejs non-instrumented-python instrumented-python non-instrumented-nodejs instrumented-nodejs
 
 all: python-nodejs
 
 python-nodejs: non-instrumented-python instrumented-python non-instrumented-nodejs instrumented-nodejs
+
+python: non-instrumented-python instrumented-python
+
+nodejs: non-instrumented-nodejs instrumented-nodejs
 
 # Non-instrumented Python Experiments
 non-instrumented-python:

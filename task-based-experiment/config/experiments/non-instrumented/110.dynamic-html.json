@@ -15,7 +15,7 @@
         "warm"
       ],
       "input-size": "test",
-      "repetitions": 1000,
+      "repetitions": 10000,
       "concurrent-invocations": 10,
       "memory-sizes": [
         128
@@ -23,7 +23,7 @@
     },
     "network-ping-pong": {
       "invocations": 50,
-      "repetitions": 1000,
+      "repetitions": 10000,
       "threads": 1
     },
     "invocation-overhead": {
@@ -84,9 +84,9 @@
       "storage": {
         "address": "192.168.1.104:9011",
         "mapped_port": 9011,
-        "access_key": "OgJjOc1o3FDRI69AQnGYu7CPpkP1MYVlbsAyuO2Z9zc",
-        "secret_key": "aa353d11689199c338e379a499ca29391f9ae4413a47d05b83399779f9b59ac3",
-        "instance_id": "55c5edf784d4793fcfe823a75d3346159689641c68e994fae0eb16d75571c3fb",
+        "access_key": "oVf_k_LaIBx2OR27XbZUsnzKcSoti8l-QgmDwP2XP40",
+        "secret_key": "b263f7d3e00adf468b9f74c670a61b7e2d41233faec127c5151192d9e57d7126",
+        "instance_id": "466e4cd13e9bb2cc0b88031e583cca38e1b852ed34ed5d65429b84ff1db851ae",
         "output_buckets": [],
         "input_buckets": [],
         "type": "minio"
