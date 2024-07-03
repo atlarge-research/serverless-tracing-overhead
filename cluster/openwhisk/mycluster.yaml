@@ -24,7 +24,7 @@ whisk:
   limits:
     actionsInvokesPerminute: 1000
     actionsInvokesConcurrent: 100
-    triggersFiresPerminute: 60
+    triggersFiresPerminute: 1000
     actionsSequenceMaxlength: 50
     actions:
       memory:

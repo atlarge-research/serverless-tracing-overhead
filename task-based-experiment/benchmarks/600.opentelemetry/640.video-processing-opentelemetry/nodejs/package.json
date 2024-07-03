@@ -1,10 +1,10 @@
 {
   "dependencies": {
     "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/exporter-collector-grpc": "^0.25.0",
-    "@opentelemetry/node": "^0.24.0",
-    "@opentelemetry/resources": "^1.25.0",
-    "@opentelemetry/tracing": "^0.24.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.52.1",
+    "@opentelemetry/resources": "^1.25.1",
+    "@opentelemetry/sdk-trace-base": "^1.25.1",
+    "@opentelemetry/semantic-conventions": "^1.25.1",
     "child_process": "^1.0.2",
     "fs": "^0.0.1-security",
     "path": "^0.12.7",
