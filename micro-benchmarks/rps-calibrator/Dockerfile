@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io &
 
 # Install k6
 ARG ARCH=amd64
+ARG ARCH=arm64
 ARG K6_VERSION=k6-v0.50.0-linux-$ARCH
 ADD https://github.com/grafana/k6/releases/download/v0.50.0/$K6_VERSION.tar.gz $K6_VERSION.tar.gz
 RUN tar -xzf $K6_VERSION.tar.gz

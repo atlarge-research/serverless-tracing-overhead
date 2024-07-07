@@ -1,0 +1,21 @@
+13:36:03,301 INFO SeBS-1800: Created experiment output at /home/anou/msc-thesis/task-based-experiment/experiment-results/nodejs/non-instrumented/310.compression
+13:36:03,659 INFO OpenWhisk.Resources-b1a9: Using user-provided configuration of storage for OpenWhisk.
+13:36:03,659 INFO OpenWhisk-0976: Using existing resource name: 92a2d56e.
+13:36:03,750 INFO Benchmark-2b5b: Building benchmark 310.compression. Reason: cached code package is not up to date/build enforced.
+13:36:03,752 INFO Benchmark-2b5b: There is no Docker build image for openwhisk run in nodejs, thus skipping the Docker-based installation of dependencies.
+13:36:03,752 INFO OpenWhisk-0976: Build the benchmark base image andersnou/msc-thesis:function.openwhisk.310.compression.nodejs-12.
+13:36:04,353 INFO OpenWhisk-0976: Push the benchmark base image andersnou/msc-thesis:function.openwhisk.310.compression.nodejs-12 to registry: Docker Hub.
+13:36:05,553 INFO OpenWhisk-0976: Created /home/anou/msc-thesis/task-based-experiment/experiment-results/nodejs/non-instrumented/310.compression/310.compression_code/nodejs/12/310.compression.zip archive
+13:36:05,553 INFO OpenWhisk-0976: Zip archive size 0.000621 MB
+13:36:05,555 INFO Benchmark-2b5b: Created code package (source hash: 90cd0a7ebf78215283ded44fa2e3d4fd), for run on openwhisk with nodejs:12
+13:36:05,560 INFO OpenWhisk-0976: Using cached function 310.compression-nodejs-12 in /home/anou/msc-thesis/task-based-experiment/cache/310.compression/openwhisk/nodejs/12/310.compression.zip
+13:36:05,561 INFO OpenWhisk-0976: Enforcing rebuild and update of of cached function 310.compression-nodejs-12 with hash 90cd0a7ebf78215283ded44fa2e3d4fd.
+13:36:05,561 INFO OpenWhisk-0976: Update an existing OpenWhisk action 310.compression-nodejs-12.
+13:36:06,291 INFO Experiment.PerfCost-5a91: Begin experiment on memory size 512
+13:36:06,291 INFO OpenWhisk-0976: Update an existing OpenWhisk action 310.compression-nodejs-12.
+13:36:06,484 INFO Experiment.PerfCost-5a91: Begin warm experiments
+13:37:11,591 ERROR OpenWhisk.HTTPTrigger-974c: Invocation on URL https://localhost:31001/api/v1/web/guest/default/310.compression-nodejs-12.json failed!
+13:37:11,591 ERROR OpenWhisk.HTTPTrigger-974c: Invocation on URL https://localhost:31001/api/v1/web/guest/default/310.compression-nodejs-12.json failed!
+13:37:11,591 ERROR OpenWhisk.HTTPTrigger-974c: Output: {'code': '2SRVWoOgufAe5x1AEAklaA171WAIABbS', 'error': 'Response not yet ready.'}
+13:37:11,592 ERROR OpenWhisk.HTTPTrigger-974c: Output: {'code': 'SoXeBxzRBCBudL9iJTyTuouZDcTgcYTb', 'error': 'Response not yet ready.'}
+13:37:11,593 INFO Experiment.PerfCost-5a91: Processed 0 warm-up samples, ignoring these results.
