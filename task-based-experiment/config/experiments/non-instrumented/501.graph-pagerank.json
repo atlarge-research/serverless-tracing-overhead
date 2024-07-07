@@ -10,7 +10,7 @@
       },
       "type": "invocation-overhead",
       "perf-cost": {
-        "benchmark": "620.uploader-opentelemetry",
+        "benchmark": "501.graph-pagerank",
         "experiments": [
           "warm"
         ],
@@ -18,7 +18,7 @@
         "repetitions": 10000,
         "concurrent-invocations": 10,
         "memory-sizes": [
-          128
+          512
         ]
       },
       "network-ping-pong": {
@@ -90,7 +90,7 @@
           "output_buckets": [],
           "input_buckets": [],
           "type": "minio"
-      }
+        }
       }
     }
   }
