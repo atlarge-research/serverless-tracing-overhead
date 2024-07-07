@@ -14,7 +14,7 @@
         "experiments": [
           "warm"
         ],
-        "input-size": "test",
+        "input-size": "small",
         "repetitions": 10000,
         "concurrent-invocations": 10,
         "memory-sizes": [
