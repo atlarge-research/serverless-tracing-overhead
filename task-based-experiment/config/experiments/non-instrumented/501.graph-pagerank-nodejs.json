@@ -10,11 +10,11 @@
       },
       "type": "invocation-overhead",
       "perf-cost": {
-        "benchmark": "221.video-processing",
+        "benchmark": "501.graph-pagerank",
         "experiments": [
-          "cold"
+          "warm"
         ],
-        "input-size": "test",
+        "input-size": "small",
         "repetitions": 10000,
         "concurrent-invocations": 10,
         "memory-sizes": [
@@ -84,9 +84,9 @@
         "storage": {
           "address": "192.168.1.104:9011",
           "mapped_port": 9011,
-          "access_key": "WFSVcUtBtYA9R7PYaUEi7Tex46_MxA5vj-_L5tF73kw",
-          "secret_key": "9a2bd095659fa89e6d9cc5039194f2126ef83cf8dbf3df99d5bba582efc1e968",
-          "instance_id": "29393f687f61e6ec69ae0fba9aa6e20a58380b24ba385ff29a77c0d4d24410fd",
+          "access_key": "DrFyh3D7HvoQAfyDb8pV4ilcsIOaf1Z74T6Ji-x9sv8",
+          "secret_key": "eea3b96ca82e1b48702cb124a1bc0d5b79329af70786a5025230605185a69ed9",
+          "instance_id": "3d80152ad30de2bf0276203b2ef2def205bdc22c61378057e1fbefe203e73631",
           "output_buckets": [],
           "input_buckets": [],
           "type": "minio"

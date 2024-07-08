@@ -30,7 +30,7 @@ non-instrumented-nodejs:
 	./sebs.py experiment invoke perf-cost --config config/experiments/non-instrumented/120.uploader.json --output-dir experiment-results/nodejs/non-instrumented/120.uploader --deployment openwhisk --language nodejs --language-version "12"
 	./sebs.py experiment invoke perf-cost --config config/experiments/non-instrumented/210.thumbnailer.json --output-dir experiment-results/nodejs/non-instrumented/210.thumbnailer --deployment openwhisk --language nodejs --language-version "12"
 	./sebs.py experiment invoke perf-cost --config config/experiments/non-instrumented/221.video-processing.json --output-dir experiment-results/nodejs/non-instrumented/221.video-processing --deployment openwhisk --language nodejs --language-version "12"
-	./sebs.py experiment invoke perf-cost --config config/experiments/non-instrumented/501.graph-pagerank.json --output-dir experiment-results/nodejs/non-instrumented/501.graph-pagerank --deployment openwhisk --language nodejs --language-version "12"
+	./sebs.py experiment invoke perf-cost --config config/experiments/non-instrumented/501.graph-pagerank-nodejs.json --output-dir experiment-results/nodejs/non-instrumented/501.graph-pagerank --deployment openwhisk --language nodejs --language-version "12"
 
 
 # Instrumented NodeJS Experiments
@@ -39,14 +39,11 @@ instrumented-nodejs:
 	./sebs.py experiment invoke perf-cost --config config/experiments/instrumented/620.uploader.json --output-dir experiment-results/nodejs/instrumented/620.uploader-otel --deployment openwhisk --language nodejs --language-version "12"
 	./sebs.py experiment invoke perf-cost --config config/experiments/instrumented/630.thumbnailer.json --output-dir experiment-results/nodejs/instrumented/630.thumbnailer-otel --deployment openwhisk --language nodejs --language-version "12"
 	./sebs.py experiment invoke perf-cost --config config/experiments/instrumented/640.video-processing.json --output-dir experiment-results/nodejs/instrumented/640.video-processing-otel --deployment openwhisk --language nodejs --language-version "12"
-	./sebs.py experiment invoke perf-cost --config config/experiments/instrumented/660.graph-pagerank.json --output-dir experiment-results/nodejs/instrumented/660.graph-pagerank --deployment openwhisk --language nodejs --language-version "12"
+	./sebs.py experiment invoke perf-cost --config config/experiments/instrumented/660.graph-pagerank-nodejs.json --output-dir experiment-results/nodejs/instrumented/660.graph-pagerank --deployment openwhisk --language nodejs --language-version "12"
 
 
-
-
-cold-non-instrumented-python:
-	./sebs.py experiment invoke perf-cost --config config/experiments/cold/non-instrumented/110.dynamic-html.json --output-dir experiment-results/cold/python/non-instrumented/110.dynamic-html --deployment openwhisk
-	./sebs.py experiment invoke perf-cost --config config/experiments/cold/non-instrumented/120.uploader.json --output-dir experiment-results/cold/python/non-instrumented/120.uploader --deployment openwhisk
-	./sebs.py experiment invoke perf-cost --config config/experiments/cold/non-instrumented/210.thumbnailer.json --output-dir experiment-results/cold/python/non-instrumented/210.thumbnailer --deployment openwhisk
-	./sebs.py experiment invoke perf-cost --config config/experiments/cold/non-instrumented/221.video-processing.json --output-dir experiment-results/cold/python/non-instrumented/221.video-processing --deployment openwhisk
-	./sebs.py experiment invoke perf-cost --config config/experiments/cold/non-instrumented/501.graph-pagerank.json --output-dir experiment-results/cold/python/non-instrumented/501.graph-pagerank --deployment openwhisk
+pagerank:
+#	./sebs.py experiment invoke perf-cost --config config/experiments/non-instrumented/501.graph-pagerank.json --output-dir experiment-results/python/non-instrumented/501.graph-pagerank --deployment openwhisk
+#	./sebs.py experiment invoke perf-cost --config config/experiments/instrumented/660.graph-pagerank.json --output-dir experiment-results/python/instrumented/660.graph-pagerank --deployment openwhisk
+	./sebs.py experiment invoke perf-cost --config config/experiments/non-instrumented/501.graph-pagerank-nodejs.json --output-dir experiment-results/nodejs/non-instrumented/501.graph-pagerank --deployment openwhisk --language nodejs --language-version "12"
+	./sebs.py experiment invoke perf-cost --config config/experiments/instrumented/660.graph-pagerank-nodejs.json --output-dir experiment-results/nodejs/instrumented/660.graph-pagerank --deployment openwhisk --language nodejs --language-version "12"
