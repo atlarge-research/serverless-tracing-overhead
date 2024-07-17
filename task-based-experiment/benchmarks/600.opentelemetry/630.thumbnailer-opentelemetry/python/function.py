@@ -53,7 +53,6 @@ def handler(event):
         width = event.get('object').get('width')
         height = event.get('object').get('height')
 
-        # Add attributes to the span
         span.set_attribute("bucket", bucket)
         span.set_attribute("input_prefix", input_prefix)
         span.set_attribute("output_prefix", output_prefix)
