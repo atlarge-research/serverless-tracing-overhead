@@ -22,24 +22,14 @@ resource = Resource(attributes={
 trace.set_tracer_provider(TracerProvider(resource=resource))
 tracer = trace.get_tracer("function")
 
-# Setup the OTLP exporter to send traces to the collector using HTTP
 otlp_exporter = OTLPSpanExporter(
     endpoint="http://192.168.1.104:4317",
     insecure=True
 )
 
-# Setup the span processor with the exporter
 span_processor = SimpleSpanProcessor(otlp_exporter)
 trace.get_tracer_provider().add_span_processor(span_processor)
 
-
-# Disk-based solution
-#def resize_image(image_path, resized_path, w, h):
-#    with Image.open(image_path) as image:
-#        image.thumbnail((w,h))
-#        image.save(resized_path)
-
-# Memory-based solution
 def resize_image(image_bytes, w, h):
     with tracer.start_as_current_span("resize_image") as span:
         span.set_attribute("width", w)
@@ -63,7 +53,6 @@ def handler(event):
         width = event.get('object').get('width')
         height = event.get('object').get('height')
 
-        # Add attributes to the span
         span.set_attribute("bucket", bucket)
         span.set_attribute("input_prefix", input_prefix)
         span.set_attribute("output_prefix", output_prefix)
