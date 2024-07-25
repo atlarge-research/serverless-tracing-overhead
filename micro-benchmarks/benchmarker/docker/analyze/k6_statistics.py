@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import os
 import numpy as np
 
+plt.rcParams.update({'font.size': 18})
+
 
 class K6Statistics:
     def __init__(self, csv_file_path, cpu_file_path=None, plots_dir="plots"):
@@ -118,7 +120,7 @@ class K6Statistics:
                 if not metric_df.empty:
                     ax.plot(metric_df['timestamp'], metric_df['metric_value'], label=metric)
 
-            ax.set_title(f'Request Performance Metrics for Scenario: {scenario}')
+            # ax.set_title(f'Request Performance Metrics for Scenario: {scenario}')
             ax.set_xlabel('Time')
             ax.set_ylabel('Metric Value')
             ax.legend()
@@ -294,10 +296,10 @@ class K6Statistics:
             for element in ['whiskers', 'caps', 'medians']:
                 plt.setp(boxplots[element], color='black')
 
-            # ax.set_title(f'{self.metric_name_mapping[metric]} Across Scenarios', fontsize=14)
-            ax.set_xticklabels(formatted_scenarios, rotation=45, ha="right", fontsize=12)
-            ax.set_xlabel('Applications', fontsize=12)
-            ax.set_ylabel(f'{self.metric_name_mapping[metric]} (ms)', fontsize=12)
+            # ax.set_title(f'{self.metric_name_mapping[metric]} Across Scenarios')
+            ax.set_xticklabels(formatted_scenarios, rotation=45, ha="right")
+            ax.set_xlabel('Applications')
+            ax.set_ylabel(f'{self.metric_name_mapping[metric]} (ms)')
 
         # Adding overall plot adjustments and grid
         plt.grid(axis='y', linestyle='--', linewidth=0.7)
@@ -367,11 +369,10 @@ class K6Statistics:
             for element in ['whiskers', 'caps', 'medians']:
                 plt.setp(boxplots[element], color='black')
 
-            # Set the title using the mapped metric name
-            ax.set_title(self.metric_name_mapping.get(metric, metric).replace('_', ' ').title(), fontsize=14)
-            ax.set_yticklabels(formatted_scenarios, fontsize=12)
-            ax.set_ylabel('Scenarios', fontsize=12)
-            ax.set_xlabel(f'{self.metric_name_mapping.get(metric, metric)} Values (ms)', fontsize=12)
+            ax.set_title(self.metric_name_mapping.get(metric, metric).replace('_', ' ').title())
+            ax.set_yticklabels(formatted_scenarios)
+            ax.set_ylabel('Scenarios')
+            ax.set_xlabel(f'{self.metric_name_mapping.get(metric, metric)} Values (ms)')
 
         # Adding overall plot adjustments and grid
         plt.grid(axis='x', linestyle='--', linewidth=0.7)
@@ -460,11 +461,11 @@ class K6Statistics:
                     plt.setp(boxplots[element], color='black')
 
                 # Set the title using the mapped metric name
-                ax.set_title(f'{endpoint.title()} Endpoint', fontsize=14)
+                ax.set_title(f'{endpoint.title()} Endpoint')
                 ax.set_yticks(positions)
-                ax.set_yticklabels([format_scenario_name(name) for name in scenario_names], fontsize=12)
-                ax.set_ylabel('Applications', fontsize=12)
-                ax.set_xlabel(f'{self.metric_name_mapping.get(metric, metric)} (ms)', fontsize=12)
+                ax.set_yticklabels([format_scenario_name(name) for name in scenario_names])
+                ax.set_ylabel('Applications')
+                ax.set_xlabel(f'{self.metric_name_mapping.get(metric, metric)} (ms)')
 
                 # Adding grid lines
                 ax.grid(axis='x', linestyle='--', linewidth=0.7)
@@ -704,7 +705,7 @@ class K6Statistics:
             variation = scenario['scenario_name'].split('-')[1]
             if endpoint in endpoints and variation in variations:
                 scenario_df = filtered_df[filtered_df['scenario'] == scenario['scenario_name']]
-                metric_values = scenario_df['metric_value'].tolist()
+                metric_values = scenario_df['metric_value'].astype(float).tolist()
                 metric_data[endpoint][variation].extend(metric_values)
 
         # Create a figure with 4 subplots
@@ -716,26 +717,33 @@ class K6Statistics:
             positions = np.arange(1, len(variations) + 1)
             data_to_plot = [metric_data[endpoint][variation] for variation in variations]
 
-            # Plotting boxplot without outliers and with specified colors
+            # Plotting boxplot with outliers included
             boxplots = ax.boxplot(data_to_plot, positions=positions, widths=0.6, patch_artist=True, showfliers=False,
-                                  vert=False)  # Set vert=False for horizontal boxplots
+                                  vert=False)
             for patch, color in zip(boxplots['boxes'], [variation_colors[var] for var in variations]):
                 patch.set_facecolor(color)
                 patch.set_edgecolor('black')  # Adding edge color to boxes
 
             # Beautifying boxplot elements
-            for element in ['whiskers', 'caps', 'medians']:
+            for element in ['whiskers', 'caps', 'medians', 'fliers']:
                 plt.setp(boxplots[element], color='black')
 
             # Set the title using the endpoint name
-            ax.set_title(f'{endpoint.title()} Endpoint', fontsize=14)
+            ax.set_title(f'{endpoint.title()} Endpoint')
             ax.set_yticks(positions)
-            ax.set_yticklabels([variation.capitalize() for variation in variations], fontsize=12)
-            ax.set_xlabel('HTTP Request Duration (ms)', fontsize=12)
-            ax.set_ylabel('Variations', fontsize=12)
+            ax.set_yticklabels([variation.capitalize() for variation in variations])
+            ax.set_xlabel('HTTP Request Duration (ms)')
+            ax.set_ylabel('Variations')
+
 
             # Adding grid lines
             ax.grid(axis='x', linestyle='--', linewidth=0.7)
+
+            # Annotate median values
+            medians = [np.median(data) for data in data_to_plot]
+            for pos, median, variation in zip(positions, medians, variations):
+                ax.text(median, pos, f'{median:.2f}', va='center', ha='left', color='black',
+                        bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
 
         # Adding overall plot adjustments and grid
         plt.tight_layout()
@@ -767,7 +775,8 @@ class K6Statistics:
                 metric_values = scenario_df['metric_value'].astype(float)
                 avg = metric_values.mean()
                 max_val = metric_values.max()
-                med = metric_values.median()
+                med = np.median(metric_values)
+                # metric_values.median()
                 min_val = metric_values.min()
                 p90 = metric_values.quantile(0.90)
                 p95 = metric_values.quantile(0.95)
@@ -784,9 +793,11 @@ class K6Statistics:
 
         return pivot_table
 
+
+
     def generate_aggregated_http_req_duration_stats(self, scenario_list):
         # Define the columns for the output table
-        columns = ['Variation', 'Average', 'Max', 'Median', 'Min', 'P90', 'P95', 'P99']
+        columns = ['Variation', 'Endpoint', 'Average', 'Max', 'Median', 'Min', 'P90', 'P95', 'P99']
 
         # Initialize a list to hold the data for the table
         data = []
@@ -796,6 +807,7 @@ class K6Statistics:
 
         # Collecting all metric values for each scenario
         for scenario in scenario_list:
+            endpoint = scenario['endpoint']
             variation = scenario['scenario_name'].split('-')[1]
 
             scenario_df = filtered_df[filtered_df['scenario'] == scenario['scenario_name']]
@@ -803,19 +815,19 @@ class K6Statistics:
                 metric_values = scenario_df['metric_value'].astype(float)
                 avg = metric_values.mean()
                 max_val = metric_values.max()
-                med = metric_values.median()
+                med = np.median(metric_values)
                 min_val = metric_values.min()
                 p90 = metric_values.quantile(0.90)
                 p95 = metric_values.quantile(0.95)
                 p99 = metric_values.quantile(0.99)
 
-                data.append([variation, avg, max_val, med, min_val, p90, p95, p99])
+                data.append([variation, endpoint, avg, max_val, med, min_val, p90, p95, p99])
 
         # Create a DataFrame for the table
         stats_df = pd.DataFrame(data, columns=columns)
 
-        # Aggregate the statistics by variation
-        aggregated_stats = stats_df.groupby('Variation').agg({
+        # Aggregate the statistics by variation and endpoint
+        aggregated_stats = stats_df.groupby(['Variation', 'Endpoint']).agg({
             'Average': 'mean',
             'Max': 'max',
             'Median': 'median',
@@ -827,20 +839,139 @@ class K6Statistics:
 
         return aggregated_stats
 
-    def generate_aggregated_http_req_duration_stats_variation_endpoint(self, scenario_list):
-        # Define the columns for the output table
-        columns = ['Language', 'Variation', 'Endpoint', 'Average', 'Max', 'Median', 'Min', 'P90', 'P95', 'P99']
+    # def generate_aggregated_http_req_duration_stats_variation(self, scenario_list):
+    #     # Define the columns for the output table
+    #     columns = ['Variation', 'Average', 'Max', 'Median', 'Min', 'P90', 'P95', 'P99']
+    #
+    #     # Initialize a list to hold the data for the table
+    #     data = []
+    #
+    #     # Filter the DataFrame for the http_req_duration metric
+    #     filtered_df = self.data[self.data['metric_name'] == 'http_req_duration']
+    #
+    #     # Collecting all metric values for each scenario
+    #     for scenario in scenario_list:
+    #         variation = scenario['scenario_name'].split('-')[1]
+    #
+    #         scenario_df = filtered_df[filtered_df['scenario'] == scenario['scenario_name']]
+    #         if not scenario_df.empty:
+    #             metric_values = scenario_df['metric_value'].astype(float)
+    #             avg = metric_values.mean()
+    #             max_val = metric_values.max()
+    #             med = np.median(metric_values)
+    #             min_val = metric_values.min()
+    #             p90 = metric_values.quantile(0.90)
+    #             p95 = metric_values.quantile(0.95)
+    #             p99 = metric_values.quantile(0.99)
+    #
+    #             data.append([variation, avg, max_val, med, min_val, p90, p95, p99])
+    #
+    #     # Create a DataFrame for the table
+    #     stats_df = pd.DataFrame(data, columns=columns)
+    #     print("Table Data (before aggregation):")
+    #     print(stats_df)
+    #
+    #     # Aggregate the statistics by variation
+    #     aggregated_stats = stats_df.groupby('Variation').agg({
+    #         'Average': 'mean',
+    #         'Max': 'max',
+    #         'Median': 'median',
+    #         'Min': 'min',
+    #         'P90': 'mean',
+    #         'P95': 'mean',
+    #         'P99': 'mean'
+    #     }).reset_index()
+    #
+    #     print("Aggregated Table Data:")
+    #     print(aggregated_stats)
+    #
+    #     return aggregated_stats
+    #
+    # def plot_aggregated_results_across_variations(self, scenario_list, plot_name="aggregated_variations_plot.png",
+    #                                               save_plot=True):
+    #     # Define the variations and their colors
+    #     variations = ['standard', 'otel', 'elastic']
+    #     variation_colors = {
+    #         'standard': '#1f77b4',  # blue
+    #         'otel': '#ff7f0e',  # orange
+    #         'elastic': '#2ca02c'  # green
+    #     }
+    #
+    #     # Prepare data for aggregation and plotting
+    #     metric_data = {variation: [] for variation in variations}
+    #
+    #     # Filter the DataFrame for the http_req_duration metric
+    #     filtered_df = self.data[self.data['metric_name'] == 'http_req_duration']
+    #
+    #     # Collecting all metric values for each variation
+    #     for scenario in scenario_list:
+    #         variation = scenario['scenario_name'].split('-')[1]
+    #         if variation in variations:
+    #             scenario_df = filtered_df[filtered_df['scenario'] == scenario['scenario_name']]
+    #             metric_values = scenario_df['metric_value'].astype(float).tolist()
+    #             metric_data[variation].extend(metric_values)
+    #
+    #     print("Plot Data (before plotting):")
+    #     for variation, values in metric_data.items():
+    #         print(f"{variation}: {values[:10]}...")  # Print first 10 values for brevity
+    #
+    #     # Create a figure
+    #     fig, ax = plt.subplots(figsize=(10, 8))
+    #
+    #     # Plotting
+    #     positions = np.arange(1, len(variations) + 1)
+    #     data_to_plot = [metric_data[variation] for variation in variations]
+    #
+    #     # Plotting boxplot without outliers and with specified colors
+    #     boxplots = ax.boxplot(data_to_plot, positions=positions, widths=0.6, patch_artist=True, showfliers=False,
+    #                           vert=False)
+    #     for patch, color in zip(boxplots['boxes'], [variation_colors[var] for var in variations]):
+    #         patch.set_facecolor(color)
+    #         patch.set_edgecolor('black')  # Adding edge color to boxes
+    #
+    #     # Beautifying boxplot elements
+    #     for element in ['whiskers', 'caps', 'medians']:
+    #         plt.setp(boxplots[element], color='black')
+    #
+    #     # Annotate median values
+    #     medians = [np.median(data) for data in data_to_plot]
+    #     for pos, median, variation in zip(positions, medians, variations):
+    #         ax.text(median, pos, f'{median:.2f}', va='center', ha='left', fontsize=10, color='black',
+    #                 bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
+    #
+    #     # Set the title and labels
+    #     ax.set_title('Aggregated HTTP Request Duration Across Variations')
+    #     ax.set_yticks(positions)
+    #     ax.set_yticklabels([variation.capitalize() for variation in variations])
+    #     ax.set_xlabel('HTTP Request Duration (ms)')
+    #     ax.set_ylabel('Variations')
+    #
+    #     # Adding grid lines
+    #     ax.grid(axis='x', linestyle='--', linewidth=0.7)
+    #
+    #     # Adding overall plot adjustments and grid
+    #     plt.tight_layout()
+    #
+    #     # Save plot as PNG file
+    #     plt.savefig(plot_name)
+    #     if not save_plot:
+    #         plt.show()
+    #     plt.close(fig)
 
-        # Initialize a list to hold the data for the table
-        data = []
+    #######
+    def aggregate_http_req_duration_stats(self, data, scenario_list):
+        # Define the columns for the output DataFrame
+        columns = ['Variation', 'Average', 'Max', 'Median', 'Min', 'P90', 'P95', 'P99']
+
+        # Initialize a list to hold the data
+        aggregated_data = []
 
         # Filter the DataFrame for the http_req_duration metric
-        filtered_df = self.data[self.data['metric_name'] == 'http_req_duration']
+        filtered_df = data[data['metric_name'] == 'http_req_duration']
 
         # Collecting all metric values for each scenario
         for scenario in scenario_list:
-            language = scenario['language']
-            endpoint = scenario['endpoint']
+
             variation = scenario['scenario_name'].split('-')[1]
 
             scenario_df = filtered_df[filtered_df['scenario'] == scenario['scenario_name']]
@@ -848,19 +979,455 @@ class K6Statistics:
                 metric_values = scenario_df['metric_value'].astype(float)
                 avg = metric_values.mean()
                 max_val = metric_values.max()
-                med = metric_values.median()
+                med = np.median(metric_values)
                 min_val = metric_values.min()
                 p90 = metric_values.quantile(0.90)
                 p95 = metric_values.quantile(0.95)
                 p99 = metric_values.quantile(0.99)
 
-                data.append([language, variation, endpoint, avg, max_val, med, min_val, p90, p95, p99])
+                aggregated_data.append([variation, avg, max_val, med, min_val, p90, p95, p99])
 
-        # Create a DataFrame for the table
-        stats_df = pd.DataFrame(data, columns=columns)
+        # Create a DataFrame for the aggregated data
+        aggregated_stats_df = pd.DataFrame(aggregated_data, columns=columns)
 
-        # Pivot the table to get a cleaner format with each language, endpoint, and variation combination as a row
-        pivot_table = stats_df.pivot_table(index=['Language', 'Variation', 'Endpoint'],
-                                           values=['Average', 'Max', 'Median', 'Min', 'P90', 'P95', 'P99'])
+        # Aggregate the statistics by variation
+        final_aggregated_stats = aggregated_stats_df.groupby('Variation').agg({
+            'Average': 'mean',
+            'Max': 'max',
+            'Median': 'median',
+            'Min': 'min',
+            'P90': 'mean',
+            'P95': 'mean',
+            'P99': 'mean'
+        }).reset_index()
 
-        return pivot_table
+        return final_aggregated_stats
+
+    def generate_aggregated_http_req_duration_stats_variation(self, scenario_list):
+        # Aggregate the data using the shared function
+        aggregated_stats = self.aggregate_http_req_duration_stats(self.data, scenario_list)
+
+        print("Aggregated Table Data:")
+        print(aggregated_stats)
+
+        return aggregated_stats
+
+    def plot_aggregated_results_across_variations(self, scenario_list, plot_name="aggregated_variations_plot.png",
+                                                  save_plot=True):
+        # Aggregate the data using the shared function
+        aggregated_stats = self.aggregate_http_req_duration_stats(self.data, scenario_list)
+
+        print("Aggregated Plot Data:")
+        print(aggregated_stats)
+
+        # Prepare data for plotting
+        variations = aggregated_stats['Variation'].tolist()
+        variation_colors = {
+            'standard': '#1f77b4',  # blue
+            'otel': '#ff7f0e',  # orange
+            'elastic': '#2ca02c'  # green
+        }
+        data_to_plot = []
+
+        for variation in variations:
+            variation_data = self.data[(self.data['metric_name'] == 'http_req_duration') &
+                                       (self.data['scenario'].str.contains(variation))]['metric_value'].astype(
+                float).tolist()
+            data_to_plot.append(variation_data)
+
+        # Create a figure
+        fig, ax = plt.subplots(figsize=(10, 8))
+
+        # Plotting
+        positions = np.arange(1, len(variations) + 1)
+
+        # Plotting boxplot without outliers and with specified colors
+        boxplots = ax.boxplot(data_to_plot, positions=positions, widths=0.6, patch_artist=True, showfliers=False,
+                              vert=False)
+        for patch, color in zip(boxplots['boxes'], [variation_colors[var] for var in variations]):
+            patch.set_facecolor(color)
+            patch.set_edgecolor('black')  # Adding edge color to boxes
+
+        # Beautifying boxplot elements
+        for element in ['whiskers', 'caps', 'medians']:
+            plt.setp(boxplots[element], color='black')
+
+        # Annotate median values
+        medians = [np.median(data) for data in data_to_plot]
+        for pos, median, variation in zip(positions, medians, variations):
+            ax.text(median, pos, f'{median:.2f}', va='center', ha='left', color='black',
+                    bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
+
+        # Set the title and labels
+        ax.set_title('Aggregated HTTP Request Duration Across Variations')
+        ax.set_yticks(positions)
+        ax.set_yticklabels(
+            [variation.capitalize().replace('Otel', 'OpenTelemetry').replace('Elastic', 'Elastic APM') for variation in
+             variations])
+        ax.set_xlabel('HTTP Request Duration (ms)')
+        ax.set_ylabel('Variations')
+
+        # Adding grid lines
+        ax.grid(axis='x', linestyle='--', linewidth=0.7)
+
+        # Adding overall plot adjustments and grid
+        plt.tight_layout()
+
+        # Save plot as PNG file
+        plt.savefig(plot_name)
+        if not save_plot:
+            plt.show()
+        plt.close(fig)
+
+    def create_boxplots(self):
+        # Load the dataset
+        # Filter the dataframe for the metric_name 'http_req_duration'
+        df_duration = self.data[self.data['metric_name'] == 'http_req_duration']
+
+        # Ensure the 'metadata' column is of string type
+        df_duration['extra_tags'] = df_duration['extra_tags'].astype(str)
+
+        # Extract the configurations from the 'extra_tags' column
+        df_duration['configuration'] = df_duration['extra_tags'].str.extract(r'(standard|elastic|otel)')
+
+        # Prepare the data for plotting
+        data_standard = df_duration[df_duration['configuration'] == 'standard']['metric_value']
+        data_elastic = df_duration[df_duration['configuration'] == 'elastic']['metric_value']
+        data_otel = df_duration[df_duration['configuration'] == 'otel']['metric_value']
+
+        # Create a figure with one boxplot
+        fig, ax = plt.subplots(figsize=(12, 8))
+
+        # Colors for the boxplots
+        colors = ['lightblue', 'lightgreen', 'lightcoral']
+
+        # Define a helper function to annotate the medians
+        def annotate_median(ax, data, position):
+            median = data.median()
+            ax.annotate(f'{median:.2f}',
+                        xy=(median, position),
+                        xytext=(median, position + 0.275),
+                        bbox=dict(boxstyle='round,pad=0.3', edgecolor='black', facecolor='white'),
+                        color='black',
+                        ha='center',
+                        va='center')
+
+        # Combined boxplot for all configurations without outliers
+        boxplot_data = [data_standard.dropna(), data_elastic.dropna(), data_otel.dropna()]
+        bplot = ax.boxplot(boxplot_data, vert=False, labels=['Standard', 'Elastic', 'Otel'], patch_artist=True,
+                           showfliers=False)
+
+        # Set colors for each box
+        for patch, color in zip(bplot['boxes'], colors):
+            patch.set_facecolor(color)
+
+        for median in bplot['medians']:
+            median.set_color('black')
+
+        # Annotate the medians
+        annotate_median(ax, data_standard, 1)
+        annotate_median(ax, data_elastic, 2)
+        annotate_median(ax, data_otel, 3)
+
+        # Set titles and labels
+        # ax.set_title('HTTP Request Duration by Configuration', fontsize=16, fontweight='bold')
+        ax.set_ylabel('Configuration')
+        ax.set_xlabel('Request Duration (ms)')
+
+        # Add grid lines
+        ax.xaxis.grid(True, linestyle='--', which='major', color='grey', alpha=0.7)
+        ax.yaxis.grid(True, linestyle='--', which='major', color='grey', alpha=0.7)
+
+        plt.tight_layout()
+        plot_name = "aggregated_plot.png"
+        plt.savefig(plot_name)
+        plt.close(fig)
+
+    def create_statistics_table(self):
+        # Load the dataset
+
+        # Filter the dataframe for the metric_name 'http_req_duration'
+        df_duration = self.data[self.data['metric_name'] == 'http_req_duration']
+
+        # Ensure the 'extra_tags' column is of string type
+        df_duration['extra_tags'] = df_duration['extra_tags'].astype(str)
+
+        # Extract the configurations from the 'extra_tags' column
+        df_duration['configuration'] = df_duration['extra_tags'].str.extract(r'(standard|elastic|otel)')
+
+        # Define a helper function to calculate the statistics
+        def calculate_statistics(data):
+            return {
+                'median': data.median(),
+                'avg': data.mean(),
+                'max_val': data.max(),
+                'min_val': data.min(),
+                'p75': data.quantile(0.75),
+                'p90': data.quantile(0.90),
+                'p95': data.quantile(0.95),
+                'p99': data.quantile(0.99)
+            }
+
+        # Calculate statistics for each configuration
+        stats_standard = calculate_statistics(df_duration[df_duration['configuration'] == 'standard']['metric_value'])
+        stats_elastic = calculate_statistics(df_duration[df_duration['configuration'] == 'elastic']['metric_value'])
+        stats_otel = calculate_statistics(df_duration[df_duration['configuration'] == 'otel']['metric_value'])
+
+        # Create a dataframe to display the results
+        stats_df = pd.DataFrame({
+            'Configuration': ['Standard', 'Elastic', 'Otel'],
+            'Median': [stats_standard['median'], stats_elastic['median'], stats_otel['median']],
+            'Avg': [stats_standard['avg'], stats_elastic['avg'], stats_otel['avg']],
+            'Max Value': [stats_standard['max_val'], stats_elastic['max_val'], stats_otel['max_val']],
+            'Min Value': [stats_standard['min_val'], stats_elastic['min_val'], stats_otel['min_val']],
+            'P90': [stats_standard['p90'], stats_elastic['p90'], stats_otel['p90']],
+            'P95': [stats_standard['p95'], stats_elastic['p95'], stats_otel['p95']],
+            'P99': [stats_standard['p99'], stats_elastic['p99'], stats_otel['p99']]
+        })
+
+        stats_df = stats_df.round(2)
+
+        return stats_df
+
+    def create_statistics_table_by_endpoint(self):
+        # Load the dataset
+        df = self.data
+
+        # Filter the dataframe for the metric_name 'http_req_duration'
+        df_duration = df[df['metric_name'] == 'http_req_duration']
+
+        # Ensure the 'metadata' column is of string type
+        df_duration['extra_tags'] = df_duration['extra_tags'].astype(str)
+
+        # Extract the configurations from the 'extra_tags' column
+        df_duration['configuration'] = df_duration['extra_tags'].str.extract(r'(standard|elastic|otel)')
+
+        # Extract the endpoint from the URL
+        df_duration['endpoint'] = df_duration['url'].str.extract(r'(http://[^/]+(/[^?]*))')[1]
+
+        # Group by endpoint and configuration
+        grouped = df_duration.groupby(['endpoint', 'configuration'])
+
+        # Calculate statistics for each group
+        stats = grouped['metric_value'].agg(
+            # count='count',
+            mean='mean',
+            # std='std',
+            min='min',
+            # q25=lambda x: x.quantile(0.25),
+            median='median',
+            # q75=lambda x: x.quantile(0.75),
+            q90=lambda x: x.quantile(0.90),
+            q95=lambda x: x.quantile(0.95),
+            q99=lambda x: x.quantile(0.99),
+            max='max'
+        ).reset_index()
+
+        stats = stats.round(2)
+
+        # Rename columns for better readability
+        stats.columns = [
+            'Endpoint',
+            'Configuration',
+            # 'Count',
+            'Mean',
+            # 'Std Dev',
+            'Min',
+            # '25th Percentile',
+            'Median',
+            # '75th Percentile',
+            'p90',
+            'p95',
+            'p99',
+            'Max'
+        ]
+
+        return stats
+
+    def plot_endpoint_boxplots(self):
+        # Load the dataset
+        df = self.data
+
+        # Filter the dataframe for the metric_name 'http_req_duration'
+        df_duration = df[df['metric_name'] == 'http_req_duration']
+
+        # Ensure the 'metadata' column is of string type
+        df_duration['extra_tags'] = df_duration['extra_tags'].astype(str)
+
+        # Extract the configurations from the 'extra_tags' column
+        df_duration['configuration'] = df_duration['extra_tags'].str.extract(r'(standard|elastic|otel)')
+
+        # Extract the endpoint from the URL
+        df_duration['endpoint'] = df_duration['url'].str.extract(r'(http://[^/]+(/[^?]*))')[1]
+
+        # Get the unique endpoints
+        endpoints = df_duration['endpoint'].unique()
+
+        # Create a figure with subplots for each endpoint
+        fig, axs = plt.subplots(2, 2, figsize=(15, 10))
+        axs = axs.flatten()
+
+        # Colors for the boxplots
+        colors = ['lightblue', 'lightgreen', 'lightcoral']
+
+        # Define a helper function to annotate the medians
+        def annotate_median(ax, data, position):
+            median = data.median()
+            ax.annotate(f'{median:.2f}',
+                        xy=(position, median),
+                        xytext=(position + 0.35, median),
+                        bbox=dict(boxstyle='round,pad=0.3', edgecolor='black', facecolor='white'),
+                        color='black',
+                        ha='center',
+                        va='center')
+
+        # Plot each endpoint
+        for i, endpoint in enumerate(endpoints):
+            ax = axs[i]
+
+            # Filter data for each endpoint
+            data_standard = \
+            df_duration[(df_duration['endpoint'] == endpoint) & (df_duration['configuration'] == 'standard')][
+                'metric_value']
+            data_elastic = \
+            df_duration[(df_duration['endpoint'] == endpoint) & (df_duration['configuration'] == 'elastic')][
+                'metric_value']
+            data_otel = df_duration[(df_duration['endpoint'] == endpoint) & (df_duration['configuration'] == 'otel')][
+                'metric_value']
+
+            # Combined boxplot for the current endpoint
+            boxplot_data = [data_standard.dropna(), data_elastic.dropna(), data_otel.dropna()]
+            bplot = ax.boxplot(boxplot_data, labels=['Standard', 'Elastic APM', 'OpenTelemetry'], patch_artist=True,
+                               showfliers=False)
+
+            # Set colors
+            for patch, color in zip(bplot['boxes'], colors):
+                patch.set_facecolor(color)
+
+            for median in bplot['medians']:
+                median.set_color('black')
+
+            # Add grid
+            ax.yaxis.grid(True, linestyle='--', which='major', color='grey', alpha=0.5)
+
+            # Annotate the medians
+            annotate_median(ax, data_standard, 1)
+            annotate_median(ax, data_elastic, 2)
+            annotate_median(ax, data_otel, 3)
+
+            # Set titles and labels
+            ax.set_title(f'Endpoint: {endpoint}')
+            ax.set_ylabel('Request Duration (ms)')
+
+        # fig.suptitle('HTTP Request Duration by Endpoint and Configuration')
+        plt.tight_layout(rect=[0, 0, 1, 0.96])
+        plot_name = "aggregated_plot_endpoints.png"
+        plt.savefig(plot_name)
+        plt.close(fig)
+
+    def create_statistics_table_by_language(self):
+        # Load the dataset
+        df = self.data
+
+        # Filter the dataframe for the metric_name 'http_req_duration'
+        df_duration = df[df['metric_name'] == 'http_req_duration']
+
+        # Ensure the 'metadata' column is of string type
+        df_duration['extra_tags'] = df_duration['extra_tags'].astype(str)
+
+        # Extract the programming language from the 'extra_tags' column
+        df_duration['language'] = df_duration['extra_tags'].str.extract(r'language=(python|java|go)')[0]
+
+        # Extract the endpoint from the URL
+        df_duration['endpoint'] = df_duration['url'].str.extract(r'(http://[^/]+(/[^?]*))')[1]
+
+        # Group by language
+        grouped = df_duration.groupby(['language'])
+
+        # Calculate statistics for each group
+        stats = grouped['metric_value'].agg(
+            mean='mean',
+            min='min',
+            median='median',
+            q90=lambda x: x.quantile(0.90),
+            q95=lambda x: x.quantile(0.95),
+            q99=lambda x: x.quantile(0.99),
+            max='max'
+        ).reset_index()
+
+        stats = stats.round(2)
+
+        # Rename columns for better readability
+        stats.columns = [
+            'Language',
+            'Mean',
+            'Min',
+            'Median',
+            'p90',
+            'p95',
+            'p99',
+            'Max'
+        ]
+
+        return stats
+
+    def create_statistics_table_languages(self):
+        # Load the dataset
+        # Assuming self.data is a pandas DataFrame already loaded with the necessary data
+
+        # Filter the dataframe for the metric_name 'http_req_duration'
+        df_duration = self.data[self.data['metric_name'] == 'http_req_duration']
+
+        # Ensure the 'extra_tags' column is of string type
+        df_duration['extra_tags'] = df_duration['extra_tags'].astype(str)
+
+        # Extract the configurations from the 'extra_tags' column
+        df_duration['configuration'] = df_duration['extra_tags'].str.extract(r'(standard|elastic|otel)')
+
+        # Extract the programming languages from the 'extra_tags' column
+        df_duration['language'] = df_duration['extra_tags'].str.extract(r'(go|java|python)')
+
+        # Define a helper function to calculate the statistics
+        def calculate_statistics(data):
+            return {
+                'median': data.median(),
+                'mean': data.mean(),
+                'max': data.max(),
+                'min': data.min(),
+                'p90': data.quantile(0.90),
+                'p95': data.quantile(0.95),
+                'p99': data.quantile(0.99)
+            }
+
+        # Initialize an empty list to store the results
+        results = []
+
+        # Iterate over each language
+        for language in df_duration['language'].unique():
+            # Filter the dataframe for the current language
+            df_lang = df_duration[df_duration['language'] == language]
+
+            # Calculate statistics for each configuration
+            stats_standard = calculate_statistics(df_lang[df_lang['configuration'] == 'standard']['metric_value'])
+            stats_elastic = calculate_statistics(df_lang[df_lang['configuration'] == 'elastic']['metric_value'])
+            stats_otel = calculate_statistics(df_lang[df_lang['configuration'] == 'otel']['metric_value'])
+
+            # Append the results to the list
+            results.append(['Standard', language.capitalize(), stats_standard['median'], stats_standard['mean'],
+                            stats_standard['max'], stats_standard['min'], stats_standard['p90'], stats_standard['p95'],
+                            stats_standard['p99']])
+            results.append(
+                ['Elastic', language.capitalize(), stats_elastic['median'], stats_elastic['mean'], stats_elastic['max'],
+                 stats_elastic['min'], stats_elastic['p90'], stats_elastic['p95'], stats_elastic['p99']])
+            results.append(['Otel', language.capitalize(), stats_otel['median'], stats_otel['mean'], stats_otel['max'],
+                            stats_otel['min'], stats_otel['p90'], stats_otel['p95'], stats_otel['p99']])
+
+        # Create a dataframe to display the results
+        stats_df = pd.DataFrame(results,
+                                columns=['Configuration', 'Language', 'Median', 'Mean', 'Max', 'Min', 'P90', 'P95',
+                                         'P99'])
+
+        stats_df = stats_df.round(2)
+
+        return stats_df
+

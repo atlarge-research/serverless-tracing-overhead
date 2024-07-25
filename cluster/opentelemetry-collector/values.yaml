@@ -1,0 +1,58 @@
+mode: deployment
+
+image:
+  repository: "otel/opentelemetry-collector-k8s"
+
+command:
+  name: "otelcol-k8s"
+
+
+# config:
+#   receivers:
+#     otlp:
+#       protocols:
+#         grpc:
+#           endpoint: 0.0.0.0:4317
+#         http:
+#           endpoint: 0.0.0.0:4318
+
+#   processors:
+#     batch: {}
+
+#   exporters:
+#     # logging: null
+#     otlp:
+#       endpoint: "http://apm-server:8200"
+#       tls:
+#         insecure: true
+
+#   service:
+#     pipelines:
+#       traces:
+#         receivers: [otlp]
+#         processors: [batch]
+#         exporters: [otlp]
+config:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+
+  processors:
+    batch: {}
+
+  exporters:
+    otlp:
+      endpoint: "http://apm-server-quickstart-apm-http.telemetry.svc:8200"
+      tls:
+        insecure: true
+
+  service:
+    pipelines:
+      traces:
+        receivers: [otlp]
+        processors: [batch]
+        exporters: [otlp]

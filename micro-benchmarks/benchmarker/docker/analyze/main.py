@@ -6,27 +6,55 @@ def analyze(k6_path, cpu_file_path, plots_dir, metrics_dir):
 
     scenarios = k6_stats.get_scenarios()
 
+    k6_stats.create_boxplots()
+    k6_stats.plot_endpoint_boxplots()
+    stats = k6_stats.create_statistics_table()
+    print(stats)
+    stats_2 = k6_stats.create_statistics_table_by_endpoint()
+    print(stats_2)
+
+    stats_3 = k6_stats.create_statistics_table_by_language()
+    print(stats_3)
+
+    stats_4 = k6_stats.create_statistics_table_languages()
+    print(stats_4)
+
     k6_stats.plot_aggregated_results_by_variation_and_endpoint(scenarios, plot_name="aggregated_plot.png")
+    k6_stats.plot_aggregated_results_across_variations(scenarios, plot_name="aggregated_variations_plot.png")
 
-    table = k6_stats.generate_http_req_duration_stats(scenarios)
-    print(table)
-
-    table = k6_stats.generate_aggregated_http_req_duration_stats(scenarios)
-    print(table)
-
-    table = k6_stats.generate_aggregated_http_req_duration_stats_variation_endpoint(scenarios)
-    print(table)
-
-
-
-
+    # k6_stats.create_boxplots()
+    # k6_stats.plot_endpoint_boxplots()
+    # stats = k6_stats.create_statistics_table()
+    # print(stats)
+    # stats_2 = k6_stats.create_statistics_table_by_endpoint()
+    # print(stats_2)
+    #
+    # stats_3 = k6_stats.create_statistics_table_by_language()
+    # print(stats_3)
+    #
+    # stats_4 = k6_stats.create_statistics_table_languages()
+    # print(stats_4)
+    #
+    # print("k6_stats.generate_http_req_duration_stats(scenarios)")
+    # table = k6_stats.generate_http_req_duration_stats(scenarios)
+    # print(table)
+    #
+    # print("k6_stats.generate_aggregated_http_req_duration_stats(scenarios)")
+    # table = k6_stats.generate_aggregated_http_req_duration_stats(scenarios)
+    # print(table)
+    #
+    # print("k6_stats.generate_aggregated_http_req_duration_stats_variation(scenarios)")
+    # table = k6_stats.generate_aggregated_http_req_duration_stats_variation(scenarios)
+    # print(table)
+    #
+    #
     # endpoints = ['json', 'db', 'queries', 'updates']
     # languages = ['python', 'java', 'go']
     # variations = ['standard', 'otel', 'elastic']
     #
     # k6_stats.show_metrics()
     # k6_stats.show_total_number_of_requests()
-    #
+    
     # for lang in languages:
     #     k6_stats.plot_overhead([f'{lang}-standard-json', f'{lang}-otel-json', f'{lang}-elastic-json'],
     #                            f'{lang}-json-overhead')
@@ -63,10 +91,7 @@ def analyze(k6_path, cpu_file_path, plots_dir, metrics_dir):
     #         container_groups[container_name] = set()
     #
     #     container_groups[container_name].add(scenario['endpoint'])
-    #
-    # # Show metrics for all scenarios
-    # k6_stats.show_metrics_scenarios(scenarios, metrics_dir)
-    #
+
     # # Plot CPU usage by Scenario
     # for lang in languages:
     #     k6_stats.plot_cpu_usage_by_scenarios(scenarios, lang, 'json',
@@ -98,6 +123,7 @@ if __name__ == '__main__':
 
     ## New 2
     k6_path_2 = '../results/2024-05-22/2024-05-22_19-33.csv'
+    # k6_path_2 = '../results/2024-05-22/2024-05-22_19-33-test.csv'
     cpu_file_path_2 = "../results/2024-05-22/cpu_usage_2024-05-22_19-33.csv"
     plots_dir_2 = "plots/2024-05-22/19-33"
     metrics_dir_2 = "metrics/2024-05-22/19-33"

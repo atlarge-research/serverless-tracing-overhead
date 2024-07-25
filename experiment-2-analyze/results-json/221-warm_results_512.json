@@ -1,0 +1,242 @@
+{
+  "_invocations": {
+    "221.video-processing-nodejs-12": {
+      "000f7fc15daa4ad98f7fc15daaead974": {
+        "billing": {
+          "_billed_time": null,
+          "_gb_seconds": 0,
+          "_memory": null
+        },
+        "output": {
+          "begin": 1720544262.177,
+          "compute_time": 3609909.213,
+          "end": 1720544265.787,
+          "is_cold": false,
+          "request_id": "000f7fc15daa4ad98f7fc15daaead974",
+          "result": {
+            "measurement": {
+              "compute_time": 3.451,
+              "download_size": 15350231,
+              "download_time": 0.158,
+              "upload_size": 592095,
+              "upload_time": 0
+            },
+            "result": {
+              "bucket": "sebs-benchmarks-8010e764",
+              "key": [
+                "221.video-processing-0-output/processed-city.531b4887.mp4",
+                {}
+              ]
+            }
+          },
+          "results_time": 0
+        },
+        "provider_times": {
+          "execution": 0,
+          "initialization": 0
+        },
+        "request_id": "000f7fc15daa4ad98f7fc15daaead974",
+        "stats": {
+          "cold_start": false,
+          "failure": false,
+          "memory_used": null
+        },
+        "times": {
+          "benchmark": 3610000,
+          "client": 3678499,
+          "client_begin": "2024-07-09 18:57:42.119572",
+          "client_end": "2024-07-09 18:57:45.798071",
+          "http_first_byte_return": 3.678418,
+          "http_startup": 0.005758,
+          "initialization": 0
+        }
+      },
+      "0013a5c05b8f444f93a5c05b8f644f9e": {
+        "billing": {
+          "_billed_time": null,
+          "_gb_seconds": 0,
+          "_memory": null
+        },
+        "output": {
+          "begin": 1720531800.343,
+          "compute_time": 2016202.806,
+          "end": 1720531802.359,
+          "is_cold": false,
+          "request_id": "0013a5c05b8f444f93a5c05b8f644f9e",
+          "result": {
+            "measurement": {
+              "compute_time": 1.648,
+              "download_size": 15350231,
+              "download_time": 0.368,
+              "upload_size": 592095,
+              "upload_time": 0
+            },
+            "result": {
+              "bucket": "sebs-benchmarks-8010e764",
+              "key": [
+                "221.video-processing-0-output/processed-city.b23a0e11.mp4",
+                {}
+              ]
+            }
+          },
+          "results_time": 0
+        },
+        "provider_times": {
+          "execution": 0,
+          "initialization": 0
+        },
+        "request_id": "0013a5c05b8f444f93a5c05b8f644f9e",
+        "stats": {
+          "cold_start": false,
+          "failure": false,
+          "memory_used": null
+        },
+        "times": {
+          "benchmark": 2016000,
+          "client": 2057837,
+          "client_begin": "2024-07-09 15:30:00.305696",
+          "client_end": "2024-07-09 15:30:02.363533",
+          "http_first_byte_return": 2.057746,
+          "http_startup": 0.018736,
+          "initialization": 0
+        }
+      },
+      "fffa45d80cb84580ba45d80cb88580de": {
+        "billing": {
+          "_billed_time": null,
+          "_gb_seconds": 0,
+          "_memory": null
+        },
+        "output": {
+          "begin": 1720542143.88,
+          "compute_time": 1773127.08,
+          "end": 1720542145.653,
+          "is_cold": false,
+          "request_id": "fffa45d80cb84580ba45d80cb88580de",
+          "result": {
+            "measurement": {
+              "compute_time": 1.425,
+              "download_size": 15350231,
+              "download_time": 0.348,
+              "upload_size": 592095,
+              "upload_time": 0
+            },
+            "result": {
+              "bucket": "sebs-benchmarks-8010e764",
+              "key": [
+                "221.video-processing-0-output/processed-city.f659fadf.mp4",
+                {}
+              ]
+            }
+          },
+          "results_time": 0
+        },
+        "provider_times": {
+          "execution": 0,
+          "initialization": 0
+        },
+        "request_id": "fffa45d80cb84580ba45d80cb88580de",
+        "stats": {
+          "cold_start": false,
+          "failure": false,
+          "memory_used": null
+        },
+        "times": {
+          "benchmark": 1773000,
+          "client": 1815908,
+          "client_begin": "2024-07-09 18:22:23.841607",
+          "client_end": "2024-07-09 18:22:25.657515",
+          "http_first_byte_return": 1.815814,
+          "http_startup": 0.020259,
+          "initialization": 0
+        }
+      }
+    }
+  },
+  "_metrics": {},
+  "begin_time": 1720531153.185085,
+  "config": {
+    "deployment": {
+      "credentials": {},
+      "experimentalManifest": false,
+      "name": "openwhisk",
+      "removeCluster": false,
+      "resources": {
+        "benchmarks": "sebs-benchmarks-8010e764",
+        "docker_password": "",
+        "docker_registry": "",
+        "docker_username": "",
+        "resources_id": "8010e764",
+        "storage": {
+          "access_key": "DrFyh3D7HvoQAfyDb8pV4ilcsIOaf1Z74T6Ji-x9sv8",
+          "address": "192.168.1.104:9011",
+          "input_buckets": [],
+          "instance_id": "3d80152ad30de2bf0276203b2ef2def205bdc22c61378057e1fbefe203e73631",
+          "mapped_port": 9011,
+          "output_buckets": [],
+          "secret_key": "eea3b96ca82e1b48702cb124a1bc0d5b79329af70786a5025230605185a69ed9",
+          "type": "minio"
+        }
+      },
+      "shutdownStorage": false,
+      "wskBypassSecurity": "true",
+      "wskExec": "wsk"
+    },
+    "experiments": {
+      "download_results": false,
+      "experiments": {
+        "eviction-model": {
+          "function_copy_idx": 0,
+          "invocations": 1,
+          "repetitions": 5,
+          "sleep": 1
+        },
+        "invocation-overhead": {
+          "N": 20,
+          "code_begin": 1048576,
+          "code_end": 261619712,
+          "code_points": 20,
+          "payload_begin": 1024,
+          "payload_end": 6251000,
+          "payload_points": 20,
+          "repetitions": 5,
+          "type": "payload"
+        },
+        "network-ping-pong": {
+          "invocations": 50,
+          "repetitions": 10000,
+          "threads": 1
+        },
+        "perf-cost": {
+          "benchmark": "221.video-processing",
+          "concurrent-invocations": 10,
+          "experiments": [
+            "warm"
+          ],
+          "input-size": "test",
+          "memory-sizes": [
+            512
+          ],
+          "repetitions": 10000
+        }
+      },
+      "flags": {},
+      "runtime": {
+        "language": "nodejs",
+        "version": "12"
+      },
+      "update_code": false,
+      "update_storage": false
+    }
+  },
+  "end_time": 1720544376.372198,
+  "result_bucket": null,
+  "statistics": {
+    "cold_count": 0,
+    "failures": [],
+    "failures_count": 0,
+    "incorrect": [],
+    "incorrect_count": 0,
+    "samples_generated": 10000
+  }
+}
