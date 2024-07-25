@@ -70,8 +70,8 @@ def compare_tracing_overhead(python_dir, nodejs_dir, time_type='benchmark'):
 
     return pd.DataFrame(overhead_diff_data)
 
-# Example usage
 
+# Example usage
 benchmark_overhead_diff_df = compare_tracing_overhead(PYTHON_DIR, NODEJS_DIR, "benchmark")
 client_overhead_diff_df = compare_tracing_overhead(PYTHON_DIR, NODEJS_DIR, "client")
 print("\nBenchmark")

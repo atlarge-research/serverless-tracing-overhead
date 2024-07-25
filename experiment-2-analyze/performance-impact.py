@@ -1,43 +1,48 @@
 import pandas as pd
-from utils import parse_all_json_files, PYTHON_DIR, NODEJS_DIR
+from utils_performance import parse_all_json_files, aggregate_times_data, PYTHON_DIR, NODEJS_DIR
 
-python_benchmark_df, python_client_df = parse_all_json_files(PYTHON_DIR)
-nodejs_benchmark_df, nodejs_client_df = parse_all_json_files(NODEJS_DIR)
+def create_aggregated_table():
+    # Parse JSON files and create dataframes
+    times_data_python = parse_all_json_files(PYTHON_DIR)
+    times_data_nodejs = parse_all_json_files(NODEJS_DIR)
+    times_data = pd.concat([times_data_python, times_data_nodejs], ignore_index=True)
 
-benchmark_df = pd.concat([python_benchmark_df, nodejs_benchmark_df], ignore_index=True)
-client_df = pd.concat([python_client_df, nodejs_client_df], ignore_index=True)
+    # Aggregate times data
+    aggregated_data = aggregate_times_data(times_data)
 
-def get_comparison_df(df):
-    comparison_data = []
+    # Pivot the data to have instrumented and non-instrumented as columns
+    pivoted_data = aggregated_data.pivot(index='benchmark_name', columns='configuration')
 
-    for language in df['language'].unique():
-        for benchmark_name in df['benchmark_name'].unique():
-            non_instrumented = df[(df['benchmark_name'] == benchmark_name) &
-                                            (df['configuration'] == 'non-instrumented') &
-                                            (df['language'] == language)]
-            instrumented = df[(benchmark_df['benchmark_name'] == benchmark_name) &
-                                        (df['configuration'] == 'instrumented') &
-                                        (df['language'] == language)]
+    # Flatten the MultiIndex columns
+    pivoted_data.columns = ['_'.join(col).strip() for col in pivoted_data.columns.values]
 
-            if not non_instrumented.empty and not instrumented.empty:
-                non_instrumented_mean = non_instrumented['mean'].values[0]
-                instrumented_mean = instrumented['mean'].values[0]
-                overhead_percentage = ((instrumented_mean - non_instrumented_mean) / non_instrumented_mean) * 100
+    # Reset index to turn the pivoted index back into a column
+    pivoted_data.reset_index(inplace=True)
 
-                comparison_data.append({
-                    'benchmark_name': benchmark_name,
-                    'language': language,
-                    'non_instrumented_mean': non_instrumented_mean,
-                    'instrumented_mean': instrumented_mean,
-                    'overhead_percentage': round(overhead_percentage, 2)
-                })
+    # Reorganize the DataFrame to include metric types
+    benchmark_columns = ['benchmark_name', 'benchmark_time_mean_instrumented', 'benchmark_time_std_instrumented',
+                         'benchmark_time_mean_non-instrumented', 'benchmark_time_std_non-instrumented']
+    client_columns = ['benchmark_name', 'client_time_mean_instrumented', 'client_time_std_instrumented',
+                      'client_time_mean_non-instrumented', 'client_time_std_non-instrumented']
 
-    return pd.DataFrame(comparison_data)
+    benchmark_df = pivoted_data[benchmark_columns].copy()
+    benchmark_df['Metric'] = 'Benchmark Time'
 
-# Display the comparison dataframe
-benchmark_comparison_df = get_comparison_df(benchmark_df)
-client_comparison_df = get_comparison_df(client_df)
-print("\nBenchmark")
-print(benchmark_comparison_df)
-print("\nClient")
-print(client_comparison_df)
+    client_df = pivoted_data[client_columns].copy()
+    client_df['Metric'] = 'Client Time'
+
+    benchmark_df.columns = ['Benchmark Name', 'Mean (Instrumented)', 'Std (Instrumented)',
+                            'Mean (Non-Instrumented)', 'Std (Non-Instrumented)', 'Metric']
+    client_df.columns = ['Benchmark Name', 'Mean (Instrumented)', 'Std (Instrumented)',
+                         'Mean (Non-Instrumented)', 'Std (Non-Instrumented)', 'Metric']
+
+    combined_df = pd.concat([benchmark_df, client_df], ignore_index=True)
+
+    return combined_df
+
+# Generate the table
+aggregated_table = create_aggregated_table()
+print(aggregated_table.to_string(index=False))
+
+# Save the table to a CSV file
+aggregated_table.to_csv('aggregated_benchmark_client_times.csv', index=False)
