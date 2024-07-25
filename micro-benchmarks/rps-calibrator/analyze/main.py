@@ -5,6 +5,7 @@ PLOT_DIR = "plots"
 
 plt.rcParams.update({'font.size': 18})
 
+
 def main():
     file_path = "../results/rps_calibration_results.csv"
 
@@ -26,6 +27,7 @@ def main():
     # Calculate the Average of the five runs
     # Also Min
     # Also Max
+
 
 def plot_aggregated_RPS_across_endpoints(file_path):
     # Calculate statistics
@@ -189,6 +191,7 @@ def plot_aggregated_RPS_across_variations(file_path):
     plt.savefig(plot_filename)
     plt.close(fig)
 
+
 def plot_aggregated_RPS_across_variations_horizontal(file_path):
     # Calculate statistics
     stats_df = calculate_targetRPS_stats(file_path)
@@ -208,13 +211,13 @@ def plot_aggregated_RPS_across_variations_horizontal(file_path):
     # Define colors for each variation and error bars
     variation_colors = {
         'standard': '#1f77b4',  # blue
-        'otel': '#ff7f0e',      # orange
-        'elastic': '#2ca02c'    # green
+        'otel': '#ff7f0e',  # orange
+        'elastic': '#2ca02c'  # green
     }
     error_colors = {
         'standard': 'lightblue',  # blue
-        'otel': 'lightcoral',      # orange
-        'elastic': 'lightgreen'    # green
+        'otel': 'lightcoral',  # orange
+        'elastic': 'lightgreen'  # green
     }
 
     # Define label mapping
@@ -255,6 +258,7 @@ def plot_aggregated_RPS_across_variations_horizontal(file_path):
     plot_filename = 'aggregated_RPS_across_variations_horizontal.png'
     plt.savefig(plot_filename)
     plt.close(fig)
+
 
 def plot_targetRPS_stats_error_bars(file_path):
     # Calculate statistics
@@ -411,6 +415,7 @@ def plot_targetRPS_per_language(file_path):
         plt.savefig(plot_filename)
         plt.close(fig)
 
+
 def calculate_targetRPS_stats(file_path):
     # Read the data from the CSV file
     data = pd.read_csv(file_path)
@@ -440,11 +445,13 @@ def calculate_differences(file_path):
     average_rps = data.groupby(['language', 'configuration', 'endpoint']).targetRPS.mean().reset_index()
 
     # Pivot the data to have configurations as columns
-    pivot_table = average_rps.pivot_table(index=['language', 'endpoint'], columns='configuration', values='targetRPS').reset_index()
+    pivot_table = average_rps.pivot_table(index=['language', 'endpoint'], columns='configuration',
+                                          values='targetRPS').reset_index()
 
     # Calculate the differences between instrumented (otel and elastic) and non-instrumented (standard)
     pivot_table['otel_vs_standard'] = ((pivot_table['otel'] - pivot_table['standard']) / pivot_table['standard']) * 100
-    pivot_table['elastic_vs_standard'] = ((pivot_table['elastic'] - pivot_table['standard']) / pivot_table['standard']) * 100
+    pivot_table['elastic_vs_standard'] = ((pivot_table['elastic'] - pivot_table['standard']) / pivot_table[
+        'standard']) * 100
     pivot_table['otel_vs_elastic'] = ((pivot_table['otel'] - pivot_table['elastic']) / pivot_table['elastic']) * 100
 
     # Calculate the overall differences across all endpoints
@@ -454,7 +461,6 @@ def calculate_differences(file_path):
     overall['otel_vs_elastic'] = ((overall['otel'] - overall['elastic']) / overall['elastic']) * 100
 
     return pivot_table, overall
-
 
 
 if __name__ == '__main__':

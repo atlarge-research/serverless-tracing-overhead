@@ -21,6 +21,19 @@ def analyze(k6_path, cpu_file_path, plots_dir, metrics_dir):
 
     k6_stats.plot_aggregated_results_by_variation_and_endpoint(scenarios, plot_name="aggregated_plot.png")
     k6_stats.plot_aggregated_results_across_variations(scenarios, plot_name="aggregated_variations_plot.png")
+
+    # k6_stats.create_boxplots()
+    # k6_stats.plot_endpoint_boxplots()
+    # stats = k6_stats.create_statistics_table()
+    # print(stats)
+    # stats_2 = k6_stats.create_statistics_table_by_endpoint()
+    # print(stats_2)
+    #
+    # stats_3 = k6_stats.create_statistics_table_by_language()
+    # print(stats_3)
+    #
+    # stats_4 = k6_stats.create_statistics_table_languages()
+    # print(stats_4)
     #
     # print("k6_stats.generate_http_req_duration_stats(scenarios)")
     # table = k6_stats.generate_http_req_duration_stats(scenarios)
