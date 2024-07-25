@@ -283,6 +283,7 @@ def plot_targetRPS_stats_error_bars(file_path):
         'standard': 'lightblue',  # blue
         'otel': 'lightcoral',  # orange
         'elastic': 'lightgreen'  # green
+
     }
 
     # Define label mapping
@@ -325,6 +326,7 @@ def plot_targetRPS_stats_error_bars(file_path):
             # Add legend
             # ax.legend(loc='upper right')
 
+
             # Improve overall plot aesthetics
             ax.grid(True, linestyle='--', alpha=0.6)
             plt.tight_layout()
@@ -359,6 +361,7 @@ def plot_targetRPS_per_language(file_path):
         'standard': 'lightblue',  # blue
         'otel': 'lightcoral',  # orange
         'elastic': 'lightgreen'  # green
+
     }
 
     # Define label mapping
@@ -414,7 +417,6 @@ def plot_targetRPS_per_language(file_path):
         plot_filename = f'{PLOT_DIR}/{lang}_All_targetRPS.png'
         plt.savefig(plot_filename)
         plt.close(fig)
-
 
 def calculate_targetRPS_stats(file_path):
     # Read the data from the CSV file

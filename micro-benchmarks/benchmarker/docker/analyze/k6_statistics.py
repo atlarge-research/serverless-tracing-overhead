@@ -369,7 +369,6 @@ class K6Statistics:
             for element in ['whiskers', 'caps', 'medians']:
                 plt.setp(boxplots[element], color='black')
 
-            # Set the title using the mapped metric name
             ax.set_title(self.metric_name_mapping.get(metric, metric).replace('_', ' ').title())
             ax.set_yticklabels(formatted_scenarios)
             ax.set_ylabel('Scenarios')
@@ -736,6 +735,7 @@ class K6Statistics:
             ax.set_xlabel('HTTP Request Duration (ms)')
             ax.set_ylabel('Variations')
 
+
             # Adding grid lines
             ax.grid(axis='x', linestyle='--', linewidth=0.7)
 
@@ -971,6 +971,7 @@ class K6Statistics:
 
         # Collecting all metric values for each scenario
         for scenario in scenario_list:
+
             variation = scenario['scenario_name'].split('-')[1]
 
             scenario_df = filtered_df[filtered_df['scenario'] == scenario['scenario_name']]
@@ -1429,3 +1430,4 @@ class K6Statistics:
         stats_df = stats_df.round(2)
 
         return stats_df
+

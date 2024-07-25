@@ -54,10 +54,7 @@ def analyze(k6_path, cpu_file_path, plots_dir, metrics_dir):
     #
     # k6_stats.show_metrics()
     # k6_stats.show_total_number_of_requests()
-
-    # Show metrics for all scenarios
-    # k6_stats.show_metrics_scenarios(scenarios, metrics_dir)
-
+    
     # for lang in languages:
     #     k6_stats.plot_overhead([f'{lang}-standard-json', f'{lang}-otel-json', f'{lang}-elastic-json'],
     #                            f'{lang}-json-overhead')
