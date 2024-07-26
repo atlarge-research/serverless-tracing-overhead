@@ -6,8 +6,8 @@ package-lock.json
 *.csv
 *.zip
 *.png
-task-based-experiment/experiment-results
-task-based-experiment/experiment-results/*
+e2-task-based-experiment/experiment-results
+e2-task-based-experiment/experiment-results/*
 
 experiment-results
 e1-request-based-experiment/.DS_Store
