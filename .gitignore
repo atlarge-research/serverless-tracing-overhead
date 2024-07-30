@@ -3,7 +3,6 @@
 node_modules
 package-lock.json
 .terraform*
-*.csv
 *.zip
 *.png
 e2-task-based-experiment/experiment-results
@@ -21,3 +20,9 @@ e1-request-based-experiment/rps-calibrator/analyze/.DS_Store
 e1-request-based-experiment/benchmarker/docker/analyze/__pycache__/k6_statistics.cpython-311.pyc
 e1-request-based-experiment/opentelemetry-javaagent.jar
 e1-request-based-experiment/rps-calibrator/__pycache__/utils.cpython-39.pyc
+
+/e1-request-based-experiment/benchmarker/docker/results/*/*.csv
+/e1-request-based-experiment/benchmarker/docker/analyze/**/*.csv
+/e1-request-based-experiment/rps-calibrator/results/*.csv
+
+data/experiment-1/performance-overhead/2024-05-22_19-33.csv
