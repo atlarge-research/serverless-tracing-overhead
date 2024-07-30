@@ -1,6 +1,0 @@
-{
-    "dependencies": {
-        "ngraph.generators": "^20.1.0",
-        "ngraph.pagerank": "^2.1.1"
-    }
-}

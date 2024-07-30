@@ -1,0 +1,29 @@
+version: '3.8'
+name: micro-benchmark
+services:
+  java-elastic:
+    hostname: java-elastic
+    build:
+      context: ./spring
+      dockerfile: spring-jpa.dockerfile
+      args:
+        ELASTIC_APM: true
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+    ports:
+      - "5220-5229:8080"
+    environment:
+      JAVA_TOOL_OPTIONS: "-javaagent:/spring/elastic-apm-agent.jar"
+      ELASTIC_APM_ENABLED: True
+      ELASTIC_APM_SERVICE_NAME: java-elastic
+      ELASTIC_APM_SERVER_URL: http://apm-server:8200
+      ELASTIC_APM_TRANSACTION_SAMPLE_RATE: 1.0
+    networks:
+      - telemetry
+    restart: always
+
+networks:
+  telemetry:
+    external: true
