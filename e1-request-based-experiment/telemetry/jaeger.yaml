@@ -1,0 +1,16 @@
+version: '3.7'
+name: telemetry
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"  # Jaeger UI
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - LOG_LEVEL=debug
+    networks:
+      - telemetry
+
+networks:
+  telemetry:
+    name: telemetry

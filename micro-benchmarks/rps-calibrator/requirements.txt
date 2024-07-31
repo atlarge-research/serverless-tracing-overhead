@@ -1,4 +1,0 @@
-docker==7.0.0
-Flask==3.0.3
-gunicorn==22.0.0
-SQLAlchemy==2.0.29

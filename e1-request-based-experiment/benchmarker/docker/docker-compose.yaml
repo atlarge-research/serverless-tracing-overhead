@@ -1,0 +1,14 @@
+version: '3.8'
+name: micro-benchmark
+services:
+  tests:
+    build: .
+    volumes:
+      - ./results:/app/results
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - telemetry
+
+networks:
+  telemetry:
+    external: true

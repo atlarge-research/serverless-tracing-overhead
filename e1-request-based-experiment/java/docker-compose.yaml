@@ -1,0 +1,21 @@
+version: '3.8'
+name: micro-benchmark
+services:
+  java-standard:
+    hostname: java-standard
+    build:
+      context: ./spring
+      dockerfile: spring-jpa.dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+    ports:
+      - "5200-5209:8080"
+    networks:
+      - telemetry
+    restart: always
+
+networks:
+  telemetry:
+    external: true

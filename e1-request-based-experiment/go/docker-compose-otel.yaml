@@ -1,0 +1,27 @@
+version: '3.8'
+name: micro-benchmark
+services:
+  go-otel:
+    hostname: go-otel
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+    ports:
+      - "5110-5119:8080"
+    environment:
+      - DB_HOST=postgres
+      - APP_PORT=8080
+      - OPENTELEMETRY_ENABLED=true
+      - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4318
+      - OTEL_SERVICE_NAME=go-otel
+    networks:
+      - telemetry
+    restart: always
+
+networks:
+  telemetry:
+    external: true
