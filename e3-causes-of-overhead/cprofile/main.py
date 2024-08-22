@@ -5,7 +5,7 @@ from cprofiler import profile_function
 from dynamic_html.main import task as dynamic_html_task
 from graph_pagerank.main import task as graph_pagerank_task
 
-from utils import save_aggregated_statistics, save_each_run_results, dynamic_html_event
+from utils import save_aggregated_statistics, save_each_run_results, dynamic_html_event, graph_pagerank_event
 
 # OpenTelemetry Libraries
 from opentelemetry import trace
@@ -33,6 +33,8 @@ def run_single_workload(times_dict_list, experiment_name):
             dynamic_html_task(event, span)
             span.end()
     elif experiment_name == EXPERIMENT_NAME_GRAPH_PAGERANK:
+        _event = graph_pagerank_event
+
         @profile_function(times_dict_list)
         def workload(event):
             tracer = configure_opentelemetry()
@@ -77,8 +79,8 @@ def configure_opentelemetry():
 
 if __name__ == "__main__":
     # Number of times to run the process
-    _iterations = int(os.getenv("TEST_RUNS", 100))
-    _experiment_name = os.getenv("EXPERIMENT_NAME", EXPERIMENT_NAME_DYNAMIC_HTML)
+    _iterations = int(os.getenv("TEST_RUNS", 1))
+    _experiment_name = os.getenv("EXPERIMENT_NAME", EXPERIMENT_NAME_GRAPH_PAGERANK)
 
     # Run the workloads and get the execution times
     _times_dict_list = run_workloads_sequentially(_iterations, _experiment_name)

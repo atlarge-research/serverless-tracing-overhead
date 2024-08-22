@@ -12,6 +12,16 @@ dynamic_html_event = {
     'random_len': dynamic_html_size_generators['test']
 }
 
+graph_pagerank_size_generators = {
+    'test' : 10,
+    'small' : 10000,
+    'large': 100000
+}
+
+graph_pagerank_event = {
+    'size': graph_pagerank_size_generators['small']
+}
+
 def save_each_run_results(times_dict_list, filename="each_run_results.csv"):
     with open(filename, mode='w', newline='') as file:
         writer = csv.writer(file)
