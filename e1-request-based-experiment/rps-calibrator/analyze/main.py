@@ -115,25 +115,6 @@ def plot_aggregated_RPS_across_variations(file_path):
     stats_df['Configuration'] = pd.Categorical(stats_df['Configuration'], categories=order, ordered=True)
     stats_df = stats_df.sort_values('Configuration')
 
-    # Aggregate the statistics by Configuration (Variation)
-    aggregated_stats = stats_df.groupby('Configuration').agg({
-        'Average Target RPS': 'mean',
-        'Min Target RPS': 'min',
-        'Max Target RPS': 'max'
-    }).reset_index()
-
-    # Define colors for each variation and error bars
-    variation_colors = {
-        'standard': '#1f77b4',  # blue
-        'otel': '#ff7f0e',  # orange
-        'elastic': '#2ca02c'  # green
-    }
-    error_colors = {
-        'standard': 'lightblue',  # blue
-        'otel': 'lightcoral',  # orange
-        'elastic': 'lightgreen'  # green
-    }
-
     # Define label mapping
     label_mapping = {
         'standard': 'Standard',
@@ -141,53 +122,73 @@ def plot_aggregated_RPS_across_variations(file_path):
         'elastic': 'Elastic APM'
     }
 
-    # Create a figure for the aggregated RPS across variations
+    # Define colors for each configuration
+    colors = ['lightblue', 'lightcoral', 'lightgreen']
+    color_mapping = dict(zip(order, colors))
+
+    # Create a figure for the boxplot
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    # Plot the error bars for average, min, and max target RPS
-    variations = aggregated_stats['Configuration'].tolist()
-    avg_rps = aggregated_stats['Average Target RPS'].tolist()
-    min_rps = aggregated_stats['Min Target RPS'].tolist()
-    max_rps = aggregated_stats['Max Target RPS'].tolist()
-    positions = range(len(variations))
+    # Create the boxplot
+    box_data = [stats_df[stats_df['Configuration'] == config]['Average Target RPS'] for config in order]
+    box = ax.boxplot(box_data, labels=[label_mapping[config] for config in order], patch_artist=True, showfliers=True,
+                     widths=(0.2))
 
-    # Plot the error bars
-    for pos, avg, min_val, max_val, var in zip(positions, avg_rps, min_rps, max_rps, variations):
-        ax.errorbar(pos, avg, yerr=[[avg - min_val], [max_val - avg]], fmt='o', capsize=5,
-                    color='black', ecolor=error_colors[var], elinewidth=2, markeredgewidth=2)
+    # Color the boxes
+    for patch, config in zip(box['boxes'], order):
+        patch.set_facecolor(color_mapping[config])
+        patch.set_edgecolor('black')
 
-        # Determine text alignment and position
-        if var in ['standard', 'otel']:
-            ha = 'left'
-            text_x = pos + 0.05  # Slightly to the right
-        else:
-            ha = 'right'
-            text_x = pos - 0.05  # Slightly to the left
+    # Color the median lines
+    for median in box['medians']:
+        median.set_color('black')
+        median.set_linewidth(2)
 
-        # Add annotation for average RPS
-        ax.text(text_x, avg, f'{avg:.2f}', ha=ha, va='center', fontsize=10, color='black',
+    # Add annotations for min, max, median, and upper whisker values
+    for i, config in enumerate(order):
+        data = stats_df[stats_df['Configuration'] == config]['Average Target RPS']
+        min_val = data.min()
+        max_val = data.max()
+        median_val = data.median()
+        upper_whisker_val = [item.get_ydata()[1] for item in box['whiskers']][i * 2 + 1]
+
+        annotation_fontsize = 14
+        # Add annotation for min
+        min_vertical_adjustment = 40
+        ax.text(i + 1.10, min_val - min_vertical_adjustment, f'{min_val:.2f}', va='center', fontsize=annotation_fontsize, color='black',
                 bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
 
-        # Add annotation for min and max RPS
-        ax.text(text_x, min_val, f'{min_val:.2f}', ha=ha, va='center', fontsize=10, color='black',
-                bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
-        ax.text(text_x, max_val, f'{max_val:.2f}', ha=ha, va='center', fontsize=10, color='black',
+        # Add annotation for max
+        max_vertical_adjustment = 200 if config == 'elastic' else 0
+        ax.text(i + 0.66, max_val + max_vertical_adjustment, f'{max_val:.2f}', va='center',
+                fontsize=annotation_fontsize, color='black',
                 bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
 
-    # Labeling
-    # ax.set_title('Aggregated RPS Across Variations')
-    ax.set_xticks(positions)
-    ax.set_xticklabels([label_mapping[var] for var in variations], rotation=45, ha='right')
-    ax.set_xlabel('Variations')
+        # Add annotation for median
+        median_vertical_adjustment = 100
+        ax.text(i + 0.6, median_val + median_vertical_adjustment, f'{median_val:.2f}', va='center', fontsize=annotation_fontsize,
+                color='black',
+                bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
+
+        # Upper whisker
+        uw_vertical_adjustment = -100
+        ax.text(i + 1.10, upper_whisker_val + uw_vertical_adjustment, f'{upper_whisker_val:.2f}', va='center', fontsize=annotation_fontsize,
+                color='black',
+                bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
+
+    # Customize the plot
+    # ax.set_xlabel('Variations')
     ax.set_ylabel('Requests per Second')
+    # ax.set_title('Aggregated RPS Across Variations')
 
     # Add grid
-    ax.grid(True, linestyle='--', alpha=0.6)
+    ax.yaxis.grid(True, linestyle='--', which='major', color='grey', alpha=0.5)
 
-    plt.tight_layout()
+    # plt.tight_layout()
 
     # Save plot as PNG file
-    plot_filename = 'aggregated_RPS_across_variations.png'
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plot_filename = 'aggregated_RPS_across_variations_boxplot.png'
     plt.savefig(plot_filename)
     plt.close(fig)
 
@@ -326,7 +327,6 @@ def plot_targetRPS_stats_error_bars(file_path):
             # Add legend
             # ax.legend(loc='upper right')
 
-
             # Improve overall plot aesthetics
             ax.grid(True, linestyle='--', alpha=0.6)
             plt.tight_layout()
@@ -417,6 +417,7 @@ def plot_targetRPS_per_language(file_path):
         plot_filename = f'{PLOT_DIR}/{lang}_All_targetRPS.png'
         plt.savefig(plot_filename)
         plt.close(fig)
+
 
 def calculate_targetRPS_stats(file_path):
     # Read the data from the CSV file

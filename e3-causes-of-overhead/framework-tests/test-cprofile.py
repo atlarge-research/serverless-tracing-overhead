@@ -14,18 +14,7 @@ from jinja2 import Template
 from datetime import datetime
 from random import sample
 
-# Setup OpenTelemetry
-resource = Resource(attributes={"service.name": "test-profiler"})
-trace.set_tracer_provider(TracerProvider(resource=resource))
-tracer = trace.get_tracer("function")
 
-# Setup the span processor with the exporter
-otlp_exporter = OTLPSpanExporter(
-    endpoint="http://localhost:4317",
-    insecure=True
-)
-span_processor = SimpleSpanProcessor(otlp_exporter)
-trace.get_tracer_provider().add_span_processor(span_processor)
 
 
 # Convert pstats to microseconds
@@ -48,6 +37,11 @@ def profile_function(func):
 
         profiler.disable()
 
+        # Save the profiling results to a .prof file
+        prof_filename = f"{func.__name__}.prof"
+        profiler.dump_stats(prof_filename)
+        print(f"Saved profiling results to {prof_filename}")
+
         s = StringIO()
         sortby = 'tottime'
         ps = pstats.Stats(profiler, stream=s).sort_stats(sortby)
@@ -59,6 +53,7 @@ def profile_function(func):
             line for line in full_stats.split('\n')
             if 'opentelemetry' in line or 'tracer' in line or line.strip().startswith(('ncalls', 'filename'))
         )
+
         print(filtered_stats)
 
         otel_total_time = 0.0
@@ -82,20 +77,40 @@ def profile_function(func):
         return result
     return wrapper
 
-@profile_function
-def run_loop(iterations):
-    with tracer.start_as_current_span("run_loop") as span:
-        total = 0
-        for i in range(iterations):
-            with tracer.start_as_current_span("loop_iteration"):
-                time.sleep(0.001)  # 1 ms
-                total += i * i
-                span.set_attribute("total", total)
-                span.add_event("Computed", {
-                    "total": total,
-                    "i": i
-                })
-        return total
+
+# @profile_function
+def setup_opentelemetry():
+    resource = Resource(attributes={"service.name": "test-profiler"})
+    provider = TracerProvider(resource=resource)
+
+    otlp_exporter = OTLPSpanExporter(
+        endpoint="http://localhost:4317",
+        insecure=True
+    )
+    span_processor = SimpleSpanProcessor(otlp_exporter)
+    provider.add_span_processor(span_processor)
+
+    trace.set_tracer_provider(provider)
+
+    tracer = trace.get_tracer("function")
+    return tracer
+
+
+# @profile_function
+# def run_loop(iterations):
+#     tracer = setup_opentelemetry()
+#     with tracer.start_as_current_span("run_loop") as span:
+#         total = 0
+#         for i in range(iterations):
+#             with tracer.start_as_current_span("loop_iteration"):
+#                 time.sleep(0.001)  # 1 ms
+#                 total += i * i
+#                 span.set_attribute("total", total)
+#                 span.add_event("Computed", {
+#                     "total": total,
+#                     "i": i
+#                 })
+#         return total
 
 SCRIPT_DIR = ""
 
@@ -107,6 +122,7 @@ size_generators = {
 
 @profile_function
 def dynamic_html(event):
+    tracer = setup_opentelemetry()
     with tracer.start_as_current_span("dynamic_html") as span:
         name = event.get('username')
         size = event.get('random_len')
@@ -137,4 +153,3 @@ if __name__ == "__main__":
     }
 
     result = dynamic_html(input_config)
-    # print(f"Total result: {result}")
