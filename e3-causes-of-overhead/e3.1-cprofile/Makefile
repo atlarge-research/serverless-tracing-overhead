@@ -47,5 +47,7 @@ graph-pagerank-cold:
 graph-pagerank-warm:
 	docker compose -f docker-compose/graph-pagerank-warm.yaml up -d
 
+telemetry:
+	docker compose -f docker-compose/telemetry.yaml up -d
 
-.PHONY: flamegraph-dynamic-html-cold flamegraph-dynamic-html-warm flamegraph-graph-pagerank-cold flamegraph-graph-pagerank-warm flamegraphs dynamic-html-cold dynamic-html-warm graph-pagerank-cold graph-pagerank-warm
+.PHONY: flamegraph-dynamic-html-cold flamegraph-dynamic-html-warm flamegraph-graph-pagerank-cold flamegraph-graph-pagerank-warm flamegraphs dynamic-html-cold dynamic-html-warm graph-pagerank-cold graph-pagerank-warm telemetry
