@@ -2,6 +2,7 @@ import cProfile
 import pstats
 import time
 from io import StringIO
+import os
 
 
 PROFILE_DIR = "profiles"
@@ -91,6 +92,8 @@ def profile_function(times_dict_list, experiment_name, start_mode):
             # Append this run's function times to the list
             times_dict_list.append(renamed_func_times)
 
+            if not os.path.exists(PROFILE_DIR):
+                os.makedirs(PROFILE_DIR)
             profiler.dump_stats(f"{PROFILE_DIR}/workload-{experiment_name}-{start_mode}.prof")
 
             return result
