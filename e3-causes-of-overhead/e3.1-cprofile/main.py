@@ -18,28 +18,47 @@ OTLP_ENDPOINT = os.getenv("OTLP_ENDPOINT", "http://localhost:4317")
 EXPERIMENT_NAME_DYNAMIC_HTML = "dynamic-html"
 EXPERIMENT_NAME_GRAPH_PAGERANK = "graph-pagerank"
 
+tracer = None
 
-def run_single_workload(times_dict_list, experiment_name):
+
+def run_single_workload(times_dict_list, _experiment_name, _start_mode):
     _event = {}
+    global tracer
+    # Pre-configure OpenTelemetry for warm start
+    if _start_mode == "warm":
+        print("Warm mode, configuring opentelemetry before profiling")
+        tracer = configure_opentelemetry()
+
+
     # If dynamic html
-    if experiment_name == EXPERIMENT_NAME_DYNAMIC_HTML:
+    if _experiment_name == EXPERIMENT_NAME_DYNAMIC_HTML:
         _event = dynamic_html_event
 
-        @profile_function(times_dict_list)
+        @profile_function(times_dict_list, _experiment_name, _start_mode)
         def workload(event):
-            tracer = configure_opentelemetry()
-
-            span = tracer.start_span("workload")
+            if tracer is None:
+                # Cold
+                local_tracer = configure_opentelemetry()
+            else:
+                # Warm
+                local_tracer = tracer
+            span = local_tracer.start_span("workload")
             dynamic_html_task(event, span)
             span.end()
-    elif experiment_name == EXPERIMENT_NAME_GRAPH_PAGERANK:
+    elif _experiment_name == EXPERIMENT_NAME_GRAPH_PAGERANK:
         _event = graph_pagerank_event
 
-        @profile_function(times_dict_list)
+        @profile_function(times_dict_list, _experiment_name, _start_mode)
         def workload(event):
-            tracer = configure_opentelemetry()
+            print(tracer)
+            if tracer is None:
+                # Cold
+                local_tracer = configure_opentelemetry()
+            else:
+                # Warm
+                local_tracer = tracer
 
-            span = tracer.start_span("workload")
+            span = local_tracer.start_span("workload")
             graph_pagerank_task(event, span)
             span.end()
     else:
@@ -49,13 +68,14 @@ def run_single_workload(times_dict_list, experiment_name):
     workload(_event)
 
 
-def run_workloads_sequentially(num_runs, experiment_name="dynamic-html"):
+def run_workloads_sequentially(num_runs, experiment_name, start_mode):
     times_dict_list = multiprocessing.Manager().list()
 
-    for _ in range(num_runs):
-        p = multiprocessing.Process(target=run_single_workload, args=(times_dict_list, experiment_name))
+    for i in range(num_runs):
+        p = multiprocessing.Process(target=run_single_workload, args=(times_dict_list, experiment_name, start_mode))
         p.start()
         p.join()  # Wait for the process to finish before starting the next one
+        print("Finished iteration:", i+1)
 
     return list(times_dict_list)
 
@@ -79,16 +99,20 @@ def configure_opentelemetry():
 
 if __name__ == "__main__":
     # Number of times to run the process
-    _iterations = int(os.getenv("TEST_RUNS", 1))
-    _experiment_name = os.getenv("EXPERIMENT_NAME", EXPERIMENT_NAME_GRAPH_PAGERANK)
+    iterations = int(os.getenv("TEST_RUNS", 1))
+    experiment_name = os.getenv("EXPERIMENT_NAME", EXPERIMENT_NAME_GRAPH_PAGERANK)
+    start_mode = os.getenv("START_MODE", "cold")
+    print("Iterations: ", iterations)
+    print("Experiment name: ", experiment_name)
+    print("Start mode: ", start_mode)
 
     # Run the workloads and get the execution times
-    _times_dict_list = run_workloads_sequentially(_iterations, _experiment_name)
+    _times_dict_list = run_workloads_sequentially(iterations, experiment_name, start_mode)
 
     # Save the results of each run to a CSV file
     save_each_run_results(_times_dict_list,
-                          filename=f"output/{_experiment_name}_{_iterations}_each_run_results.csv")
+                          filename=f"output/{experiment_name}_{start_mode}_{iterations}_each_run_results.csv")
 
     # Save the aggregated statistics to a different CSV file
     save_aggregated_statistics(_times_dict_list,
-                               filename=f"output/{_experiment_name}_{_iterations}_aggregated_statistics.csv")
+                               filename=f"output/{experiment_name}_{start_mode}_{iterations}_aggregated_statistics.csv")

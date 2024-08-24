@@ -4,6 +4,9 @@ import time
 from io import StringIO
 
 
+PROFILE_DIR = "profiles"
+
+
 # Convert pstats to microseconds
 def f8(x):
     # ret = "%8.3f" % x
@@ -38,7 +41,7 @@ def filter_opentelemetry_stats(full_stats):
     return filtered_stats
 
 
-def profile_function(times_dict_list):
+def profile_function(times_dict_list, experiment_name, start_mode):
     def decorator(func):
         def wrapper(*args, **kwargs):
             profiler = cProfile.Profile()
@@ -87,6 +90,8 @@ def profile_function(times_dict_list):
 
             # Append this run's function times to the list
             times_dict_list.append(renamed_func_times)
+
+            profiler.dump_stats(f"{PROFILE_DIR}/workload-{experiment_name}-{start_mode}.prof")
 
             return result
 

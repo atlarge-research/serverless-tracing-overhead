@@ -3,7 +3,7 @@ name: experiment
 services:
   experiment:
     build:
-      context: .
+      context: ..
       dockerfile: Dockerfile
     deploy:
       resources:
@@ -13,6 +13,7 @@ services:
       OTLP_ENDPOINT: "http://otel-collector:4317"
       EXPERIMENT_NAME: "dynamic-html"
       TEST_RUNS: 100000
+      START_MODE: warm
     networks:
       - telemetry
     volumes:
