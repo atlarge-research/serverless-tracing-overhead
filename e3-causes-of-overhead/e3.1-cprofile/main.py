@@ -26,7 +26,7 @@ def run_single_workload(times_dict_list, _experiment_name, _start_mode):
     global tracer
     # Pre-configure OpenTelemetry for warm start
     if _start_mode == "warm":
-        print("Warm mode, configuring opentelemetry before profiling")
+        # print("Warm mode, configuring opentelemetry before profiling")
         tracer = configure_opentelemetry()
 
 
@@ -50,7 +50,6 @@ def run_single_workload(times_dict_list, _experiment_name, _start_mode):
 
         @profile_function(times_dict_list, _experiment_name, _start_mode)
         def workload(event):
-            print(tracer)
             if tracer is None:
                 # Cold
                 local_tracer = configure_opentelemetry()
