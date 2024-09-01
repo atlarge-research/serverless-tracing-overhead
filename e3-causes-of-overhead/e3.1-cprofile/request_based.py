@@ -52,6 +52,7 @@ if __name__ == "__main__":
 
     _endpoint = os.getenv("EXPERIMENT_ENDPOINT", "updates")
     _iterations = int(os.getenv("EXPERIMENT_ITERATIONS", 1000))
+    print("Running experiment {} with {} iterations".format(_endpoint, _iterations))
 
     # Run the experiment and collect profiling data
     run_experiment(endpoint=_endpoint, iterations=_iterations)
