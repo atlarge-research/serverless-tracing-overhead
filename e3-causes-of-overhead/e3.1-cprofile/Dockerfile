@@ -19,3 +19,4 @@ RUN mkdir output
 
 # Run the main.py script
 CMD ["python", "main.py"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
