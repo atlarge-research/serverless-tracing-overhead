@@ -14,7 +14,7 @@ def f8(x):
     # ret = "%8.3f" % x
     # if ret != '   0.000':
     #     return ret
-    return "%6d" % (x * 10000000)
+    return "%6d" % (x * 1_000_000)
 
 pstats.f8 = f8
 
@@ -82,6 +82,7 @@ def profile_function(times_dict_list, experiment_name, start_mode):
                         parts = line.split()
                         if len(parts) > 3:
                             try:
+                                # Convert from microseconds to milliseconds
                                 func_times[func_name] = float(parts[3]) / 1_000  # Cumulative time column
                             except ValueError:
                                 continue
@@ -101,9 +102,9 @@ def profile_function(times_dict_list, experiment_name, start_mode):
             # Append this run's function times to the list
             times_dict_list.append(renamed_func_times)
 
-            if not os.path.exists(PROFILE_DIR):
-                os.makedirs(PROFILE_DIR)
-            profiler.dump_stats(f"{PROFILE_DIR}/workload-{experiment_name}-{start_mode}.prof")
+            # if not os.path.exists(PROFILE_DIR):
+            #     os.makedirs(PROFILE_DIR)
+            # profiler.dump_stats(f"{PROFILE_DIR}/workload-{experiment_name}-{start_mode}.prof")
 
             return result
 
@@ -117,83 +118,72 @@ def profile_route(profiling_data_list, endpoint_name=""):
         def wrapper(*args, **kwargs):
             profiler = cProfile.Profile()
             profiler.enable()
+
+            start_time = time.time()
             result = func2(*args, **kwargs)
+            end_time = time.time()
+
             profiler.disable()
 
             # Capture the profiling data
             s = StringIO()
-            ps = pstats.Stats(profiler, stream=s).sort_stats('cumulative')
+            ps = pstats.Stats(profiler, stream=s)
             ps.print_stats()
 
             full_stats = s.getvalue()
-            print(full_stats)
+            # print(full_stats)
 
             # Define the categories for OpenTelemetry-related functions
-            config_functions = ['configure_opentelemetry']
-            instrumentation_functions = ['opentelemetry.instrumentation']
-            exporting_functions = ['opentelemetry.exporter']
-            total_time_functions = ['updates', 'db']
+            config_functions = ['configure_opentelemetry', 'get_tracer']
+            instrumentation_functions = ['start_span', 'set_attribute']
+            exporting_functions = ['end']
+            total_time_function = endpoint_name
 
             # Initialize the time tracking
-            total_time = 0
             time_spent = {
-                'Configuration': 0,
-                'Instrumentation': 0,
-                'Exporting': 0,
-                'Workload': 0,
-                'Total': 0,
+                'configuration': 0,
+                'task': 0,
+                'export': 0,
+                'instrumentation': 0,
+                'total': 0,
             }
-
-            # Dictionary to store function relationships
-            call_graph = {}
 
             # Analyze the stats
             for func, stat in ps.stats.items():
                 filename, line, funcname = func
-                time_spent_fn = stat[3]  # cumtime (total time including subcalls)
+
+                # Convert from seconds to milliseconds
+                tottime = stat[2] * 1_000
+                cumtime = stat[3] * 1_000
 
                 # Determine the category
-                if any(fn in funcname for fn in config_functions):
-                    time_spent['Configuration'] += time_spent_fn
-                elif any(fn in funcname for fn in instrumentation_functions):
-                    time_spent['Instrumentation'] += time_spent_fn
-                elif any(fn in funcname for fn in exporting_functions):
-                    time_spent['Exporting'] += time_spent_fn
-                elif any(fn in funcname for fn in total_time_functions):
-                    time_spent['Total'] += time_spent_fn
-                else:
-                    time_spent['Workload'] += time_spent_fn
+                if any(fn == funcname for fn in config_functions):
+                    # The get_tracer line
+                    if line == 490:
+                        time_spent['configuration'] += cumtime
+                elif any(fn == funcname for fn in instrumentation_functions):
+                    time_spent['instrumentation'] += cumtime
+                elif any(fn == funcname for fn in exporting_functions):
+                    time_spent['export'] += cumtime
+                elif funcname == total_time_function:
+                    time_spent['total'] = cumtime
 
-                # Record the call hierarchy
-                if stat[4]:  # Check if there are subcalls
-                    for subfunc in stat[4]:
-                        if func not in call_graph:
-                            call_graph[func] = []
-                        call_graph[func].append(subfunc)
+                # Handle special case for specific functions
+                elif 'opentelemetry/instrumentation/sqlalchemy' in filename:
+                    time_spent['instrumentation'] += tottime
+                elif funcname == 'use_span':
+                    time_spent['instrumentation'] += tottime
 
-            # Process the call graph to accumulate times for OpenTelemetry
-            for parent, children in call_graph.items():
-                _, _, parent_funcname = parent
-                if any(fn in parent_funcname for fn in
-                       config_functions + instrumentation_functions + exporting_functions):
-                    for child in children:
-                        child_cumtime = ps.stats[child][3]
-                        if any(fn in child[2] for fn in config_functions):
-                            time_spent['Configuration'] += child_cumtime
-                        elif any(fn in child[2] for fn in instrumentation_functions):
-                            time_spent['Instrumentation'] += child_cumtime
-                        elif any(fn in child[2] for fn in exporting_functions):
-                            time_spent['Exporting'] += child_cumtime
+            # Calculate task time as total minus other categories
+            time_spent['task'] = (
+                time_spent['total'] -
+                (time_spent['configuration'] +
+                 time_spent['instrumentation'] +
+                 time_spent['export'])
+            )
 
             # Append the results to the profiling data list
-            profiling_data_list.append({
-                'endpoint': endpoint_name,
-                'total_time': time_spent['Total'],
-                'time_spent': time_spent
-            })
-
-            # Save the profiling data to a .prof file for further analysis if needed
-            profiler.dump_stats(f"{endpoint_name}-request-based.prof")
+            profiling_data_list.append(time_spent)
 
             return result
 

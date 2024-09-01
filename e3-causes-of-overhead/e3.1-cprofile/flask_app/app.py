@@ -10,27 +10,38 @@ from opentelemetry.instrumentation.flask import FlaskInstrumentor
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor, ConsoleSpanExporter
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.resources import Resource
 
-def configure_opentelemetry(app, db):
+OTLP_ENDPOINT = os.getenv("OTLP_ENDPOINT", "http://localhost:4317")
+
+
+def configure_opentelemetry(app, db, service_name):
     """
     Configure OpenTelemetry for the Flask application and SQLAlchemy.
     """
-    with app.app_context():  # Ensure the application context is active
-        # Set up OpenTelemetry Tracer
-        trace.set_tracer_provider(TracerProvider())
-        tracer = trace.get_tracer(__name__)
+    resource = Resource(attributes={"service.name": service_name})
+    provider = TracerProvider(resource=resource)
 
-        # Set up the span processor and exporter
-        span_processor = SimpleSpanProcessor(ConsoleSpanExporter())
-        trace.get_tracer_provider().add_span_processor(span_processor)
+    otlp_exporter = OTLPSpanExporter(
+        endpoint=OTLP_ENDPOINT,
+        insecure=True
+    )
+    span_processor = SimpleSpanProcessor(otlp_exporter)
+    provider.add_span_processor(span_processor)
 
-        # Instrument the Flask app with OpenTelemetry
-        FlaskInstrumentor().instrument_app(app)
+    trace.set_tracer_provider(provider)
 
-        # Instrument SQLAlchemy with OpenTelemetry
-        SQLAlchemyInstrumentor().instrument(engine=db.engine)
+    # Instrument the Flask app with OpenTelemetry
+    FlaskInstrumentor().instrument_app(app)
 
-        return tracer
+    # Instrument SQLAlchemy with OpenTelemetry
+    SQLAlchemyInstrumentor().instrument(engine=db.engine)
+
+    tracer = trace.get_tracer("function")
+
+    return tracer
+
 
 def create_app(profiling_data):
     app = Flask(__name__)
@@ -64,8 +75,13 @@ def create_app(profiling_data):
 
     @app.route("/db")
     def single_db_query():
+        tracer = trace.get_tracer(__name__)
+        span = tracer.start_span("db-endpoint")
         random_id = random.randint(1, 10000)
         world = World.query.get(random_id)
+        span.set_attribute("random_id", random_id)
+        span.set_attribute("world_id", world.id)
+        span.end()
         return jsonify(world.serialize())
 
     @app.route("/queries")
@@ -90,12 +106,11 @@ def create_app(profiling_data):
     @profile_route(profiling_data, "updates")
     def updates():
         tracer = trace.get_tracer(__name__)
+        span = tracer.start_span("updates-endpoint")
         query_count = request.args.get('queries', 1, type=int)
         query_count = min(max(query_count, 1), 500)
 
         worlds = []
-        # span = tracer.start_span("updates-endpoint")
-        span = start_span_custom(tracer, "updates-endpoint")
 
         span.set_attribute("query_count", query_count)
 
@@ -114,15 +129,15 @@ def create_app(profiling_data):
 
         db.session.commit()
 
+        span.end()
         return jsonify(worlds)
 
     return app, db
 
-def start_span_custom(tracer, name):
-    return tracer.start_span(name)
 
 if __name__ == "__main__":
     profiling_data = []  # Just for standalone testing
     app, db = create_app(profiling_data)
-    configure_opentelemetry(app, db)
+    SERVICE_NAME = os.getenv("SERVICE_NAME", "e3-request-based")
+    configure_opentelemetry(app, db, SERVICE_NAME)
     app.run(host="0.0.0.0", port=8080, debug=True)

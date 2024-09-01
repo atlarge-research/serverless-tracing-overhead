@@ -24,42 +24,42 @@ event = {
 }
 
 
-# Turn profiling on
-scalene_profiler.start()
 
-resource = Resource(attributes={"service.name": "test-profiler"})
-provider = TracerProvider(resource=resource)
+def configure_opentelemetry():
+    resource = Resource(attributes={"service.name": "test-profiler"})
+    trace.set_tracer_provider(TracerProvider(resource=resource))
+    tracer = trace.get_tracer("function")
 
-otlp_exporter = OTLPSpanExporter(
-    endpoint="http://localhost:4317",
-    insecure=True
-)
-span_processor = SimpleSpanProcessor(otlp_exporter)
-provider.add_span_processor(span_processor)
+    # Setup the span processor with the exporter
+    otlp_exporter = OTLPSpanExporter(
+        endpoint="http://localhost:4317",
+        insecure=True
+    )
+    span_processor = SimpleSpanProcessor(otlp_exporter)
+    trace.get_tracer_provider().add_span_processor(span_processor)
+    return tracer
 
-trace.set_tracer_provider(provider)
+tracer = configure_opentelemetry()
 
-tracer = trace.get_tracer("function")
+span = tracer.start_span("dynamic_html")
 
+name = event.get('username')
+size = event.get('random_len')
+cur_time = datetime.now()
 
-with tracer.start_as_current_span("dynamic_html") as span:
-    name = event.get('username')
-    size = event.get('random_len')
-    cur_time = datetime.now()
+span.set_attribute("username", name)
+span.set_attribute("random_len", size)
 
-    span.set_attribute("username", name)
-    span.set_attribute("random_len", size)
+random_numbers = sample(range(0, 1000000), size)
+template_path = os.path.join(SCRIPT_DIR, 'templates', 'template.html')
 
-    random_numbers = sample(range(0, 1000000), size)
-    template_path = os.path.join(SCRIPT_DIR, 'templates', 'template.html')
+with open(template_path, 'r') as file:
+    template = Template(file.read())
 
-    with open(template_path, 'r') as file:
-        template = Template(file.read())
+html = template.render(username=name, cur_time=cur_time, random_numbers=random_numbers)
 
-    html = template.render(username=name, cur_time=cur_time, random_numbers=random_numbers)
+span.set_attribute("template_path", template_path)
+span.set_attribute("render_time", str(cur_time))
 
-    span.set_attribute("template_path", template_path)
-    span.set_attribute("render_time", str(cur_time))
+span.end()
 
-# Turn profiling off
-scalene_profiler.stop()

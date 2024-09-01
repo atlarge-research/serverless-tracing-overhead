@@ -3,16 +3,16 @@ name: experiment
 services:
   experiment:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: Dockerfile-request-based
     deploy:
       resources:
         limits:
           cpus: '1'
     environment:
       OTLP_ENDPOINT: "http://otel-collector:4317"
-      EXPERIMENT_NAME: "graph-pagerank"
-      TEST_RUNS: 100000
+      EXPERIMENT_ENDPOINT: "db"
+      EXPERIMENT_ITERATIONS: 100000
     networks:
       - telemetry
     volumes:

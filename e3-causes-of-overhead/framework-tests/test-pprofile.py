@@ -14,17 +14,6 @@ from datetime import datetime
 from random import sample
 
 # Setup OpenTelemetry
-resource = Resource(attributes={"service.name": "test-profiler"})
-trace.set_tracer_provider(TracerProvider(resource=resource))
-tracer = trace.get_tracer("function")
-
-# Setup the span processor with the exporter
-otlp_exporter = OTLPSpanExporter(
-    endpoint="http://localhost:4317",
-    insecure=True
-)
-span_processor = SimpleSpanProcessor(otlp_exporter)
-trace.get_tracer_provider().add_span_processor(span_processor)
 
 size_generators = {
     'test': 10,
@@ -39,30 +28,48 @@ event = {
     'random_len': size_generators["small"],
 }
 
+def configure_opentelemetry():
+    resource = Resource(attributes={"service.name": "test-profiler"})
+    trace.set_tracer_provider(TracerProvider(resource=resource))
+    tracer = trace.get_tracer("function")
+
+    # Setup the span processor with the exporter
+    otlp_exporter = OTLPSpanExporter(
+        endpoint="http://localhost:4317",
+        insecure=True
+    )
+    span_processor = SimpleSpanProcessor(otlp_exporter)
+    trace.get_tracer_provider().add_span_processor(span_processor)
+    return tracer
+
 
 def profile_dynamic_html():
     # Deterministic profiler
     prof = pprofile.Profile()
 
     with prof():
-        with tracer.start_as_current_span("dynamic_html") as span:
-            name = event.get('username')
-            size = event.get('random_len')
-            cur_time = datetime.now()
+        tracer = configure_opentelemetry()
+        span = tracer.start_span("dynamic_html")
 
-            span.set_attribute("username", name)
-            span.set_attribute("random_len", size)
+        name = event.get('username')
+        size = event.get('random_len')
+        cur_time = datetime.now()
 
-            random_numbers = sample(range(0, 1000000), size)
-            template_path = os.path.join(SCRIPT_DIR, 'templates', 'template.html')
+        span.set_attribute("username", name)
+        span.set_attribute("random_len", size)
 
-            with open(template_path, 'r') as file:
-                template = Template(file.read())
+        random_numbers = sample(range(0, 1000000), size)
+        template_path = os.path.join(SCRIPT_DIR, 'templates', 'template.html')
 
-            html = template.render(username=name, cur_time=cur_time, random_numbers=random_numbers)
+        with open(template_path, 'r') as file:
+            template = Template(file.read())
 
-            span.set_attribute("template_path", template_path)
-            span.set_attribute("render_time", str(cur_time))
+        html = template.render(username=name, cur_time=cur_time, random_numbers=random_numbers)
+
+        span.set_attribute("template_path", template_path)
+        span.set_attribute("render_time", str(cur_time))
+
+        span.end()
 
     prof.print_stats()
 

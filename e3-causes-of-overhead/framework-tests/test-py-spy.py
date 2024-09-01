@@ -23,23 +23,25 @@ event = {
     'random_len': size_generators["small"],
 }
 
+def configure_opentelemetry():
+    resource = Resource(attributes={"service.name": "test-profiler"})
+    trace.set_tracer_provider(TracerProvider(resource=resource))
+    tracer = trace.get_tracer("function")
 
-resource = Resource(attributes={"service.name": "test-profiler"})
-provider = TracerProvider(resource=resource)
-
-otlp_exporter = OTLPSpanExporter(
-    endpoint="http://localhost:4317",
-    insecure=True
-)
-span_processor = SimpleSpanProcessor(otlp_exporter)
-provider.add_span_processor(span_processor)
-
-trace.set_tracer_provider(provider)
-
-tracer = trace.get_tracer("function")
+    # Setup the span processor with the exporter
+    otlp_exporter = OTLPSpanExporter(
+        endpoint="http://localhost:4317",
+        insecure=True
+    )
+    span_processor = SimpleSpanProcessor(otlp_exporter)
+    trace.get_tracer_provider().add_span_processor(span_processor)
+    return tracer
 
 
-with tracer.start_as_current_span("dynamic_html") as span:
+def pyspy_test():
+    tracer = configure_opentelemetry()
+    span = tracer.start_span("dynamic_html")
+
     name = event.get('username')
     size = event.get('random_len')
     cur_time = datetime.now()
@@ -57,3 +59,9 @@ with tracer.start_as_current_span("dynamic_html") as span:
 
     span.set_attribute("template_path", template_path)
     span.set_attribute("render_time", str(cur_time))
+
+    span.end()
+
+
+if __name__ == "__main__":
+    pyspy_test()

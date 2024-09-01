@@ -18,4 +18,4 @@ COPY *.py .
 RUN mkdir output
 
 # Run the main.py script
-CMD ["python", "main.py"]
+CMD ["python", "request_based.py"]

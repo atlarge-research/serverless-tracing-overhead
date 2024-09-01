@@ -80,7 +80,7 @@ def run_workloads_sequentially(num_runs, experiment_name, start_mode):
 
 
 def configure_opentelemetry():
-    resource = Resource(attributes={"service.name": "e3-dynamic-html"})
+    resource = Resource(attributes={"service.name": "e3"})
     provider = TracerProvider(resource=resource)
 
     otlp_exporter = OTLPSpanExporter(
@@ -98,8 +98,8 @@ def configure_opentelemetry():
 
 if __name__ == "__main__":
     # Number of times to run the process
-    iterations = int(os.getenv("TEST_RUNS", 1))
-    experiment_name = os.getenv("EXPERIMENT_NAME", EXPERIMENT_NAME_GRAPH_PAGERANK)
+    iterations = int(os.getenv("TEST_RUNS", 50))
+    experiment_name = os.getenv("EXPERIMENT_NAME", EXPERIMENT_NAME_DYNAMIC_HTML)
     start_mode = os.getenv("START_MODE", "cold")
     print("Iterations: ", iterations)
     print("Experiment name: ", experiment_name)
