@@ -57,6 +57,6 @@ telemetry:
 	docker compose -f docker-compose/telemetry.yaml up -d
 
 postgres:
-	docker compose -f docker-compose/postgres.yaml up -d
+	docker compose -f postgres/postgres.yaml up -d
 
-.PHONY: request-based-db request-based-updates flamegraph-dynamic-html-cold flamegraph-dynamic-html-warm flamegraph-graph-pagerank-cold flamegraph-graph-pagerank-warm flamegraphs dynamic-html-cold dynamic-html-warm graph-pagerank-cold graph-pagerank-warm telemetry
+.PHONY: postgres request-based-db request-based-updates flamegraph-dynamic-html-cold flamegraph-dynamic-html-warm flamegraph-graph-pagerank-cold flamegraph-graph-pagerank-warm flamegraphs dynamic-html-cold dynamic-html-warm graph-pagerank-cold graph-pagerank-warm telemetry
