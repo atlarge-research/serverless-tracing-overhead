@@ -75,7 +75,7 @@ def create_app(profiling_data):
 
     @app.route("/db")
     def single_db_query():
-        tracer = trace.get_tracer(__name__)
+        tracer = trace.get_tracer("function")
         span = tracer.start_span("db-endpoint")
         random_id = random.randint(1, 10000)
         world = World.query.get(random_id)
@@ -105,7 +105,7 @@ def create_app(profiling_data):
     @app.route('/updates', methods=['GET'])
     @profile_route(profiling_data, "updates")
     def updates():
-        tracer = trace.get_tracer(__name__)
+        tracer = trace.get_tracer("function")
         span = tracer.start_span("updates-endpoint")
         query_count = request.args.get('queries', 1, type=int)
         query_count = min(max(query_count, 1), 500)

@@ -1,6 +1,6 @@
-Flask
-flask_sqlalchemy
-SQLAlchemy
-opentelemetry-instrumentation-flask
-opentelemetry-instrumentation-sqlalchemy
-psycopg2-binary
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+SQLAlchemy==2.0.29
+opentelemetry-instrumentation-flask==0.45b0
+opentelemetry-instrumentation-sqlalchemy==0.45b0
+psycopg2-binary==2.9.9
