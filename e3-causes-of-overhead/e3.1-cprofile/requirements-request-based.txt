@@ -2,3 +2,5 @@ Flask
 flask_sqlalchemy
 SQLAlchemy
 opentelemetry-instrumentation-flask
+opentelemetry-instrumentation-sqlalchemy
+psycopg2
