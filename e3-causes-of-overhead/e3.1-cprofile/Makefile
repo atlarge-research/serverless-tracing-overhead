@@ -36,27 +36,34 @@ flamegraphs: flamegraph-dynamic-html-cold flamegraph-dynamic-html-warm flamegrap
 
 
 dynamic-html-cold:
+	docker compose -f docker-compose/dynamic-html-cold.yaml build --no-cache
 	docker compose -f docker-compose/dynamic-html-cold.yaml up -d
 
 dynamic-html-warm:
+	docker compose -f docker-compose/dynamic-html-warm.yaml build --no-cache
 	docker compose -f docker-compose/dynamic-html-warm.yaml up -d
 
 graph-pagerank-cold:
+	docker compose -f docker-compose/graph-pagerank-cold.yaml build --no-cache
 	docker compose -f docker-compose/graph-pagerank-cold.yaml up -d
 
 graph-pagerank-warm:
+	docker compose -f docker-compose/graph-pagerank-warm.yaml build --no-cache
 	docker compose -f docker-compose/graph-pagerank-warm.yaml up -d
 
 request-based-db:
+	docker compose -f docker-compose/request-based-db.yaml build --no-cache
 	docker compose -f docker-compose/request-based-db.yaml up -d
 
 request-based-updates:
+	docker compose -f docker-compose/request-based-updates.yaml build --no-cache
 	docker compose -f docker-compose/request-based-updates.yaml up -d
 
 telemetry:
 	docker compose -f docker-compose/telemetry.yaml up -d
 
 postgres:
+	docker compose -f postgres/postgres.yaml build --no-cache
 	docker compose -f postgres/postgres.yaml up -d
 
 .PHONY: postgres request-based-db request-based-updates flamegraph-dynamic-html-cold flamegraph-dynamic-html-warm flamegraph-graph-pagerank-cold flamegraph-graph-pagerank-warm flamegraphs dynamic-html-cold dynamic-html-warm graph-pagerank-cold graph-pagerank-warm telemetry
