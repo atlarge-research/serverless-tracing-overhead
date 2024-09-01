@@ -13,6 +13,7 @@ services:
       OTLP_ENDPOINT: "http://otel-collector:4317"
       EXPERIMENT_ENDPOINT: "updates"
       EXPERIMENT_ITERATIONS: 100000
+      DB_HOST: postgres
     networks:
       - telemetry
     volumes:
