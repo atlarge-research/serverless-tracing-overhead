@@ -47,7 +47,13 @@ graph-pagerank-cold:
 graph-pagerank-warm:
 	docker compose -f docker-compose/graph-pagerank-warm.yaml up -d
 
+request-based-db:
+	docker compose -f docker-compose/request-based-db.yaml up -d
+
+request-based-updates:
+	docker compose -f docker-compose/request-based-updates.yaml up -d
+
 telemetry:
 	docker compose -f docker-compose/telemetry.yaml up -d
 
-.PHONY: flamegraph-dynamic-html-cold flamegraph-dynamic-html-warm flamegraph-graph-pagerank-cold flamegraph-graph-pagerank-warm flamegraphs dynamic-html-cold dynamic-html-warm graph-pagerank-cold graph-pagerank-warm telemetry
+.PHONY: request-based-db request-based-updates flamegraph-dynamic-html-cold flamegraph-dynamic-html-warm flamegraph-graph-pagerank-cold flamegraph-graph-pagerank-warm flamegraphs dynamic-html-cold dynamic-html-warm graph-pagerank-cold graph-pagerank-warm telemetry
