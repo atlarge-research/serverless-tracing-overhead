@@ -11,8 +11,7 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container at /usr/src/app
-COPY dynamic_html dynamic_html
-COPY graph_pagerank graph_pagerank
+COPY flask_app flask_app
 COPY *.py .
 
 RUN mkdir output
