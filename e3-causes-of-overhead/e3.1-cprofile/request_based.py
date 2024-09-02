@@ -8,7 +8,7 @@ from multiprocessing import Manager
 from utils import save_aggregated_statistics, save_each_run_results
 
 
-def run_flask_app(profiling_data):
+def run_flask_app(profiling_data, port):
     # Create a Flask app instance
     app, db = create_app(profiling_data)
 
@@ -16,10 +16,10 @@ def run_flask_app(profiling_data):
     with app.app_context():
         configure_opentelemetry(app, db, "e3-request-based-flask")
 
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=port, debug=False)
 
 
-def run_experiment(endpoint="updates", iterations=100000):
+def run_experiment(endpoint="updates", iterations=100000, port=5000):
     url = f"http://localhost:5000/{endpoint}"
 
     params = {}
@@ -27,7 +27,7 @@ def run_experiment(endpoint="updates", iterations=100000):
         params = {"queries": 10}
 
     # Start Flask app in a separate process
-    flask_process = multiprocessing.Process(target=run_flask_app, args=(profiling_data,))
+    flask_process = multiprocessing.Process(target=run_flask_app, args=(profiling_data, port))
     flask_process.start()
 
     # Wait a moment for the Flask app to start
@@ -52,10 +52,11 @@ if __name__ == "__main__":
 
     _endpoint = os.getenv("EXPERIMENT_ENDPOINT", "updates")
     _iterations = int(os.getenv("EXPERIMENT_ITERATIONS", 10))
+    _port = int(os.getenv("EXPERIMENT_PORT", 5000))
     print("Running experiment {} with {} iterations".format(_endpoint, _iterations))
 
     # Run the experiment and collect profiling data
-    run_experiment(endpoint=_endpoint, iterations=_iterations)
+    run_experiment(endpoint=_endpoint, iterations=_iterations, port=_port)
 
     # Convert the manager's list to a regular list for processing
     profiling_data_list = list(profiling_data)
