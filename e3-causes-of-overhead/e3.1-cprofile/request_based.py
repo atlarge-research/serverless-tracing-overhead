@@ -20,7 +20,7 @@ def run_flask_app(profiling_data, port):
 
 
 def run_experiment(endpoint="updates", iterations=100000, port=5000):
-    url = f"http://localhost:5000/{endpoint}"
+    url = f"http://localhost:{port}/{endpoint}"
 
     params = {}
     if endpoint == "updates":
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     manager = Manager()
     profiling_data = manager.list()
 
-    _endpoint = os.getenv("EXPERIMENT_ENDPOINT", "updates")
+    _endpoint = os.getenv("EXPERIMENT_ENDPOINT", "db")
     _iterations = int(os.getenv("EXPERIMENT_ITERATIONS", 10))
     _port = int(os.getenv("EXPERIMENT_PORT", 5000))
     print("Running experiment {} with {} iterations".format(_endpoint, _iterations))

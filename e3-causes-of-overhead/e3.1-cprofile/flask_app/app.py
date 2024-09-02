@@ -75,6 +75,7 @@ def create_app(profiling_data):
         return jsonify({"message": "Hello, World!"})
 
     @app.route("/db")
+    @profile_route(profiling_data, "db")
     def single_db_query():
         tracer = trace.get_tracer("function")
         span = tracer.start_span("db-endpoint")
