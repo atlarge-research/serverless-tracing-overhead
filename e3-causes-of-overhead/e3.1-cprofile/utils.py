@@ -1,5 +1,6 @@
 import numpy as np
 import csv
+import os.path
 
 
 dynamic_html_size_generators = {
@@ -23,6 +24,9 @@ graph_pagerank_event = {
 }
 
 def save_each_run_results(times_dict_list, filename="each_run_results.csv"):
+    if not os.path.exists(filename):
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+
     with open(filename, mode='w', newline='') as file:
         writer = csv.writer(file)
 
@@ -50,6 +54,9 @@ def save_aggregated_statistics(times_dict_list, filename="aggregated_statistics.
         for key, value in times_dict.items():
             aggregated_times[key].append(value)
             percentage_of_total[key].append((value / total_time) * 100)
+
+    if not os.path.exists(filename):
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
 
     with open(filename, mode='w', newline='') as file:
         writer = csv.writer(file)
