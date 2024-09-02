@@ -160,18 +160,24 @@ def profile_route(profiling_data_list, endpoint_name=""):
                 if any(fn == funcname for fn in config_functions):
                     # The get_tracer line
                     if line == 490:
+                        print("CONFIGURATION", funcname, cumtime)
                         time_spent['configuration'] += cumtime
                 elif any(fn == funcname for fn in instrumentation_functions):
+                    print("INSTRUMENTATION", funcname, cumtime)
                     time_spent['instrumentation'] += cumtime
                 elif any(fn == funcname for fn in exporting_functions):
+                    print("EXPORT", funcname, cumtime)
                     time_spent['export'] += cumtime
                 elif funcname == total_time_function:
+                    print("TOTAL", funcname, cumtime)
                     time_spent['total'] = cumtime
 
                 # Handle special case for specific functions
                 elif 'opentelemetry/instrumentation/sqlalchemy' in filename:
+                    print("INSTRUMENTATION", funcname, tottime)
                     time_spent['instrumentation'] += tottime
                 elif funcname == 'use_span':
+                    print("INSTRUMENTATION", funcname, tottime)
                     time_spent['instrumentation'] += tottime
 
             # Calculate task time as total minus other categories

@@ -61,6 +61,9 @@ if __name__ == "__main__":
     # Convert the manager's list to a regular list for processing
     profiling_data_list = list(profiling_data)
 
+    for item in profiling_data_list:
+        print(item)
+
     # Save each run's results to a CSV file
     save_each_run_results(times_dict_list=profiling_data_list,
                           filename=f"output/{_endpoint}_{_iterations}_each_run_results.csv")
