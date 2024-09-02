@@ -102,6 +102,7 @@ def profile_function(times_dict_list, experiment_name, start_mode):
             # Append this run's function times to the list
             times_dict_list.append(renamed_func_times)
 
+            # Dump the profile data
             # if not os.path.exists(PROFILE_DIR):
             #     os.makedirs(PROFILE_DIR)
             # profiler.dump_stats(f"{PROFILE_DIR}/workload-{experiment_name}-{start_mode}.prof")
@@ -160,24 +161,18 @@ def profile_route(profiling_data_list, endpoint_name=""):
                 if any(fn == funcname for fn in config_functions):
                     # The get_tracer line
                     if line == 490:
-                        print("CONFIGURATION", funcname, cumtime)
                         time_spent['configuration'] += cumtime
                 elif any(fn == funcname for fn in instrumentation_functions):
-                    print("INSTRUMENTATION", funcname, cumtime)
                     time_spent['instrumentation'] += cumtime
                 elif any(fn == funcname for fn in exporting_functions):
-                    print("EXPORT", funcname, cumtime)
                     time_spent['export'] += cumtime
                 elif funcname == total_time_function:
-                    print("TOTAL", funcname, cumtime)
                     time_spent['total'] = cumtime
 
                 # Handle special case for specific functions
                 elif 'opentelemetry/instrumentation/sqlalchemy' in filename:
-                    print("INSTRUMENTATION", funcname, tottime)
                     time_spent['instrumentation'] += tottime
                 elif funcname == 'use_span':
-                    print("INSTRUMENTATION", funcname, tottime)
                     time_spent['instrumentation'] += tottime
 
             # Calculate task time as total minus other categories
