@@ -12,7 +12,7 @@ services:
     environment:
       OTLP_ENDPOINT: "http://otel-collector:4317"
       EXPERIMENT_ENDPOINT: "db"
-      EXPERIMENT_ITERATIONS: 100000
+      EXPERIMENT_ITERATIONS: 100
       DB_HOST: postgres
     networks:
       - telemetry

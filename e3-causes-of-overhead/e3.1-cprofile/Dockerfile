@@ -4,7 +4,7 @@ FROM python:3.9-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements file if you have one (uncomment if you do)
+RUN pip install --upgrade pip
 COPY requirements.txt ./
 
 # Install any needed packages specified in requirements.txt (uncomment if you have a requirements.txt)

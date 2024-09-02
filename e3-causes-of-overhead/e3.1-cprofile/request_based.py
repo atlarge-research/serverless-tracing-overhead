@@ -51,7 +51,7 @@ if __name__ == "__main__":
     profiling_data = manager.list()
 
     _endpoint = os.getenv("EXPERIMENT_ENDPOINT", "updates")
-    _iterations = int(os.getenv("EXPERIMENT_ITERATIONS", 100000))
+    _iterations = int(os.getenv("EXPERIMENT_ITERATIONS", 10))
     print("Running experiment {} with {} iterations".format(_endpoint, _iterations))
 
     # Run the experiment and collect profiling data
