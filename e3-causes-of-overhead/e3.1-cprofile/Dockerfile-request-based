@@ -19,5 +19,5 @@ COPY *.py .
 RUN mkdir output
 
 # Run the main.py script
-#CMD ["python", "request_based.py"]
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+CMD ["python", "request_based.py"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
