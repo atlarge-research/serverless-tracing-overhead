@@ -1,0 +1,6 @@
+Function,Average Time (ms),Median Time (ms),95th Percentile (ms),99th Percentile (ms),Average % of Total Time
+configuration,0.000000,0.000000,0.000000,0.000000,0.00
+task,12.138151,9.865000,25.523050,30.337030,68.38
+export,4.851154,4.054000,12.239150,17.170030,27.92
+instrumentation,0.613553,0.560000,0.801000,0.840000,3.56
+total,17.627658,14.606000,32.319050,36.616000,100.00
