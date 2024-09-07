@@ -100,9 +100,10 @@ def stacked_area_chart(df, output_file="stacked_area_chart.png"):
     range_size = end - start
     range_list = range(0, range_size)
 
-    df = df.loc[start:end-1]
+    df = df.loc[start:end - 1]
 
-    df['Total Time'] = df["configuration Time (ms)"] + df["instrumentation Time (ms)"] + df["export Time (ms)"] + df["task Time (ms)"]
+    df['Total Time'] = df["configuration Time (ms)"] + df["instrumentation Time (ms)"] + df["export Time (ms)"] + df[
+        "task Time (ms)"]
 
     df['Configuration %'] = df["configuration Time (ms)"] / df['Total Time']
     df['Instrumentation %'] = df["instrumentation Time (ms)"] / df['Total Time']
@@ -174,7 +175,9 @@ def radar_chart(df, output_file="radar_chart.png"):
     plt.savefig(output_file, bbox_inches='tight')
     plt.close()
 
-def two_stacked_area_charts(df1, df2, output_file="stacked_area_charts.png"):
+
+def two_stacked_area_charts(df1, df2, title1="", title2="", output_file="stacked_area_charts.png"):
+    label_size = 24
     start = 100
     end = 200
     range_size = end - start
@@ -198,29 +201,32 @@ def two_stacked_area_charts(df1, df2, output_file="stacked_area_charts.png"):
 
     categories = ['Configuration %', 'Instrumentation %', 'Export %', 'Task %']
 
-    fig, axes = plt.subplots(1, 2, figsize=(16, 8), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(14, 7), sharey=True)
 
     axes[0].stackplot(range_list, df1[categories].T,
                       colors=['mediumslateblue', 'mediumseagreen', 'coral', 'lightskyblue'], alpha=0.8)
-    axes[0].set_xlabel("Iteration", fontsize=24)
-    axes[0].set_ylabel("Percentage of Total Time", fontsize=24)
+    axes[0].set_title(title1, fontsize=22)
+    axes[0].set_xlabel("Iteration", fontsize=label_size)
+    axes[0].set_ylabel("Percentage of Total Time", fontsize=label_size)
     axes[0].set_xlim(0, range_size)
     axes[0].set_ylim(0, 1)
     axes[0].set_xticks(ticks=range(0, range_size + 1, 20))
 
+    axes[1].set_title(title2, fontsize=22)
     axes[1].stackplot(range_list, df2[categories].T,
                       colors=['mediumslateblue', 'mediumseagreen', 'coral', 'lightskyblue'], alpha=0.8)
-    axes[1].set_xlabel("Iteration", fontsize=24)
+    axes[1].set_xlabel("Iteration", fontsize=label_size)
     axes[1].set_xlim(0, range_size)
     axes[1].set_ylim(0, 1)
     axes[1].set_xticks(ticks=range(0, range_size + 1, 20))
 
     fig.legend(labels=['Configuration', 'Instrumentation', 'Export', 'Task'],
-               loc='upper center', ncol=4, frameon=True, shadow=True, bbox_to_anchor=(0.5, 1.0))
+               loc='upper center', ncol=4, frameon=True, shadow=True, bbox_to_anchor=(0.5, 1.02))
 
     plt.tight_layout(rect=[0, 0, 1, 0.95])  # Adjust the layout to fit everything properly
     plt.savefig(output_file, bbox_inches='tight')
     plt.close()
+
 
 def plot_all(filename, name):
     df = pd.read_csv(filename)
@@ -249,5 +255,4 @@ if __name__ == "__main__":
 
     df1 = pd.read_csv(dynamic_html_cold_file)
     df2 = pd.read_csv(db_file)
-    two_stacked_area_charts(df1, df2, "plots/two-stacked-area-charts.pdf")
-
+    two_stacked_area_charts(df1, df2, "dynamic-html-cold", "/db", "plots/two-stacked-area-charts.pdf")

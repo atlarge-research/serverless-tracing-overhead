@@ -119,7 +119,6 @@ def create_app(profiling_data):
         for _ in range(query_count):
             random_id = random.randint(1, 10000)
 
-            # Instrument the database query
             query_span = tracer.start_span("db-query")
             world = World.query.filter_by(id=random_id).first()
             query_span.set_attribute("random_id", random_id)
