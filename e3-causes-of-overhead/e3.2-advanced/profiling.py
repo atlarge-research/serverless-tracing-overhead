@@ -59,7 +59,7 @@ def profile_function(times_dict_list, experiment_name, instrumented):
             full_stats = s.getvalue()
 
             # For debugging
-            print(full_stats)
+            # print(full_stats)
 
             # Initialize the function times dictionary
             func_times = {
@@ -89,7 +89,6 @@ def profile_function(times_dict_list, experiment_name, instrumented):
                             except ValueError:
                                 continue
 
-            print(func_times)
             # Calculate the adjusted time for the task function
             task_time_adjusted = func_times["(task)"] - (func_times["(add_event)"] + func_times["(set_attribute)"])
 
@@ -112,7 +111,6 @@ def profile_function(times_dict_list, experiment_name, instrumented):
             if not os.path.exists(PROFILE_DIR):
                 os.makedirs(PROFILE_DIR)
             profiler.dump_stats(f"{PROFILE_DIR}/workload-{experiment_name}-{instrumented}.prof")
-            print("FINISHED")
 
             return result
 

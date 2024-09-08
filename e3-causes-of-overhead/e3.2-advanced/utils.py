@@ -1,6 +1,7 @@
 import os
 import csv
 import numpy as np
+from enum import Enum
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
@@ -8,6 +9,12 @@ from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExport
 from opentelemetry.sdk.resources import Resource
 
 OTLP_ENDPOINT = os.getenv("OTLP_ENDPOINT", "http://localhost:4317")
+
+
+class ExperimentName(Enum):
+    DYNAMIC_HTML = "dynamic-html"
+    GRAPH_PAGERANK = "graph-pagerank"
+
 
 DYNAMIC_HTML_SIZE_GENERATORS = {
     'test': 10,
@@ -17,6 +24,15 @@ DYNAMIC_HTML_SIZE_GENERATORS = {
 DYNAMIC_HTML_EVENT = {
     'username': 'testname',
     'random_len': DYNAMIC_HTML_SIZE_GENERATORS['test']
+}
+GRAPH_PAGERANK_SIZE_GENERATORS = {
+    'test' : 10,
+    'small' : 10000,
+    'large': 100000
+}
+
+GRAPH_PAGERANK_EVENT = {
+    'size': GRAPH_PAGERANK_SIZE_GENERATORS['small']
 }
 
 
@@ -77,3 +93,15 @@ def save_aggregated_statistics(times_dict_list, filename="aggregated_statistics.
             ])
 
     print(f"Aggregated statistics saved to {filename}")
+
+
+def get_total_avg_time(times_dict_list):
+    aggregated_total_time = {"total": []}
+
+    for times_dict in times_dict_list:
+        total_time = times_dict["total"]
+        aggregated_total_time["total"].append(total_time)
+
+    avg_time = np.mean(np.array(aggregated_total_time["total"]))
+
+    return avg_time
