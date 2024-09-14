@@ -9,7 +9,7 @@ python: non-instrumented-python instrumented-python
 nodejs: non-instrumented-nodejs instrumented-nodejs
 
 custom-run:
-	./sebs.py experiment invoke perf-cost --config config/experiments/instrumented/610.dynamic-html.json --output-dir experiment-results/nodejs/instrumented/610.dynamic-html-otel --deployment openwhisk --language nodejs --language-version "12"
+	./sebs.py experiment invoke perf-cost --config config/experiments/instrumented/6101.dynamic-html.json --output-dir experiment-results/nodejs/instrumented/6101.dynamic-html-otel --deployment openwhisk --language nodejs --language-version "12"
 	./sebs.py experiment invoke perf-cost --config config/experiments/non-instrumented/110.dynamic-html.json --output-dir experiment-results/nodejs/non-instrumented/110.dynamic-html --deployment openwhisk --language nodejs --language-version "12"
 #	./sebs.py experiment invoke perf-cost --config config/experiments/instrumented/640.video-processing.json --output-dir experiment-results/python/instrumented/640.video-processing-otel --deployment openwhisk
 
