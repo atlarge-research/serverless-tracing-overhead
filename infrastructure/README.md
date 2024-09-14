@@ -9,8 +9,8 @@
    2. Activate `. python-venv/bin/activate`
    3. Install dependencies `./install.py --openwhisk`
 
-5. Set up the minio bucket
-6. Configure the bucket IP and end port in the config files
+5. Set up the minio bucket `./sebs.py storage start minio --port 9011 --output-json out_storage.json`
+6. Configure the bucket IP and end port in the config files ``
 
 
 ## Charts

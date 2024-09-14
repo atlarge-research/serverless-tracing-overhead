@@ -303,13 +303,13 @@ machine and the mapped port. You can typically find an externally accessible add
 For example, for an external address `192.168.1.104` (a LAN-local address on CloudLab) and mapped port `9011`, set the SeBS configuration as follows:
 
 ```
-jq --argfile file1 out_storage.json '.deployment.openwhisk.storage = $file1 | .deployment.openwhisk.storage.address = "192.168.1.104:9011"' config/example.json > config/openwhisk.json
+jq --argfile file1 out_storage.json '.deployment.openwhisk.storage = $file1 | .deployment.openwhisk.storage.address = "192.168.1.109:9011"' config/example.json > config/openwhisk.json
 ```
 
 You can validate this is the correct address by use `curl` to access the Minio instance from another machine or container:
 
 ```
-$ curl -i 192.168.1.104:9011/minio/health/live
+$ curl -i 192.168.1.109:9011/minio/health/live
 HTTP/1.1 200 OK
 Accept-Ranges: bytes
 Content-Length: 0
