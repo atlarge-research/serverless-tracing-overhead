@@ -300,7 +300,7 @@ default, it is a address in the local bridge network not accessible to most of
 the Kubernetes cluster. It should be replaced with an external address of the
 machine and the mapped port. You can typically find an externally accessible address via `ip addr`.
 
-For example, for an external address `192.168.1.104` (a LAN-local address on CloudLab) and mapped port `9011`, set the SeBS configuration as follows:
+For example, for an external address `192.168.1.109` (a LAN-local address on CloudLab) and mapped port `9011`, set the SeBS configuration as follows:
 
 ```
 jq --argfile file1 out_storage.json '.deployment.openwhisk.storage = $file1 | .deployment.openwhisk.storage.address = "192.168.1.109:9011"' config/example.json > config/openwhisk.json

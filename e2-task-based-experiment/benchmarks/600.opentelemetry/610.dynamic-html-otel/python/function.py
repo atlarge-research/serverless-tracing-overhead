@@ -23,7 +23,7 @@ tracer = trace.get_tracer("function")
 
 # Setup the OTLP exporter to send traces to the collector using HTTP
 otlp_exporter = OTLPSpanExporter(
-    endpoint="http://192.168.1.104:4317",
+    endpoint="http://192.168.1.109:4317",
     insecure=True
 )
 
