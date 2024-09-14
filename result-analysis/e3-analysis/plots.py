@@ -8,15 +8,15 @@ import os
 sns.set_style("whitegrid")
 plt.rcParams.update({
     "font.size": 20,
-    "axes.titlesize": 22,
-    "axes.labelsize": 22,
-    "xtick.labelsize": 20,
-    "ytick.labelsize": 20,
-    "legend.fontsize": 20,
+    "axes.titlesize": 24,
+    "axes.labelsize": 24,
+    "xtick.labelsize": 22,
+    "ytick.labelsize": 22,
+    "legend.fontsize": 24,
     "figure.titlesize": 20
 })
 
-LABEL_SIZE = 20
+LABEL_SIZE = 28
 
 
 def boxplot(df, output_file="boxplot.png"):
@@ -102,24 +102,24 @@ def stacked_area_chart(df, output_file="stacked_area_chart.png"):
 
     df = df.loc[start:end - 1]
 
-    df['Total Time'] = df["configuration Time (ms)"] + df["instrumentation Time (ms)"] + df["export Time (ms)"] + df[
-        "task Time (ms)"]
+    df['Total Time'] = df["configuration Time (ms)"] + df["instrumentation Time (ms)"] + df["export Time (ms)"] + df["task Time (ms)"]
 
-    df['Configuration %'] = df["configuration Time (ms)"] / df['Total Time']
-    df['Instrumentation %'] = df["instrumentation Time (ms)"] / df['Total Time']
-    df['Export %'] = df["export Time (ms)"] / df['Total Time']
-    df['Task %'] = df["task Time (ms)"] / df['Total Time']
+    # Multiply by 100 to get percentages
+    df['Configuration %'] = (df["configuration Time (ms)"] / df['Total Time']) * 100
+    df['Instrumentation %'] = (df["instrumentation Time (ms)"] / df['Total Time']) * 100
+    df['Export %'] = (df["export Time (ms)"] / df['Total Time']) * 100
+    df['Task %'] = (df["task Time (ms)"] / df['Total Time']) * 100
 
     categories = ['Configuration %', 'Instrumentation %', 'Export %', 'Task %']
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(14, 8))
     plt.stackplot(range_list, df[categories].T, labels=['Configuration', 'Instrumentation', 'Export', 'Task'],
                   colors=['mediumslateblue', 'mediumseagreen', 'coral', 'lightskyblue'], alpha=0.8)
 
-    plt.xlabel("Iteration", fontsize=LABEL_SIZE)
+    plt.xlabel("Runs", fontsize=LABEL_SIZE)
     plt.ylabel("Percentage of Total Time", fontsize=LABEL_SIZE)
 
     plt.xlim(0, range_size)
-    plt.ylim(0, 1)
+    plt.ylim(0, 100)  # Adjust the y-axis limit to reflect percentage range
     plt.xticks(ticks=range(0, range_size + 1, 20), labels=range(0, range_size + 1, 20))
 
     plt.legend(loc="upper left", bbox_to_anchor=(1.01, 1), borderaxespad=0., frameon=True, shadow=True)
@@ -206,18 +206,18 @@ def two_stacked_area_charts(df1, df2, title1="", title2="", output_file="stacked
     axes[0].stackplot(range_list, df1[categories].T,
                       colors=['mediumslateblue', 'mediumseagreen', 'coral', 'lightskyblue'], alpha=0.8)
     axes[0].set_title(title1, fontsize=22)
-    axes[0].set_xlabel("Iteration", fontsize=label_size)
+    axes[0].set_xlabel("Runs", fontsize=label_size)
     axes[0].set_ylabel("Percentage of Total Time", fontsize=label_size)
     axes[0].set_xlim(0, range_size)
-    axes[0].set_ylim(0, 1)
+    axes[0].set_ylim(0, 100)
     axes[0].set_xticks(ticks=range(0, range_size + 1, 20))
 
     axes[1].set_title(title2, fontsize=22)
     axes[1].stackplot(range_list, df2[categories].T,
                       colors=['mediumslateblue', 'mediumseagreen', 'coral', 'lightskyblue'], alpha=0.8)
-    axes[1].set_xlabel("Iteration", fontsize=label_size)
+    axes[1].set_xlabel("Runs", fontsize=label_size)
     axes[1].set_xlim(0, range_size)
-    axes[1].set_ylim(0, 1)
+    axes[1].set_ylim(0, 100)
     axes[1].set_xticks(ticks=range(0, range_size + 1, 20))
 
     fig.legend(labels=['Configuration', 'Instrumentation', 'Export', 'Task'],

@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
     _endpoint = os.getenv("EXPERIMENT_ENDPOINT", "db")
     _iterations = int(os.getenv("EXPERIMENT_ITERATIONS", 1))
-    _port = int(os.getenv("EXPERIMENT_PORT", 5000))
+    _port = int(os.getenv("EXPERIMENT_PORT", 5001))
     print("Running experiment {} with {} iterations".format(_endpoint, _iterations))
 
     # Run the experiment and collect profiling data

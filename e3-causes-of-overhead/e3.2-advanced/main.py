@@ -1,7 +1,7 @@
 # Step 1 Validate if the overhead matches with Chapter 3 and 4 results (The percentage)
 # 1.1 Take the app (task and request based), profile it and measure the overhead
 # 1.2 Check if the results match
-# ! Did cold starts in Chapter 4 so cold starts here only as well?
+import os
 
 # Step 2
 # 2.1 Create function where part of the instrumentation is removed
@@ -17,8 +17,6 @@
 # TODO: Run validations (step 1)
 
 # TODO:
-
-
 
 
 import dynamic_html.main as dynamic_html
@@ -104,13 +102,12 @@ def step_1_validate(experiment_name, iterations):
     print(f"Total Instrumented time: {instrumented_total_avg_time}")
     print(f"Total Non-instrumented time: {non_instrumented_total_avg_time}")
     instrumentation_overhead = instrumented_total_avg_time / non_instrumented_total_avg_time
-    print(f"Overhead percentage: {round(instrumentation_overhead * 100, 2)}%")
+    print(f"Overhead percentage: {round((instrumentation_overhead * 100)-100, 2)}%")
 
 
 if __name__ == '__main__':
-    # TODO: Env variables
-    iterations = 1
-    experiment_name = "dynamic-html"
+    iterations = os.getenv("EXPERIMENT_ITERATIONS", 10)
+    # experiment_name = os.getenv("EXPERIMENT_NAME", ExperimentName.DYNAMIC_HTML.value)
 
-    # step_1_validate(ExperimentName.DYNAMIC_HTML.value, iterations)
+    step_1_validate(ExperimentName.DYNAMIC_HTML.value, iterations)
     step_1_validate(ExperimentName.GRAPH_PAGERANK.value, iterations)

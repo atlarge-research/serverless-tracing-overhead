@@ -1297,7 +1297,8 @@ class K6Statistics:
 
             # Combined boxplot for the current endpoint
             boxplot_data = [data_standard.dropna(), data_elastic.dropna(), data_otel.dropna()]
-            bplot = ax.boxplot(boxplot_data, labels=['Standard', 'Elastic APM', 'OpenTelemetry'], patch_artist=True,
+            bplot = ax.boxplot(boxplot_data, labels=['Non-\nInstrumented', 'Elastic APM\nInstrumented',
+                                                     'OpenTelemetry\nInstrumented'], patch_artist=True,
                                showfliers=False)
 
             # Set colors
@@ -1317,7 +1318,7 @@ class K6Statistics:
 
             # Set titles and labels
             ax.set_title(f'Endpoint: {endpoint}')
-            ax.set_ylabel('Request Duration (ms)')
+            ax.set_ylabel('Request Duration (ms)', fontsize=22)
 
         # fig.suptitle('HTTP Request Duration by Endpoint and Configuration')
         plt.tight_layout(rect=[0, 0, 1, 0.96])
