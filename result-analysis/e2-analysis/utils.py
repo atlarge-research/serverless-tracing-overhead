@@ -3,6 +3,12 @@ import json
 import numpy as np
 import pandas as pd
 
+# Some records are reported as 0
+def get_benchmark_time(times):
+    value = times.get('benchmark')
+    if value == 0:
+        value = 1000
+    return value
 
 def scrub_benchmark_name(benchmark_name):
     # Remove the number in front and keep the benchmark name
@@ -38,7 +44,7 @@ def parse_json(file_path):
     for bench_name, executions in invocations.items():
         for execution_id, execution_data in executions.items():
             times = execution_data.get('times', {})
-            benchmark_values.append(times.get('benchmark'))
+            benchmark_values.append(get_benchmark_time(times))
             client_values.append(times.get('client'))
 
     # Convert lists to numpy arrays and from microseconds to milliseconds

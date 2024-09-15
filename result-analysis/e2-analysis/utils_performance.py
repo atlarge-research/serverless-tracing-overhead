@@ -1,6 +1,7 @@
 import os
 import json
 import pandas as pd
+from utils import get_benchmark_time
 
 PYTHON_DIR = 'results-json/python'
 NODEJS_DIR = 'results-json/nodejs'
@@ -35,7 +36,7 @@ def parse_json(file_path):
                 'benchmark_name': scrubbed_benchmark_name,
                 'configuration': configuration,
                 'language': language,
-                'benchmark_time': times.get('benchmark') / 1000.0,  # Convert to milliseconds
+                'benchmark_time': get_benchmark_time(times) / 1000.0,  # Convert to milliseconds
                 'client_time': times.get('client') / 1000.0  # Convert to milliseconds
             })
 

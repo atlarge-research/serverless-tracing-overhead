@@ -1322,7 +1322,7 @@ class K6Statistics:
 
         # fig.suptitle('HTTP Request Duration by Endpoint and Configuration')
         plt.tight_layout(rect=[0, 0, 1, 0.96])
-        plot_name = "aggregated_plot_endpoints.png"
+        plot_name = "aggregated_plot_endpoints.pdf"
         plt.savefig(plot_name)
         plt.close(fig)
 
