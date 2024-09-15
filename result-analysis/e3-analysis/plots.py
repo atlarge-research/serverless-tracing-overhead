@@ -76,7 +76,7 @@ def stacked_bar_chart(df, output_file="stacked_bar_chart.png"):
     bottom_export = bottom_task + task_pct
     bottom_instrumentation = bottom_export + export_pct
 
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(14, 8))
     plt.bar(runs, configuration_pct, label="Configuration % of Total", color='#4c72b0')
     plt.bar(runs, task_pct, bottom=bottom_task, label="Task % of Total", color='#55a868')
     plt.bar(runs, export_pct, bottom=bottom_export, label="Export % of Total", color='#c44e52')
@@ -94,7 +94,6 @@ def stacked_bar_chart(df, output_file="stacked_bar_chart.png"):
 
 
 def stacked_area_chart(df, output_file="stacked_area_chart.png"):
-    # df = df.head(250)
     start = 100
     end = 200
     range_size = end - start
@@ -111,21 +110,31 @@ def stacked_area_chart(df, output_file="stacked_area_chart.png"):
     df['Task %'] = (df["task Time (ms)"] / df['Total Time']) * 100
 
     categories = ['Configuration %', 'Instrumentation %', 'Export %', 'Task %']
-    plt.figure(figsize=(14, 8))
-    plt.stackplot(range_list, df[categories].T, labels=['Configuration', 'Instrumentation', 'Export', 'Task'],
-                  colors=['mediumslateblue', 'mediumseagreen', 'coral', 'lightskyblue'], alpha=0.8)
+    labels = ['Configuration', 'Instrumentation', 'Export', 'Task']
+    colors = ['mediumslateblue', 'mediumseagreen', 'coral', 'lightskyblue']
+    hatches = ['/', '\\', '|', '-']
+
+    fig, ax = plt.subplots(figsize=(16, 8))
+
+    y_base = np.zeros(range_size)
+    for i, category in enumerate(categories):
+        ax.fill_between(range_list, y_base, y_base + df[category], label=labels[i], color=colors[i],
+                        alpha=0.6, hatch=hatches[i], edgecolor='black')
+        y_base += df[category]
 
     plt.xlabel("Runs", fontsize=LABEL_SIZE)
     plt.ylabel("Percentage of Total Time", fontsize=LABEL_SIZE)
 
     plt.xlim(0, range_size)
-    plt.ylim(0, 100)  # Adjust the y-axis limit to reflect percentage range
+    plt.ylim(0, 100)
     plt.xticks(ticks=range(0, range_size + 1, 20), labels=range(0, range_size + 1, 20))
 
+    # Add legend outside the plot
     plt.legend(loc="upper left", bbox_to_anchor=(1.01, 1), borderaxespad=0., frameon=True, shadow=True)
 
-    plt.tight_layout(rect=[0, 0, 1, 1])  # Adjust the layout to make room for the legend
+    plt.tight_layout(rect=[0, 0, 0.85, 1])  # Adjust the layout to make room for the legend
     plt.savefig(output_file, bbox_inches='tight')
+    plt.savefig(output_file.replace("pdf", "png"), bbox_inches='tight')
     plt.close()
 
 
