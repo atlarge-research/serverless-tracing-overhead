@@ -12,11 +12,6 @@ make go
 https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#single-database-query
 
 
-# Benchmarker
-* k6
-* Parse the results
-* Plot the results
+## Throughput experiment
 
-# TODO
-
-* README
+## Request duration experiment

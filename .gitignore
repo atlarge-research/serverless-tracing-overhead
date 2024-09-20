@@ -26,3 +26,4 @@ e1-request-based-experiment/rps-calibrator/__pycache__/utils.cpython-39.pyc
 /e1-request-based-experiment/rps-calibrator/results/*.csv
 
 data/experiment-1/performance-overhead/2024-05-22_19-33.csv
+/result-analysis/
