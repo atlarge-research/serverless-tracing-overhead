@@ -19,7 +19,6 @@ services:
       - DB_HOST=postgres
       - FLASK_RUN_PORT=8080
       - FLASK_RUN_HOST=0.0.0.0
-#      - OPENTELEMETRY_ENABLED=True
       - OTEL_SERVICE_NAME=python-otel
       - OTEL_TRACES_EXPORTER=otlp
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317

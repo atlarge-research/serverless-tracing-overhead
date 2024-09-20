@@ -14,4 +14,10 @@ https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Fram
 
 ## Throughput experiment
 
+1. Run `make all`
+2. Run `make rps-calibrator`
+
 ## Request duration experiment
+
+1. Run `make all`
+2. Run `make te-all` in the `benchmarker/docker` folder

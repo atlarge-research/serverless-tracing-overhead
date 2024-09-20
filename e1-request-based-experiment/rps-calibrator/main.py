@@ -82,7 +82,7 @@ def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_incr
     rps = initial_rps
     avg_cpu_usage = 0
 
-    if endpoint is "queries":
+    if endpoint == "queries":
         url = f"http://{host}:{port}/{endpoint}?queries={QUERIES_ENDPOINT_CONFIG}"
     else:
         url = f"http://{host}:{port}/{endpoint}"
