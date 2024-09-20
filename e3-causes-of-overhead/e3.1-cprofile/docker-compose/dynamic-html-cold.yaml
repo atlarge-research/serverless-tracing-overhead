@@ -1,0 +1,24 @@
+version: '3.8'
+name: experiment
+services:
+  experiment:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+    environment:
+      OTLP_ENDPOINT: "http://otel-collector:4317"
+      EXPERIMENT_NAME: "dynamic-html"
+      TEST_RUNS: 100000
+      START_MODE: cold
+    networks:
+      - telemetry
+    volumes:
+      - ./output:/app/output
+
+networks:
+  telemetry:
+    external: true

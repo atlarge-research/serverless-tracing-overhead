@@ -1,0 +1,29 @@
+version: '3.8'
+name: micro-benchmark
+services:
+  postgres:
+    hostname: postgres
+    build:
+      context: ../postgres
+      dockerfile: ../postgres/Dockerfile
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "10000-10100:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - telemetry
+
+volumes:
+  postgres_data:
+
+networks:
+  telemetry:
+    external: true

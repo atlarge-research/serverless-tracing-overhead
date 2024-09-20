@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: all benchmark app-all psql jaeger telemetry rps-calibrator python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java java-otel java-elastic
+.PHONY: all benchmark app-all psql postgres jaeger telemetry rps-calibrator python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java java-otel java-elastic
 
 # Directories
 TELEMETRY_FOLDER := telemetry
@@ -55,6 +55,10 @@ telemetry:
 	$(call docker_compose,$(TELEMETRY_DOCKER_COMPOSE))
 
 psql:
+	$(call docker_build,$(POSTGRES_DOCKER_COMPOSE))
+	$(call docker_compose,$(POSTGRES_DOCKER_COMPOSE))
+
+postgres:
 	$(call docker_build,$(POSTGRES_DOCKER_COMPOSE))
 	$(call docker_compose,$(POSTGRES_DOCKER_COMPOSE))
 

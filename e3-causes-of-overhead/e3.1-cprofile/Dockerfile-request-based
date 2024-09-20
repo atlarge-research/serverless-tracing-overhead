@@ -1,0 +1,23 @@
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+RUN pip install --upgrade pip
+COPY requirements.txt ./
+COPY requirements-request-based.txt ./
+
+# Install any needed packages specified in requirements.txt (uncomment if you have a requirements.txt)
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements-request-based.txt
+
+# Copy the current directory contents into the container at /usr/src/app
+COPY flask_app flask_app
+COPY *.py .
+
+RUN mkdir output
+
+# Run the main.py script
+CMD ["python", "request_based.py"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
