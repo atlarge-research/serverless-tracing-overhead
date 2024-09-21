@@ -3,7 +3,7 @@ FROM postgres:16.2
 EXPOSE 5432
 
 # Copy initialization scripts
-#COPY ./init-scripts/ /
+COPY ./init-scripts/ /docker-entrypoint-initdb.d/
 
 # Ensure scripts are readable
 RUN chmod -R a+r /docker-entrypoint-initdb.d/
