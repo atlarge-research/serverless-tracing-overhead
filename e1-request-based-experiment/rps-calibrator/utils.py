@@ -81,5 +81,6 @@ def write_to_csv(scenarios, filename, append=False, exclude_headers=None):
 configuration = {
     "python": ["standard", "otel", "elastic"],
     "go": ["standard", "otel", "elastic"],
-    "java": ["standard", "otel", "elastic"]
+    "java": ["standard", "otel", "elastic"],
+    "nodejs": ["standard", "otel", "elastic"],
 }

@@ -1,0 +1,30 @@
+version: '3.8'
+name: micro-benchmark
+services:
+  nodejs-elastic:
+    hostname: nodejs-elastic
+    build:
+      context: ./nodejs
+      dockerfile: nodejs.dockerfile
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+    ports:
+      - "5300-5309:8080"
+    environment:
+      DB_HOST: "postgres"
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+      DB_DATABASE: "world"
+#      NODE_OPTIONS: "--require @opentelemetry/auto-instrumentations-node/register"
+#      OTEL_SERVICE_NAME: "nodejs-microservice"
+#      OTEL_TRACES_EXPORTER: otlp
+#      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+    networks:
+      - telemetry
+    restart: always
+
+networks:
+  telemetry:
+    external: true

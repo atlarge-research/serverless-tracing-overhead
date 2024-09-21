@@ -7,6 +7,7 @@ TELEMETRY_FOLDER := telemetry
 PYTHON_FOLDER    := python
 GO_FOLDER        := go
 JAVA_FOLDER      := java
+JAVASCRIPT_FOLDER := javascript
 
 # Docker Compose Files
 POSTGRES_DOCKER_COMPOSE       := postgres/postgres.yaml
@@ -28,6 +29,10 @@ GO_ELASTIC_DOCKER_COMPOSE     := $(GO_FOLDER)/docker-compose-elastic.yaml
 JAVA_DOCKER_COMPOSE           := $(JAVA_FOLDER)/docker-compose.yaml
 JAVA_OTEL_DOCKER_COMPOSE      := $(JAVA_FOLDER)/docker-compose-otel.yaml
 JAVA_ELASTIC_DOCKER_COMPOSE   := $(JAVA_FOLDER)/docker-compose-elastic.yaml
+
+NODEJS_DOCKER_COMPOSE         := $(JAVASCRIPT_FOLDER)/docker-compose.yaml
+NODEJS_OTEL_DOCKER_COMPOSE    := $(JAVASCRIPT_FOLDER)/docker-compose-otel.yaml
+NODEJS_ELASTIC_DOCKER_COMPOSE := $(JAVASCRIPT_FOLDER)/docker-compose-elastic.yaml
 
 CALIBRATOR_DOCKER_COMPOSE     := rps-calibrator/docker-compose.yaml
 
@@ -114,6 +119,18 @@ java-otel:
 java-elastic:
 	$(call docker_build,$(JAVA_ELASTIC_DOCKER_COMPOSE))
 	$(call docker_compose,$(JAVA_ELASTIC_DOCKER_COMPOSE))
+
+nodejs:
+	$(call docker_build,$(NODEJS_DOCKER_COMPOSE))
+	$(call docker_compose,$(NODEJS_DOCKER_COMPOSE))
+
+nodejs-otel:
+	$(call docker_build,$(NODEJS_OTEL_DOCKER_COMPOSE))
+	$(call docker_compose,$(NODEJS_OTEL_DOCKER_COMPOSE))
+
+nodejs-elastic:
+	$(call docker_build,$(NODEJS_ELASTIC_DOCKER_COMPOSE))
+	$(call docker_compose,$(NODEJS_ELASTIC_DOCKER_COMPOSE))
 
 rps-calibrator:
 	$(call docker_build,$(CALIBRATOR_DOCKER_COMPOSE))
