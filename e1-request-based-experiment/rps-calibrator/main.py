@@ -148,14 +148,13 @@ def main():
     endpoints = ["json", "db", "updates", "queries"]
     exclude_configs = []
 
-    os.getenv("LANGUAGES", "all")
-
     filtered_configuration = filter_configuration_by_lang(utils.configuration)
     print("Configuration:", filtered_configuration)
 
     scenarios = utils.generate_scenarios(filtered_configuration, endpoints,
                                          exclude_configs=exclude_configs)
-    # Shuffle the list so the order of scenarios won't impact results anyhow
+
+    # Shuffle the list so the order of scenarios won't impact results
     random.shuffle(scenarios)
 
     print("Running scenarios:")
@@ -175,9 +174,9 @@ def main():
                 rps_increment = 50
 
         # Change RPS increment to 200 for JSON endpoint for Go and Java
-        if scenario["endpoint"] == "json" and scenario["language"] != "python":
-            initial_rps = 200
-            rps_increment = 200
+        # if scenario["endpoint"] == "json" and scenario["language"] != "python":
+        #     initial_rps = 200
+        #     rps_increment = 200
 
         log_to_file(f"=====Running scenario {scenario}=====")
         reached_target, rps, avg_cpu_usage = calibrate(host, port, scenario["endpoint"],
