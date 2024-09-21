@@ -3,6 +3,7 @@ const { availableParallelism } = require('node:os');
 const numCPUs = availableParallelism();
 
 process.env.NODE_HANDLER = 'postgres';
+console.log(numCPUs)
 
 
 if (numCPUs > 1 && cluster.isPrimary) {
