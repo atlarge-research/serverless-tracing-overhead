@@ -34,7 +34,8 @@ NODEJS_DOCKER_COMPOSE         := $(JAVASCRIPT_FOLDER)/docker-compose.yaml
 NODEJS_OTEL_DOCKER_COMPOSE    := $(JAVASCRIPT_FOLDER)/docker-compose-otel.yaml
 NODEJS_ELASTIC_DOCKER_COMPOSE := $(JAVASCRIPT_FOLDER)/docker-compose-elastic.yaml
 
-CALIBRATOR_DOCKER_COMPOSE     := rps-calibrator/docker-compose.yaml
+CALIBRATOR_DOCKER_COMPOSE        := rps-calibrator/docker-compose.yaml
+CALIBRATOR_NODEJS_DOCKER_COMPOSE := rps-calibrator/docker-compose-nodejs.yaml
 
 # Helper to build docker-compose
 define docker_build
@@ -135,6 +136,10 @@ nodejs-elastic:
 rps-calibrator:
 	$(call docker_build,$(CALIBRATOR_DOCKER_COMPOSE))
 	$(call docker_compose,$(CALIBRATOR_DOCKER_COMPOSE))
+
+rps-calibrator-nodejs:
+	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
+	$(call docker_compose,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
 
 # Destroy all Docker Compose resources
 destroy:

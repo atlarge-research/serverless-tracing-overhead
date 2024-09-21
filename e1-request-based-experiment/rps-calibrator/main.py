@@ -113,7 +113,18 @@ def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_incr
     return reached_target, rps, avg_cpu_usage
 
 
-target_cpu_usage = 80.0
+def filter_configuration_by_lang(config):
+    env_language = os.getenv('LANGUAGE', 'all')
+
+    if env_language == 'all':
+        return config
+    elif env_language in config:
+        return {env_language: config[env_language]}
+    else:
+        print(f"Language '{env_language}' not found in the configuration.")
+        return {}
+
+
 current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 results_dir = "results"
 log_file_path = f"{results_dir}/cpu_utilization_log_{current_time}.txt"
@@ -137,7 +148,12 @@ def main():
     endpoints = ["json", "db", "updates", "queries"]
     exclude_configs = []
 
-    scenarios = utils.generate_scenarios(utils.configuration, endpoints,
+    os.getenv("LANGUAGES", "all")
+
+    filtered_configuration = filter_configuration_by_lang(utils.configuration)
+    print("Configuration:", filtered_configuration)
+
+    scenarios = utils.generate_scenarios(filtered_configuration, endpoints,
                                          exclude_configs=exclude_configs)
     # Shuffle the list so the order of scenarios won't impact results anyhow
     random.shuffle(scenarios)

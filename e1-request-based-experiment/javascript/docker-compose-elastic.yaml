@@ -17,10 +17,11 @@ services:
       DB_USER: "postgres"
       DB_PASSWORD: "postgres"
       DB_DATABASE: "world"
-#      NODE_OPTIONS: "--require @opentelemetry/auto-instrumentations-node/register"
-#      OTEL_SERVICE_NAME: "nodejs-microservice"
-#      OTEL_TRACES_EXPORTER: otlp
-#      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      NODE_OPTIONS: "-r elastic-apm-node/start.js"
+      ELASTIC_APM_ENABLED: True
+      ELASTIC_APM_SERVICE_NAME: nodejs-elastic
+      ELASTIC_APM_SERVER_URL: http://apm-server:8200
+      ELASTIC_APM_TRANSACTION_SAMPLE_RATE: 1.0
     networks:
       - telemetry
     restart: always

@@ -18,7 +18,7 @@ services:
       DB_PASSWORD: "postgres"
       DB_DATABASE: "world"
       NODE_OPTIONS: "--require @opentelemetry/auto-instrumentations-node/register"
-      OTEL_SERVICE_NAME: "nodejs-microservice"
+      OTEL_SERVICE_NAME: "nodejs-otel"
       OTEL_TRACES_EXPORTER: otlp
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
     networks:
