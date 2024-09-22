@@ -181,7 +181,7 @@ def main():
         rps_increment = config["frameworks"][lang]["endpoint-config"][endpoint]["rps-increment"]
         host = scenario["host"]
 
-        log_to_file(f"Scenario: {log_to_file}")
+        log_to_file(f"Scenario: {scenario}")
         log_to_file(f"Initial RPS: {initial_rps}")
         log_to_file(f"RPS Increment: {rps_increment}")
 
