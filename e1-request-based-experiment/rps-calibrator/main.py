@@ -168,6 +168,9 @@ def main():
         rps_increment = 100
         host = scenario["host"]
 
+        if scenario["language"] == "python":
+            rps_increment = 50
+
         # Change RPS Increment to 50 for Updates and Queries endpoint
         if scenario["endpoint"] == "updates" or scenario["endpoint"] == "queries":
             if scenario["language"] == "python":
