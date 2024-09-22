@@ -149,12 +149,12 @@ def main():
     with open(log_file_path, "w") as log_file:
         log_file.write("RPS, CPU Usage (%)\n")
 
-    # TODO: RPS increment settings should be in a config file
     max_rps = 10000
     duration = 60  # Seconds
     timeunit = "1s"
     port = 8080
 
+    # TODO: Read endpoints from the config.json file
     # Generate scenarios
     endpoints = ["json", "db", "updates", "queries"]
     exclude_configs = []
@@ -181,9 +181,9 @@ def main():
         rps_increment = config["frameworks"][lang]["endpoint-config"][endpoint]["rps-increment"]
         host = scenario["host"]
 
-        print("Scenario:", scenario)
-        print("Initial RPS:", initial_rps)
-        print("RPS Increment:", rps_increment)
+        log_to_file(f"Scenario: {log_to_file}")
+        log_to_file(f"Initial RPS: {initial_rps}")
+        log_to_file(f"RPS Increment: {rps_increment}")
 
         log_to_file(f"=====Running scenario {scenario}=====")
         reached_target, rps, avg_cpu_usage = calibrate(host, port, scenario["endpoint"],
