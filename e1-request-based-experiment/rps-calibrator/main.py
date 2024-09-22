@@ -138,7 +138,7 @@ def main():
     with open(log_file_path, "w") as log_file:
         log_file.write("RPS, CPU Usage (%)\n")
     initial_rps = 100  # Starting RPS
-    max_rps = 5000
+    max_rps = 10000
     rps_increment = 100
     duration = 60  # Seconds
     timeunit = "1s"
@@ -162,6 +162,8 @@ def main():
         log_to_file(scenario)
 
     for scenario in scenarios:
+        initial_rps = 100
+        rps_increment = 100
         host = scenario["host"]
 
         # Change RPS Increment to 50 for Updates and Queries endpoint
