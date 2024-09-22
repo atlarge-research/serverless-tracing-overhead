@@ -137,6 +137,8 @@ def main():
         os.makedirs(results_dir)
     with open(log_file_path, "w") as log_file:
         log_file.write("RPS, CPU Usage (%)\n")
+
+    # TODO: RPS increment settings should be in a config file
     initial_rps = 100  # Starting RPS
     max_rps = 10000
     rps_increment = 100
@@ -169,8 +171,8 @@ def main():
         # Change RPS Increment to 50 for Updates and Queries endpoint
         if scenario["endpoint"] == "updates" or scenario["endpoint"] == "queries":
             if scenario["language"] == "python":
-                initial_rps = 25
-                rps_increment = 25
+                initial_rps = 10
+                rps_increment = 10
             else:
                 initial_rps = 50
                 rps_increment = 50
