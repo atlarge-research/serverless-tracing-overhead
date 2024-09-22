@@ -6,12 +6,14 @@ from datetime import datetime
 import threading
 import utils
 import random
+import json
 
 # Configuration
 client = docker.from_env()
 
 QUERIES_ENDPOINT_CONFIG = 10
 UPDATES_ENDPOINT_CONFIG = 5
+CONFIG_FILE = "config.json"
 
 
 def get_cpu_usage(container_id):
@@ -128,6 +130,12 @@ def filter_configuration_by_lang(config):
         return {}
 
 
+def read_config(config_file):
+    with open(config_file, 'r') as file:
+        data = json.load(file)
+    return data
+
+
 current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 results_dir = "results"
 log_file_path = f"{results_dir}/cpu_utilization_log_{current_time}.txt"
@@ -142,9 +150,7 @@ def main():
         log_file.write("RPS, CPU Usage (%)\n")
 
     # TODO: RPS increment settings should be in a config file
-    initial_rps = 100  # Starting RPS
     max_rps = 10000
-    rps_increment = 100
     duration = 60  # Seconds
     timeunit = "1s"
     port = 8080
@@ -162,31 +168,22 @@ def main():
     # Shuffle the list so the order of scenarios won't impact results
     random.shuffle(scenarios)
 
+    config = read_config(CONFIG_FILE)
+
     print("Running scenarios:")
     for scenario in scenarios:
         log_to_file(scenario)
 
     for scenario in scenarios:
-        initial_rps = 100
-        rps_increment = 100
+        lang = scenario["language"]
+        endpoint = scenario["endpoint"]
+        initial_rps = config["frameworks"][lang]["endpoint-config"][endpoint]["initial-rps"]
+        rps_increment = config["frameworks"][lang]["endpoint-config"][endpoint]["rps-increment"]
         host = scenario["host"]
 
-        if scenario["language"] == "python":
-            rps_increment = 50
-
-        # Change RPS Increment to 50 for Updates and Queries endpoint
-        if scenario["endpoint"] == "updates" or scenario["endpoint"] == "queries":
-            if scenario["language"] == "python":
-                initial_rps = 10
-                rps_increment = 10
-            else:
-                initial_rps = 50
-                rps_increment = 50
-
-        # Change RPS increment to 200 for JSON endpoint for Go and Java
-        # if scenario["endpoint"] == "json" and scenario["language"] != "python":
-        #     initial_rps = 200
-        #     rps_increment = 200
+        print("Scenario:", scenario)
+        print("Initial RPS:", initial_rps)
+        print("RPS Increment:", rps_increment)
 
         log_to_file(f"=====Running scenario {scenario}=====")
         reached_target, rps, avg_cpu_usage = calibrate(host, port, scenario["endpoint"],
