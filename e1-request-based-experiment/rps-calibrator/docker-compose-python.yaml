@@ -1,0 +1,17 @@
+version: '3.8'
+name: micro-benchmark
+services:
+  calibrator:
+    build: .
+    volumes:
+      - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      LANGUAGE: "python"
+    networks:
+      - telemetry
+    restart: always
+
+networks:
+  telemetry:
+    external: true

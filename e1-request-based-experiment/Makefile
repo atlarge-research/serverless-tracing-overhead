@@ -36,6 +36,9 @@ NODEJS_ELASTIC_DOCKER_COMPOSE := $(JAVASCRIPT_FOLDER)/docker-compose-elastic.yam
 
 CALIBRATOR_DOCKER_COMPOSE        := rps-calibrator/docker-compose.yaml
 CALIBRATOR_NODEJS_DOCKER_COMPOSE := rps-calibrator/docker-compose-nodejs.yaml
+CALIBRATOR_PYTHON_DOCKER_COMPOSE := rps-calibrator/docker-compose-python.yaml
+CALIBRATOR_JAVA_DOCKER_COMPOSE := rps-calibrator/docker-compose-java.yaml
+CALIBRATOR_GO_DOCKER_COMPOSE := rps-calibrator/docker-compose-go.yaml
 
 # Helper to build docker-compose
 define docker_build
@@ -140,6 +143,18 @@ rps-calibrator:
 rps-calibrator-nodejs:
 	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
 	$(call docker_compose,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
+
+rps-calibrator-python:
+	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
+	$(call docker_compose,$(CALIBRATOR_PYTHON_DOCKER_COMPOSE))
+
+rps-calibrator-java:
+	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
+	$(call docker_compose,$(CALIBRATOR_JAVA_DOCKER_COMPOSE))
+
+rps-calibrator-go:
+	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
+	$(call docker_compose,$(CALIBRATOR_GO_DOCKER_COMPOSE))
 
 # Destroy all Docker Compose resources
 destroy:
