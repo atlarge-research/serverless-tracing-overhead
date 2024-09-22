@@ -1,0 +1,37 @@
+{
+  "frameworks": {
+    "python": {
+      "endpoint-config": {
+        "json": { "initial-rps": 100, "rps-increment": 50 },
+        "db": { "initial-rps": 100, "rps-increment": 50 },
+        "queries": { "initial-rps": 10, "rps-increment": 10 },
+        "updates": { "initial-rps": 10, "rps-increment": 10 }
+      }
+    },
+    "java": {
+      "endpoint-config": {
+        "json": { "initial-rps": 100, "rps-increment": 100 },
+        "db": { "initial-rps": 100, "rps-increment": 100 },
+        "queries": { "initial-rps": 25, "rps-increment": 25 },
+        "updates": { "initial-rps": 25, "rps-increment": 25 }
+      }
+    },
+    "go": {
+      "endpoint-config": {
+        "json": { "initial-rps": 100, "rps-increment": 100 },
+        "db": { "initial-rps": 100, "rps-increment": 100 },
+        "queries": { "initial-rps": 25, "rps-increment": 25 },
+        "updates": { "initial-rps": 25, "rps-increment": 25 }
+      }
+    },
+    "nodejs": {
+      "endpoint-config": {
+        "json": { "initial-rps": 100, "rps-increment": 100 },
+        "db": { "initial-rps": 100, "rps-increment": 100 },
+        "queries": { "initial-rps": 25, "rps-increment": 25 },
+        "updates": { "initial-rps": 25, "rps-increment": 25 }
+      }
+    }
+  },
+  "configurations": ["standard", "otel", "elastic"]
+}

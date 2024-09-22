@@ -11,6 +11,7 @@ import random
 client = docker.from_env()
 
 QUERIES_ENDPOINT_CONFIG = 10
+UPDATES_ENDPOINT_CONFIG = 5
 
 
 def get_cpu_usage(container_id):
@@ -84,6 +85,8 @@ def calibrate(host, port, endpoint, container_id, max_rps, initial_rps, rps_incr
 
     if endpoint == "queries":
         url = f"http://{host}:{port}/{endpoint}?queries={QUERIES_ENDPOINT_CONFIG}"
+    elif endpoint == "updates":
+        url = f"http://{host}:{port}/{endpoint}?queries={UPDATES_ENDPOINT_CONFIG}"
     else:
         url = f"http://{host}:{port}/{endpoint}"
 
