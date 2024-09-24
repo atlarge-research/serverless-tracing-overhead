@@ -136,6 +136,8 @@ nodejs-elastic:
 	$(call docker_build,$(NODEJS_ELASTIC_DOCKER_COMPOSE))
 	$(call docker_compose,$(NODEJS_ELASTIC_DOCKER_COMPOSE))
 
+nodejs-all: nodejs nodejs-otel nodejs-elastic
+
 rps-calibrator:
 	$(call docker_build,$(CALIBRATOR_DOCKER_COMPOSE))
 	$(call docker_compose,$(CALIBRATOR_DOCKER_COMPOSE))
