@@ -84,7 +84,6 @@ exports.handler = async function(event) {
     span.setAttribute("first_node_rank", firstNodeRank);
 
     span.end();
-
     return {
         result: firstNodeRank
     };

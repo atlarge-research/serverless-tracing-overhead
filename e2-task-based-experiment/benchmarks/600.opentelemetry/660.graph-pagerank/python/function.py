@@ -38,9 +38,12 @@ def handler(event):
 
     pagerank_span = tracer.start_span("pagerank", context=ctx)
     result = graph.pagerank()
-    span.set_attribute("first_node_rank", result[0])
     pagerank_span.end()
 
+    first_node_rank = result[0]
+    span.set_attribute("first_node_rank", first_node_rank)
+
+    span.end()
     return {
         'result': result[0]
     }
