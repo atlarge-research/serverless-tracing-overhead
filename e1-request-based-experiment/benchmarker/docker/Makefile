@@ -12,6 +12,10 @@ QUERY_TEST := query
 
 RESULT_FILE_PREFIX := testresults
 
+run:
+	docker compose -f docker-compose.yaml build
+	docker compose -f docker-compose.yaml up -d
+
 # Target-specific variable values
 plain: RESULT_FILE_PREFIX := plaintext
 te-plain: TEST_FILENAME := $(TECHEMPOWER_TEST_DIR)/plain_test.js
