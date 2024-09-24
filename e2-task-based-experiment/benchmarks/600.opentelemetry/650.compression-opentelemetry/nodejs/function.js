@@ -33,8 +33,7 @@ const mkdir = util.promisify(fs.mkdir);
 const stat = util.promisify(fs.stat);
 const readdir = util.promisify(fs.readdir);
 
-async function parseDirectory(directory, parentSpan) {
-  const ctx = opentelemetry.trace.setSpan(opentelemetry.context.active(), parentSpan);
+async function parseDirectory(directory, ctx) {
   const span = tracer.startSpan('parseDirectory', undefined, ctx);
   span.setAttribute('directory', directory);
 
@@ -55,8 +54,7 @@ async function parseDirectory(directory, parentSpan) {
   return size;
 }
 
-async function compressDirectory(sourceDir, archivePath, parentSpan) {
-  const ctx = opentelemetry.trace.setSpan(opentelemetry.context.active(), parentSpan);
+async function compressDirectory(sourceDir, archivePath, ctx) {
   const span = tracer.startSpan('compressDirectory', undefined, ctx);
   span.setAttribute('source_directory', sourceDir);
   span.setAttribute('archive_path', archivePath);
@@ -85,6 +83,8 @@ async function compressDirectory(sourceDir, archivePath, parentSpan) {
 
 exports.handler = async function(event) {
   const span = tracer.startSpan('handler');
+  const ctx = opentelemetry.trace.setSpan(opentelemetry.context.active(), span);
+
   span.setAttribute('event', JSON.stringify(event));
 
   try {
@@ -101,37 +101,24 @@ exports.handler = async function(event) {
     span.setAttribute('download_path', download_path);
 
     await mkdir(download_path, { recursive: true });
-    span.addEvent('Directory created', { download_path });
 
-    const s3DownloadBegin = Date.now();
+    const downloadSpan = tracer.startSpan('download', undefined, ctx);
     await storage_handler.downloadDirectory(bucket, path.join(input_prefix, key), download_path);
-    const s3DownloadStop = Date.now();
-    const downloadTime = (s3DownloadStop - s3DownloadBegin) / 1000;
-
-    span.addEvent('Directory downloaded', { downloadTime });
-    span.setAttribute("download.downloadTime", downloadTime);
+    downloadSpan.end()
 
     const size = await parseDirectory(download_path, span);
+    span.setAttribute("download_size", size)
 
-    const compressBegin = Date.now();
+    const compressSpan = tracer.startSpan('compress', undefined, ctx);
     const archivePath = path.join('/tmp', `${key}.zip`);
-    const archiveSize = await compressDirectory(download_path, archivePath, span);
-    const compressEnd = Date.now();
-    const processTime = (compressEnd - compressBegin) / 1000;
+    await compressDirectory(download_path, archivePath, span);
+    compressSpan.end()
 
-    span.addEvent('Directory compressed', { processTime });
-    span.setAttribute("compress.archivePath", archivePath);
-    span.setAttribute("compress.archiveSize", archiveSize);
-    span.setAttribute("compress.processTime", processTime);
-
-    const s3UploadBegin = Date.now();
+    const uploadSpan = tracer.startSpan('upload', undefined, ctx);
     const keyName = await storage_handler.upload(bucket, path.join(output_prefix, `${key}.zip`), archivePath);
-    const s3UploadStop = Date.now();
-    const uploadTime = (s3UploadStop - s3UploadBegin) / 1000;
+    uploadSpan.end()
 
-    span.addEvent('Archive uploaded', { uploadTime });
-    span.setAttribute("upload.keyName", keyName);
-    span.setAttribute("upload.uploadTime", uploadTime);
+    span.setAttribute("key_name", keyName);
 
     span.end();
 
@@ -139,13 +126,6 @@ exports.handler = async function(event) {
       result: {
         bucket: bucket,
         key: keyName
-      },
-      measurement: {
-        download_time: downloadTime,
-        download_size: size,
-        upload_time: uploadTime,
-        upload_size: archiveSize,
-        compute_time: processTime
       }
     };
   } catch (err) {

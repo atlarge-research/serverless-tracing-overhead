@@ -34,56 +34,35 @@ trace.get_tracer_provider().add_span_processor(span_processor)
 
 
 def handler(event):
-    with tracer.start_as_current_span("handler") as span:
-        bucket = event.get('bucket').get('bucket')
-        output_prefix = event.get('bucket').get('output')
-        url = event.get('object').get('url')
-        name = os.path.basename(url)
-        download_path = '/tmp/{}'.format(name)
+    span = tracer.start_as_current_span("handler")
+    ctx = trace.set_span_in_context(span)
 
-        span.set_attribute("bucket", bucket)
-        span.set_attribute("output_prefix", output_prefix)
-        span.set_attribute("url", url)
-        span.set_attribute("download_path", download_path)
-        span.set_attribute("name", name)
+    bucket = event.get('bucket').get('bucket')
+    output_prefix = event.get('bucket').get('output')
+    url = event.get('object').get('url')
+    upload_key = os.path.basename(url)
+    download_path = '/tmp/{}'.format(upload_key)
 
-        process_begin = datetime.datetime.now()
-        urllib.request.urlretrieve(url, filename=download_path)
-        size = os.path.getsize(download_path)
-        process_end = datetime.datetime.now()
+    span.set_attribute("bucket", bucket)
+    span.set_attribute("output_prefix", output_prefix)
+    span.set_attribute("url", url)
+    span.set_attribute("download_path", download_path)
+    span.set_attribute("upload_key", upload_key)
 
-        process_time = (process_end - process_begin) / datetime.timedelta(microseconds=1)
-        span.add_event("Download completed", {
-            "size": size,
-            "process_time": process_time
-        })
+    download_span = tracer.start_span("download", context=ctx)
+    urllib.request.urlretrieve(url, filename=download_path)
+    download_span.end()
 
-        upload_begin = datetime.datetime.now()
-        key_name = client.upload(bucket, os.path.join(output_prefix, name), download_path)
-        upload_end = datetime.datetime.now()
+    upload_span = tracer.start_span("upload", context=ctx)
+    key_name = client.upload(bucket, os.path.join(output_prefix, upload_key), download_path)
+    upload_span.end()
 
-        upload_time = (upload_end - upload_begin) / datetime.timedelta(microseconds=1)
+    span.end()
 
-        span.add_event("Upload completed", {
-            "key_name": key_name,
-            "upload_time": upload_time
-        })
-
-        span.set_attribute("process_time", process_time)
-        span.set_attribute("upload_time", upload_time)
-        span.set_attribute("download_size", size)
-
-        return {
-                'result': {
-                    'bucket': bucket,
-                    'url': url,
-                    'key': key_name
-                },
-                'measurement': {
-                    'download_time': 0,
-                    'download_size': 0,
-                    'upload_time': upload_time,
-                    'upload_size': size,
-                    'compute_time': process_time
-                }
+    return {
+        'result': {
+            'bucket': bucket,
+            'url': url,
+            'key': key_name
         }
+    }

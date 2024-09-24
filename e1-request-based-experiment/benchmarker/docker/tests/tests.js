@@ -1,8 +1,7 @@
 import http from 'k6/http';
 import {check} from 'k6';
 
-// const configFile = "test-config.json"
-const configFile = "test-config-elastic.json"
+const configFile = "test-config.json"
 
 const languages = ['python', 'java', 'go', 'nodejs'];
 const appTypes = ['standard', 'otel', 'elastic'];

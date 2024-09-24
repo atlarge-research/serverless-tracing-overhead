@@ -24,37 +24,27 @@ tracerProvider.register();
 
 const tracer = tracerProvider.getTracer('nodejs-tracer');
 
-function random(b, e, parentSpan) {
-  const ctx = opentelemetry.trace.setSpan(
-    opentelemetry.context.active(),
-    parentSpan,
-  );
-
-  const span = tracer.startSpan('random', undefined, ctx);
-
-  const result = Math.round(Math.random() * (e - b) + b);
-  span.end();
-  return result;
-}
-
 exports.handler = async function(event) {
   const span = tracer.startSpan('handler');
 
   var random_numbers = new Array(event.random_len);
   for (var i = 0; i < event.random_len; ++i) {
+    Math.round(Math.random() * (100 - 0) + b)
     random_numbers[i] = random(0, 100, span);
   }
 
+  let cur_time = new Date().toLocaleString()
   var input = {
-    cur_time: new Date().toLocaleString(),
+    cur_time: cur_time,
     username: event.username,
     random_numbers: random_numbers
   };
+
   span.setAttribute('username', event.username)
-  span.setAttribute('random_numbers', random_numbers)
+  span.setAttribute('random_len', random_numbers)
 
   var file = path.resolve(__dirname, 'templates', 'template.html');
-  span.setAttribute('template_file', file);
+  span.setAttribute('template_path', file);
 
   return new Promise((resolve, reject) => {
     fs.readFile(file, "utf-8", function(err, data) {
@@ -64,7 +54,8 @@ exports.handler = async function(event) {
         reject(err);
       } else {
         const rendered = Mustache.render(data, input);
-        span.setAttribute('rendered.length', rendered.length);
+        span.setAttribute('rendered_length', rendered.length);
+        span.setAttribute("render_time", cur_time)
         span.end();
         resolve(rendered);
       }

@@ -58,29 +58,27 @@ exports.handler = async function(event) {
   let upload_key = path.basename(url);
   let download_path = path.join('/tmp', upload_key);
 
-  span.setAttributes({
-    'bucket': bucket,
-    'output_prefix': output_prefix,
-    'url': url,
-    'upload_key': upload_key,
-    'download_path': download_path,
-  });
+  span.setAttribute("bucket", bucket)
+  span.setAttribute("output_prefix", output_prefix)
+  span.setAttribute("url", url)
+  span.setAttribute("download_path", download_path)
+  span.setAttribute("upload_key", upload_key)
 
   var file = fs.createWriteStream(download_path);
-  span.addEvent('File write stream created');
 
+  const downloadSpan = tracer.startSpan('download', undefined, ctx)
   request(url).pipe(file);
-  span.addEvent('Request piped to file');
+  downloadSpan.end()
 
   let promise = streamToPromise(file, span);
   var keyName;
   let upload = promise.then(
     async () => {
       [keyName, promise] = storage_handler.upload(bucket, path.join(output_prefix, upload_key), download_path);
-      span.addEvent('File upload started');
+      const uploadSpan = tracer.startSpan('upload', undefined, ctx)
       await promise;
-      span.addEvent('File upload completed');
-      span.setAttribute('key_name', keyName);
+      uploadSpan.end()
+      span.setAttribute('key', keyName);
     }
   );
 

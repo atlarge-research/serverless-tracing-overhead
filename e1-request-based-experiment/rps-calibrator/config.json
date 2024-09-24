@@ -33,5 +33,11 @@
       }
     }
   },
-  "configurations": ["standard", "otel", "elastic"]
+  "configurations": ["standard", "otel", "elastic"],
+  "default-endpoint-config": {
+    "json": { "initial-rps": 100, "rps-increment": 100 },
+    "db": { "initial-rps": 100, "rps-increment": 100 },
+    "queries": { "initial-rps": 25, "rps-increment": 25 },
+    "updates": { "initial-rps": 25, "rps-increment": 25 }
+  }
 }

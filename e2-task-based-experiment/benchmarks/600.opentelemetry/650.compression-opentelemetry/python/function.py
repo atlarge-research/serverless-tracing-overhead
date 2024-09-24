@@ -31,8 +31,8 @@ otlp_exporter = OTLPSpanExporter(
 span_processor = SimpleSpanProcessor(otlp_exporter)
 trace.get_tracer_provider().add_span_processor(span_processor)
 
-def parse_directory(directory):
-    with tracer.start_as_current_span("parse_directory") as span:
+def parse_directory(directory, parent_span):
+    with tracer.start_as_current_span("parse_directory", trace.set_span_in_context(parent_span)) as span:
         size = 0
         for root, dirs, files in os.walk(directory):
             for file in files:
@@ -41,55 +41,46 @@ def parse_directory(directory):
         return size
 
 def handler(event):
-    with tracer.start_as_current_span("handler") as span:
-        bucket = event.get('bucket').get('bucket')
-        input_prefix = event.get('bucket').get('input')
-        output_prefix = event.get('bucket').get('output')
-        key = event.get('object').get('key')
-        download_path = '/tmp/{}-{}'.format(key, uuid.uuid4())
-        os.makedirs(download_path)
+    span = tracer.start_span("handler")
+    ctx = trace.set_span_in_context(span)
 
-        span.set_attribute("bucket", bucket)
-        span.set_attribute("input_prefix", input_prefix)
-        span.set_attribute("output_prefix", output_prefix)
-        span.set_attribute("key", key)
-        span.set_attribute("download_path", download_path)
+    bucket = event.get('bucket').get('bucket')
+    input_prefix = event.get('bucket').get('input')
+    output_prefix = event.get('bucket').get('output')
+    key = event.get('object').get('key')
+    download_path = '/tmp/{}-{}'.format(key, uuid.uuid4())
+    os.makedirs(download_path)
 
-        s3_download_begin = datetime.datetime.now()
-        client.download_directory(bucket, os.path.join(input_prefix, key), download_path)
-        s3_download_stop = datetime.datetime.now()
-        download_time = (s3_download_stop - s3_download_begin) / datetime.timedelta(microseconds=1)
-        span.add_event("S3 download completed", {"download_time": download_time})
+    span.set_attribute("bucket", bucket)
+    span.set_attribute("input_prefix", input_prefix)
+    span.set_attribute("output_prefix", output_prefix)
+    span.set_attribute("key", key)
+    span.set_attribute("download_path", download_path)
 
-        size = parse_directory(download_path)
-        span.set_attribute("download_size", size)
+    download_span = tracer.start_span("download", context=ctx)
+    client.download_directory(bucket, os.path.join(input_prefix, key), download_path)
+    download_span.end()
 
-        compress_begin = datetime.datetime.now()
-        shutil.make_archive(os.path.join(download_path, key), 'zip', root_dir=download_path)
-        compress_end = datetime.datetime.now()
-        process_time = (compress_end - compress_begin) / datetime.timedelta(microseconds=1)
-        span.add_event("Compression completed", {"process_time": process_time})
+    size = parse_directory(download_path, span)
+    span.set_attribute("download_size", size)
 
-        s3_upload_begin = datetime.datetime.now()
-        archive_name = '{}.zip'.format(key)
-        archive_size = os.path.getsize(os.path.join(download_path, archive_name))
-        key_name = client.upload(bucket, os.path.join(output_prefix, archive_name), os.path.join(download_path, archive_name))
-        s3_upload_stop = datetime.datetime.now()
-        upload_time = (s3_upload_stop - s3_upload_begin) / datetime.timedelta(microseconds=1)
-        span.add_event("S3 upload completed", {"upload_time": upload_time})
-        
-        span.set_attribute("upload_size", archive_size)
+    compress_span = tracer.start_span("compress", context=ctx)
+    shutil.make_archive(os.path.join(download_path, key), 'zip', root_dir=download_path)
+    compress_span.end()
 
-        return {
-            'result': {
-                'bucket': bucket,
-                'key': key_name
-            },
-            'measurement': {
-                'download_time': download_time,
-                'download_size': size,
-                'upload_time': upload_time,
-                'upload_size': archive_size,
-                'compute_time': process_time
-            }
+    upload_span = tracer.start_span("upload", context=ctx)
+    archive_name = '{}.zip'.format(key)
+    archive_size = os.path.getsize(os.path.join(download_path, archive_name))
+    key_name = client.upload(bucket, os.path.join(output_prefix, archive_name), os.path.join(download_path, archive_name))
+    upload_span.end()
+
+    span.set_attribute("upload_size", archive_size)
+    span.set_attribute("key_name", key_name)
+
+    span.end()
+    return {
+        'result': {
+            'bucket': bucket,
+            'key': key_name
         }
+    }
