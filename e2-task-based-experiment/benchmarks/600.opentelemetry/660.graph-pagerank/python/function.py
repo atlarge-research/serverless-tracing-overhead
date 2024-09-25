@@ -1,6 +1,4 @@
-import datetime
 import igraph
-import os
 
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter

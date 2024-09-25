@@ -20,6 +20,13 @@ benchmarks = [
     "502.graph-mst",
     "503.graph-bfs",
     "504.dna-visualisation",
+
+    "610.dynamic-html-otel",
+    "620.uploader-opentelemetry",
+    "630.thumbnailer-opentelemetry",
+    "640.video-processing-opentelemetry",
+    "650.video-processing-opentelemetry",
+    "660.graph-pagerank"
 ]
 
 # user-defined config passed during initialization
