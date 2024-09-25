@@ -28,7 +28,7 @@ whisk:
     actionsSequenceMaxlength: 50
     actions:
       memory:
-        max: "2048 MB"
+        max: "4096 MB"
   containerPool:
     userMemory: "8192m"
 
