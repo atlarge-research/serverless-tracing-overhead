@@ -10,7 +10,7 @@
       },
       "type": "invocation-overhead",
       "perf-cost": {
-        "benchmark": "640.video-processing-opentelemetry",
+        "benchmark": "6400.video-processing-opentelemetry",
         "experiments": [
           "warm"
         ],

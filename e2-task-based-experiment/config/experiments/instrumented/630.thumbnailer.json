@@ -10,7 +10,7 @@
       },
       "type": "invocation-overhead",
       "perf-cost": {
-        "benchmark": "630.thumbnailer-opentelemetry",
+        "benchmark": "6300.thumbnailer-opentelemetry",
         "experiments": [
           "warm"
         ],

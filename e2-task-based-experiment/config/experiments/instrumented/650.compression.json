@@ -10,7 +10,7 @@
       },
       "type": "invocation-overhead",
       "perf-cost": {
-        "benchmark": "650.compression-opentelemetry",
+        "benchmark": "6500.compression-opentelemetry",
         "experiments": [
           "warm"
         ],

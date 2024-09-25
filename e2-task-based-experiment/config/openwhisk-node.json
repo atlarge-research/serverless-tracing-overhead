@@ -17,7 +17,7 @@
           "burst",
           "sequential"
         ],
-        "input-size": "test",
+        "input-size": "large",
         "repetitions": 50,
         "concurrent-invocations": 50,
         "memory-sizes": [
@@ -89,8 +89,8 @@
           "address": "192.168.1.109:9011",
           "mapped_port": 9011,
           "access_key": "SB4dK8MyJMSI_mWiLqZvsK0ikjpVq7RRBoQBQ8xN4Vw",
-          "secret_key": "8a856a2dfb72c6a1dfa0393d2ab4e10a8085ed30d7c3f124e737e50a9288b56e",
-          "instance_id": "d75a8964d5e212f9d0c662abb94b64281e384c74482dc84f2867ebf28d0dcaf2",
+          "secret_key": "003d4f1bacc19bd3bca59831170bb3f52513540903e4c7cf7116ca9263eae46a",
+          "instance_id": "b494587168734bf862b1ee52d99f8bb77bb1cea134bae6193438a8a5cb7ae839",
           "output_buckets": [],
           "input_buckets": [],
           "type": "minio"

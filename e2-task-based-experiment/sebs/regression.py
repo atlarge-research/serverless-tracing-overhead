@@ -18,21 +18,35 @@ benchmarks_python = [
     "120.uploader",
     "210.thumbnailer",
     "220.video-processing",
-    "311.compression",
+    "310.compression",
     "411.image-recognition",
     "501.graph-pagerank",
     "502.graph-mst",
     "503.graph-bfs",
     "504.dna-visualisation",
 
-    "610.dynamic-html-otel",
-    "620.uploader-opentelemetry",
-    "630.thumbnailer-opentelemetry",
-    "640.video-processing-opentelemetry",
-    "650.video-processing-opentelemetry",
-    "660.graph-pagerank"
+    "6100.dynamic-html-otel",
+    "6200.uploader-opentelemetry",
+    "6300.thumbnailer-opentelemetry",
+    "6400.video-processing-opentelemetry",
+    "6500.compression-opentelemetry",
+    "6600.graph-pagerank"
 ]
-benchmarks_nodejs = ["110.dynamic-html", "120.uploader", "210.thumbnailer"]
+benchmarks_nodejs = [
+    "110.dynamic-html",
+    "120.uploader",
+    "210.thumbnailer",
+    "220.video-processing",
+    "310.compression",
+    "501.graph-pagerank",
+
+    "6100.dynamic-html-otel",
+    "6200.uploader-opentelemetry",
+    "6300.thumbnailer-opentelemetry",
+    "6400.video-processing-opentelemetry",
+    "6500.compression-opentelemetry",
+    "6600.graph-pagerank"
+]
 
 # user-defined config passed during initialization
 cloud_config: Optional[dict] = None

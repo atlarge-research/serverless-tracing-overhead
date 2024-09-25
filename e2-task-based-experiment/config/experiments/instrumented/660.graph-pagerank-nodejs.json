@@ -10,7 +10,7 @@
       },
       "type": "invocation-overhead",
       "perf-cost": {
-        "benchmark": "660.graph-pagerank",
+        "benchmark": "6600.graph-pagerank",
         "experiments": [
           "warm"
         ],
