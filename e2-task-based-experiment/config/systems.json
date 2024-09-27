@@ -219,7 +219,8 @@
       "nodejs": {
         "base_images": {
           "10": "openwhisk/action-nodejs-v10",
-          "12": "openwhisk/action-nodejs-v12"
+          "12": "openwhisk/action-nodejs-v12",
+          "18": "openwhisk/action-nodejs-v18"
         },
         "images": [
           "function"
