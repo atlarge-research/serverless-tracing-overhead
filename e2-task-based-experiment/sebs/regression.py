@@ -25,7 +25,7 @@ benchmarks_python = [
     "503.graph-bfs",
     "504.dna-visualisation",
 
-    "6108.dynamic-html-otel",
+    "6107.dynamic-html-otel",
     "6200.uploader-opentelemetry",
     "6300.thumbnailer-opentelemetry",
     "6400.video-processing-opentelemetry",
@@ -40,7 +40,7 @@ benchmarks_nodejs = [
     "310.compression",
     "501.graph-pagerank",
 
-    "6108.dynamic-html-otel",
+    "6107.dynamic-html-otel",
     "6200.uploader-opentelemetry",
     "6300.thumbnailer-opentelemetry",
     "6400.video-processing-opentelemetry",

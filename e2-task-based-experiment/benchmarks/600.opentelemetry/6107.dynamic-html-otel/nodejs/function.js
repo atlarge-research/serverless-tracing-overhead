@@ -16,7 +16,8 @@ const tracerProvider = new BasicTracerProvider({
 });
 
 const traceExporter = new OTLPTraceExporter({
-  url: 'http://192.168.1.109:4317',
+  url: 'http://localhost:4317',
+  // url: 'http://192.168.1.109:4317',
 });
 
 tracerProvider.addSpanProcessor(new SimpleSpanProcessor(traceExporter));
@@ -24,13 +25,16 @@ tracerProvider.register();
 
 const tracer = tracerProvider.getTracer('nodejs-tracer');
 
+function random(b, e) {
+	return Math.round(Math.random() * (e - b) + b);
+}
+
 exports.handler = async function(event) {
   const span = tracer.startSpan('handler');
 
   var random_numbers = new Array(event.random_len);
-  for (var i = 0; i < event.random_len; ++i) {
-    Math.round(Math.random() * (100 - 0) + b)
-    random_numbers[i] = random(0, 100, span);
+  for(var i = 0; i < event.random_len; ++i) {
+    random_numbers[i] = random(0, 100);
   }
 
   let cur_time = new Date().toLocaleString()
@@ -62,3 +66,14 @@ exports.handler = async function(event) {
     });
   });
 };
+
+const event = {
+  random_len: 5,
+  username: 'test_user'
+};
+
+exports.handler(event).then(response => {
+  console.log("Rendered HTML:", response);
+}).catch(error => {
+  console.error("Error:", error);
+});
