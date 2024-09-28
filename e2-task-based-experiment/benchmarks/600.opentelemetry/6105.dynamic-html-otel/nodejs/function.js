@@ -16,8 +16,7 @@ const tracerProvider = new BasicTracerProvider({
 });
 
 const traceExporter = new OTLPTraceExporter({
-  url: 'http://localhost:4317',
-  // url: 'http://192.168.1.109:4317',
+  url: 'http://192.168.1.109:4317',
 });
 
 tracerProvider.addSpanProcessor(new SimpleSpanProcessor(traceExporter));
