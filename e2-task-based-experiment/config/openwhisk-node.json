@@ -6,7 +6,7 @@
       "download_results": false,
       "runtime": {
         "language": "nodejs",
-        "version": "12"
+        "version": "18"
       },
       "type": "invocation-overhead",
       "perf-cost": {
