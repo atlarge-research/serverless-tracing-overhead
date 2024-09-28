@@ -10,7 +10,7 @@
     },
     "type": "invocation-overhead",
     "perf-cost": {
-      "benchmark": "6101.dynamic-html-otel",
+      "benchmark": "6100.dynamic-html-otel",
       "experiments": [
         "warm"
       ],
