@@ -66,14 +66,3 @@ exports.handler = async function(event) {
     });
   });
 };
-
-const event = {
-  random_len: 5,
-  username: 'test_user'
-};
-
-exports.handler(event).then(response => {
-  console.log("Rendered HTML:", response);
-}).catch(error => {
-  console.error("Error:", error);
-});
