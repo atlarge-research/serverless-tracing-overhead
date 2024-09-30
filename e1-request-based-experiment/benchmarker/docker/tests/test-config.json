@@ -1,74 +1,74 @@
 {
     "python-standard": {
-        "json": 200,
+        "json": 175,
         "db": 100,
-        "updates": 40,
+        "updates": 35,
         "queries": 20
     },
     "python-otel": {
-        "json": 200,
-        "db": 100,
-        "updates": 40,
-        "queries": 20
+        "json": 100,
+        "db": 75,
+        "updates": 25,
+        "queries": 15
     },
     "python-elastic": {
-        "json": 200,
-        "db": 100,
-        "updates": 40,
-        "queries": 20
+        "json": 100,
+        "db": 50,
+        "updates": 20,
+        "queries": 10
     },
     "java-standard": {
-        "json": 1400,
-        "db": 900,
-        "updates": 200,
-        "queries": 225
+        "json": 950,
+        "db": 600,
+        "updates": 125,
+        "queries": 150
     },
     "java-otel": {
-        "json": 1400,
-        "db": 900,
-        "updates": 200,
-        "queries": 225
+        "json": 750,
+        "db": 450,
+        "updates": 100,
+        "queries": 112
     },
     "java-elastic": {
-        "json": 1400,
-        "db": 900,
-        "updates": 200,
-        "queries": 225
+        "json": 700,
+        "db": 450,
+        "updates": 100,
+        "queries": 125
     },
     "go-standard": {
         "json": 1200,
-        "db": 400,
-        "updates": 225,
-        "queries": 150
+        "db": 200,
+        "updates": 125,
+        "queries": 75
     },
     "go-otel": {
-        "json": 1200,
-        "db": 400,
-        "updates": 225,
-        "queries": 150
+        "json": 600,
+        "db": 200,
+        "updates": 112,
+        "queries": 75
     },
     "go-elastic": {
-        "json": 1200,
-        "db": 400,
-        "updates": 225,
-        "queries": 150
+        "json": 650,
+        "db": 200,
+        "updates": 112,
+        "queries": 75
     },
     "nodejs-standard": {
-        "json": 200,
-        "db": 200,
-        "updates": 75,
-        "queries": 75
+        "json": 800,
+        "db": 250,
+        "updates": 212,
+        "queries": 250
     },
     "nodejs-otel": {
-        "json": 200,
+        "json": 300,
         "db": 200,
-        "updates": 75,
-        "queries": 75
+        "updates": 87,
+        "queries": 112
     },
     "nodejs-elastic": {
-        "json": 200,
-        "db": 200,
-        "updates": 75,
-        "queries": 75
+        "json": 100,
+        "db": 100,
+        "updates": 37,
+        "queries": 37
     }
 }
