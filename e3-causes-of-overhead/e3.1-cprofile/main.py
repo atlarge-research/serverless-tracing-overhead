@@ -58,7 +58,7 @@ def run_single_workload(times_dict_list, _experiment_name, _start_mode):
                 local_tracer = tracer
 
             span = local_tracer.start_span("workload")
-            graph_pagerank_task(event, span)
+            graph_pagerank_task(event, span, local_tracer)
             span.end()
     else:
         def workload():

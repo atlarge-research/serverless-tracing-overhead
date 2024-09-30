@@ -24,7 +24,6 @@ tracer = trace.get_tracer("handler")
 
 
 def handler(event):
-    print("Starting")
     span = tracer.start_span("handler")
     ctx = trace.set_span_in_context(span)
 
@@ -44,5 +43,5 @@ def handler(event):
 
     span.end()
     return {
-        'result': result[0]
+        'result': first_node_rank
     }
