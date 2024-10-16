@@ -98,8 +98,8 @@ def configure_opentelemetry():
 
 if __name__ == "__main__":
     # Number of times to run the process
-    iterations = int(os.getenv("TEST_RUNS", 50))
-    experiment_name = os.getenv("EXPERIMENT_NAME", EXPERIMENT_NAME_DYNAMIC_HTML)
+    iterations = int(os.getenv("TEST_RUNS", 1))
+    experiment_name = os.getenv("EXPERIMENT_NAME", EXPERIMENT_NAME_GRAPH_PAGERANK)
     start_mode = os.getenv("START_MODE", "cold")
     print("Iterations: ", iterations)
     print("Experiment name: ", experiment_name)

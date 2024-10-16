@@ -5,7 +5,6 @@ from io import StringIO
 import os
 from functools import wraps
 
-
 PROFILE_DIR = "profiles"
 
 
@@ -15,6 +14,7 @@ def f8(x):
     # if ret != '   0.000':
     #     return ret
     return "%6d" % (x * 1_000_000)
+
 
 pstats.f8 = f8
 
@@ -72,8 +72,12 @@ def profile_function(times_dict_list, experiment_name, start_mode):
                 "(start_span)": 0.0,
                 "(workload)": 0.0,
                 "(add_event)": 0.0,
-                "(set_attribute)": 0.0
+                "(set_attribute)": 0.0,
+                "(set_span_in_context)": 0.0
             }
+
+            start_span_calls = 0  # Count of how many times start_span was called
+            end_calls = 0  # Count of how many times end was called
 
             # Extract times for each function of interest
             for func_name in func_times.keys():
@@ -84,32 +88,58 @@ def profile_function(times_dict_list, experiment_name, start_mode):
                             try:
                                 # Convert from microseconds to milliseconds
                                 func_times[func_name] = float(parts[3]) / 1_000  # Cumulative time column
+
+                                # If this is a "start_span" line, increment the counter
+                                if func_name == "(start_span)":
+                                    start_span_calls = int(parts[0])  # The number of calls is in the first column
+
+                                # If this is an "end" line, increment the counter
+                                if func_name == "(end)":
+                                    end_calls = int(parts[0])  # The number of calls is in the first column
                             except ValueError:
                                 continue
 
             # Calculate the adjusted time for the task function
-            task_time_adjusted = func_times["(task)"] - (func_times["(add_event)"] + func_times["(set_attribute)"])
+            task_time_adjusted = func_times["(task)"] - (
+                    func_times["(add_event)"] +
+                    func_times["(set_attribute)"] +
+                    func_times["(set_span_in_context)"]
+            )
+
+            # Deduct the time for n-1 start_span calls, only if more than 1 start_span was called
+            if start_span_calls > 1:
+                task_time_adjusted -= (start_span_calls - 1) * (func_times["(start_span)"] / start_span_calls)
+
+            # Deduct the time for n-1 end calls, only if more than 1 end was called
+            if end_calls > 1:
+                task_time_adjusted -= (end_calls - 1) * (func_times["(end)"] / end_calls)
+
+            # Calculate the total instrumentation time
+            instrumentation_time = (
+                    func_times.pop("(start_span)") +
+                    func_times["(add_event)"] +
+                    func_times["(set_attribute)"] +
+                    func_times["(set_span_in_context)"]
+            )
 
             # Rename the functions in func_times dictionary and add the adjusted times
             renamed_func_times = {
                 "configuration": func_times.pop("(configure_opentelemetry)"),
                 "task": task_time_adjusted,  # Adjusted task time
                 "export": func_times.pop("(end)"),
-                "instrumentation": func_times.pop("(start_span)") + func_times["(add_event)"] + func_times["(set_attribute)"],  # Add add_event and set_attribute times
+                "instrumentation": instrumentation_time,  # Total instrumentation time
                 "total": func_times.pop("(workload)")
             }
+
+            renamed_func_times = normalize_percentages(renamed_func_times)
 
             # Append this run's function times to the list
             times_dict_list.append(renamed_func_times)
 
-            # Dump the profile data
-            # if not os.path.exists(PROFILE_DIR):
-            #     os.makedirs(PROFILE_DIR)
-            # profiler.dump_stats(f"{PROFILE_DIR}/workload-{experiment_name}-{start_mode}.prof")
-
             return result
 
         return wrapper
+
     return decorator
 
 
@@ -177,10 +207,10 @@ def profile_route(profiling_data_list, endpoint_name=""):
 
             # Calculate task time as total minus other categories
             time_spent['task'] = (
-                time_spent['total'] -
-                (time_spent['configuration'] +
-                 time_spent['instrumentation'] +
-                 time_spent['export'])
+                    time_spent['total'] -
+                    (time_spent['configuration'] +
+                     time_spent['instrumentation'] +
+                     time_spent['export'])
             )
 
             # Append the results to the profiling data list
@@ -191,3 +221,21 @@ def profile_route(profiling_data_list, endpoint_name=""):
         return wrapper
 
     return decorator
+
+
+def normalize_percentages(func_times):
+    total_time = func_times["total"]
+
+    # Calculate the sum of the parts (configuration, task, export, instrumentation)
+    sum_of_parts = func_times["configuration"] + func_times["task"] + func_times["export"] + func_times[
+        "instrumentation"]
+
+    # Check if the sum of the parts matches the total
+    if sum_of_parts != total_time:
+        # Calculate the difference
+        diff = total_time - sum_of_parts
+
+        # Add the difference to the task time to ensure the total matches
+        func_times["task"] += diff
+
+    return func_times
