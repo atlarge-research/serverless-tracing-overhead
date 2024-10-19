@@ -1,0 +1,15 @@
+{
+  "name": "",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "@opentelemetry/api": "1.9.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "0.52.1",
+    "@opentelemetry/resources": "1.25.1",
+    "@opentelemetry/sdk-trace-base": "1.25.1",
+    "@opentelemetry/semantic-conventions": "1.25.1",
+    "mustache": "^3.2.1"
+  }
+}
