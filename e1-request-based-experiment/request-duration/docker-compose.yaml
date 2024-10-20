@@ -2,11 +2,10 @@ version: '3.8'
 name: micro-benchmark
 services:
   tests:
-#    deploy:
-#      restart_policy:
-#        condition: on
-#        delay: 10s
-#        max_attempts: 10
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 10s
     build: .
     volumes:
       - ./results:/app/results
