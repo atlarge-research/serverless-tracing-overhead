@@ -12,7 +12,7 @@ services:
     environment:
       OTLP_ENDPOINT: "http://otel-collector:4317"
       EXPERIMENT_NAME: "graph-pagerank"
-      TEST_RUNS: 100000
+      TEST_RUNS: 10000
       START_MODE: warm
     networks:
       - telemetry

@@ -20,7 +20,7 @@ graph_pagerank_size_generators = {
 }
 
 graph_pagerank_event = {
-    'size': graph_pagerank_size_generators['small']
+    'size': graph_pagerank_size_generators['large']
 }
 
 def save_each_run_results(times_dict_list, filename="each_run_results.csv"):
