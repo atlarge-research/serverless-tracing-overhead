@@ -1,12 +1,13 @@
 SHELL := /bin/bash
 
-.PHONY: all benchmark app-all psql postgres jaeger telemetry rps-calibrator python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java java-otel java-elastic
+.PHONY: all benchmark app-all psql postgres jaeger telemetry throughput python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java java-otel java-elastic
 
 # Directories
 TELEMETRY_FOLDER := telemetry
 PYTHON_FOLDER    := python
 GO_FOLDER        := go
 JAVA_FOLDER      := java
+JAVASCRIPT_FOLDER := javascript
 
 # Docker Compose Files
 POSTGRES_DOCKER_COMPOSE       := postgres/postgres.yaml
@@ -29,7 +30,15 @@ JAVA_DOCKER_COMPOSE           := $(JAVA_FOLDER)/docker-compose.yaml
 JAVA_OTEL_DOCKER_COMPOSE      := $(JAVA_FOLDER)/docker-compose-otel.yaml
 JAVA_ELASTIC_DOCKER_COMPOSE   := $(JAVA_FOLDER)/docker-compose-elastic.yaml
 
-CALIBRATOR_DOCKER_COMPOSE     := rps-calibrator/docker-compose.yaml
+NODEJS_DOCKER_COMPOSE         := $(JAVASCRIPT_FOLDER)/docker-compose.yaml
+NODEJS_OTEL_DOCKER_COMPOSE    := $(JAVASCRIPT_FOLDER)/docker-compose-otel.yaml
+NODEJS_ELASTIC_DOCKER_COMPOSE := $(JAVASCRIPT_FOLDER)/docker-compose-elastic.yaml
+
+CALIBRATOR_DOCKER_COMPOSE        := throughput/docker-compose.yaml
+CALIBRATOR_NODEJS_DOCKER_COMPOSE := throughput/docker-compose-nodejs.yaml
+CALIBRATOR_PYTHON_DOCKER_COMPOSE := throughput/docker-compose-python.yaml
+CALIBRATOR_JAVA_DOCKER_COMPOSE := throughput/docker-compose-java.yaml
+CALIBRATOR_GO_DOCKER_COMPOSE := throughput/docker-compose-go.yaml
 
 # Helper to build docker-compose
 define docker_build
@@ -49,7 +58,7 @@ endef
 # All together
 all: telemetry psql app-all
 
-app-all: python-all go-all java-all
+app-all: python-all go-all java-all nodejs-all
 
 telemetry:
 	$(call docker_compose,$(TELEMETRY_DOCKER_COMPOSE))
@@ -115,9 +124,39 @@ java-elastic:
 	$(call docker_build,$(JAVA_ELASTIC_DOCKER_COMPOSE))
 	$(call docker_compose,$(JAVA_ELASTIC_DOCKER_COMPOSE))
 
-rps-calibrator:
+nodejs:
+	$(call docker_build,$(NODEJS_DOCKER_COMPOSE))
+	$(call docker_compose,$(NODEJS_DOCKER_COMPOSE))
+
+nodejs-otel:
+	$(call docker_build,$(NODEJS_OTEL_DOCKER_COMPOSE))
+	$(call docker_compose,$(NODEJS_OTEL_DOCKER_COMPOSE))
+
+nodejs-elastic:
+	$(call docker_build,$(NODEJS_ELASTIC_DOCKER_COMPOSE))
+	$(call docker_compose,$(NODEJS_ELASTIC_DOCKER_COMPOSE))
+
+nodejs-all: nodejs nodejs-otel nodejs-elastic
+
+throughput:
 	$(call docker_build,$(CALIBRATOR_DOCKER_COMPOSE))
 	$(call docker_compose,$(CALIBRATOR_DOCKER_COMPOSE))
+
+throughput-nodejs:
+	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
+	$(call docker_compose,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
+
+throughput-python:
+	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
+	$(call docker_compose,$(CALIBRATOR_PYTHON_DOCKER_COMPOSE))
+
+throughput-java:
+	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
+	$(call docker_compose,$(CALIBRATOR_JAVA_DOCKER_COMPOSE))
+
+throughput-go:
+	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
+	$(call docker_compose,$(CALIBRATOR_GO_DOCKER_COMPOSE))
 
 # Destroy all Docker Compose resources
 destroy:

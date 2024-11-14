@@ -13,16 +13,16 @@ services:
     ports:
       - "10000-10100:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-#      - ./init-scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+#      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     networks:
       - telemetry
 
-volumes:
-  postgres_data:
+#volumes:
+#  postgres_data:
 
 networks:
   telemetry:

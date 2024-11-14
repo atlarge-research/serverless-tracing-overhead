@@ -10,16 +10,16 @@ e2-task-based-experiment/experiment-results/*
 
 experiment-results
 e1-request-based-experiment/.DS_Store
-e1-request-based-experiment/benchmarker/docker/.DS_Store
-e1-request-based-experiment/benchmarker/.DS_Store
-e1-request-based-experiment/benchmarker/docker/analyze/.DS_Store
-e1-request-based-experiment/benchmarker/docker/analyze/plots/.DS_Store
-e1-request-based-experiment/benchmarker/docker/analyze/plots/2024-05-22/.DS_Store
-e1-request-based-experiment/rps-calibrator/.DS_Store
-e1-request-based-experiment/rps-calibrator/analyze/.DS_Store
-e1-request-based-experiment/benchmarker/docker/analyze/__pycache__/k6_statistics.cpython-311.pyc
+e1-request-based-experiment/request-duration/docker/.DS_Store
+e1-request-based-experiment/request-duration/.DS_Store
+e1-request-based-experiment/request-duration/docker/analyze/.DS_Store
+e1-request-based-experiment/request-duration/docker/analyze/plots/.DS_Store
+e1-request-based-experiment/request-duration/docker/analyze/plots/2024-05-22/.DS_Store
+e1-request-based-experiment/throughput/.DS_Store
+e1-request-based-experiment/throughput/analyze/.DS_Store
+e1-request-based-experiment/request-duration/docker/analyze/__pycache__/k6_statistics.cpython-311.pyc
 e1-request-based-experiment/opentelemetry-javaagent.jar
-e1-request-based-experiment/rps-calibrator/__pycache__/utils.cpython-39.pyc
+e1-request-based-experiment/throughput/__pycache__/utils.cpython-39.pyc
 
 /e1-request-based-experiment/benchmarker/docker/results/*/*.csv
 /e1-request-based-experiment/benchmarker/docker/analyze/**/*.csv

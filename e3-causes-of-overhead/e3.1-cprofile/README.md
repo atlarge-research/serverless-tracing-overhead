@@ -1,1 +1,0 @@
-python main.py & flameprof workload.prof > flamegraph.svg  

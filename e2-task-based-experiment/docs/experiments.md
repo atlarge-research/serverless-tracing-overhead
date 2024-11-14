@@ -16,7 +16,7 @@ Then, each benchmark has its own JSON object containing parameters specific to t
   "download_results": false,
   "runtime": {
     "language": "python",
-    "version": "3.7"
+    "version": "3.9"
   },
   "type": "<experiment>",
   ...

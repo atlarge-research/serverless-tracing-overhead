@@ -18,7 +18,8 @@
       "python": {
         "base_images": {
           "3.7": "python:3.7-slim",
-          "3.8": "python:3.8-slim"
+          "3.8": "python:3.8-slim",
+          "3.9": "python:3.9-slim"
         },
         "images": [
           "run",
@@ -35,7 +36,8 @@
       "nodejs": {
         "base_images": {
           "12": "node:12-slim",
-          "14": "node:14-slim"
+          "14": "node:14-slim",
+          "18": "node:18-slim"
         },
         "images": [
           "run",
@@ -217,7 +219,8 @@
       "nodejs": {
         "base_images": {
           "10": "openwhisk/action-nodejs-v10",
-          "12": "openwhisk/action-nodejs-v12"
+          "12": "openwhisk/action-nodejs-v12",
+          "18": "openwhisk/action-nodejs-v18"
         },
         "images": [
           "function"
