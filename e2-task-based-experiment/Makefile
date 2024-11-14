@@ -8,10 +8,6 @@ python: non-instrumented-python instrumented-python
 
 nodejs: non-instrumented-nodejs instrumented-nodejs
 
-custom-run:
-	./sebs.py experiment invoke perf-cost --config config/experiments/non-instrumented/120.uploader.json --output-dir experiment-results/python/non-instrumented/120.uploader --deployment openwhisk --update-code --update-storage
-	./sebs.py experiment invoke perf-cost --config config/experiments/non-instrumented/210.thumbnailer.json --output-dir experiment-results/python/non-instrumented/210.thumbnailer --deployment openwhisk --update-code --update-storage
-
 # Non-instrumented Python Experiments
 non-instrumented-python:
 	./sebs.py experiment invoke perf-cost --config config/experiments/non-instrumented/110.dynamic-html.json --output-dir experiment-results/python/non-instrumented/110.dynamic-html --deployment openwhisk
