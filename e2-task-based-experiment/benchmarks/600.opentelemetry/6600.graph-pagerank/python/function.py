@@ -7,7 +7,7 @@ from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.resources import Resource
 
 otlp_exporter = OTLPSpanExporter(
-    endpoint="http://192.168.1.109:4317",
+    endpoint="http://<REPLACE_ME>:4317",
     insecure=True
 )
 

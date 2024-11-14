@@ -15,7 +15,7 @@ const tracerProvider = new BasicTracerProvider({
 });
 
 const traceExporter = new OTLPTraceExporter({
-  url: 'http://192.168.1.109:4317',
+  url: 'http://<REPLACE_ME>:4317',
 });
 
 tracerProvider.addSpanProcessor(new SimpleSpanProcessor(traceExporter));

@@ -23,7 +23,7 @@ trace.set_tracer_provider(TracerProvider(resource=resource))
 tracer = trace.get_tracer("function")
 
 otlp_exporter = OTLPSpanExporter(
-    endpoint="http://192.168.1.109:4317",
+    endpoint="http://<REPLACE_ME>:4317",
     insecure=True
 )
 
