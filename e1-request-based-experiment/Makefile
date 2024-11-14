@@ -58,7 +58,7 @@ endef
 # All together
 all: telemetry psql app-all
 
-app-all: python-all go-all java-all
+app-all: python-all go-all java-all nodejs-all
 
 telemetry:
 	$(call docker_compose,$(TELEMETRY_DOCKER_COMPOSE))

@@ -7,23 +7,24 @@ https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Fram
 
 ## Experiments
 
-### Running Individual Experiment
+### Setup and Configuration
 
 1. Run `make telemetry`. This sets up the telemetry applications
 2. Setup the postgres: `make postgres`
-3. Run the experiment
-   1. Throughput Python OpenTelemetry experiment: `make throughput-python` 
-   2. Request Duration Python OpenTelemetry experiment: `make python-otel`
+3. Start the applications: `make app-all`
+
+### Running Individual Throughput Experiment
+
+1. Start the python applications: `make python-all`
+1. Python OpenTelemetry experiment: `make throughput-python`
 
 ### Running Throughput Experiment
 
-1. Run `make all`
-2. Run `make throughput`
+1. Run `make throughput`
 
 ### Running Request Duration Experiment
 
 The Requests Issued per Second can be configured in the JSON configuration file located at `request-duration/tests/test-config.json`.
 The file contains the parameter values for each framework and endpoint
 
-1. Run `make all`
-2. Run `make te-all` in the `benchmarker/docker` folder
+1. Run `make run` in the `request-duration` folder
