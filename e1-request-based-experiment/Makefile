@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: all benchmark app-all psql postgres jaeger telemetry rps-calibrator python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java java-otel java-elastic
+.PHONY: all benchmark app-all psql postgres jaeger telemetry throughput python-all python python-otel python-elastic go-all go go-otel go-elastic java-all java java-otel java-elastic
 
 # Directories
 TELEMETRY_FOLDER := telemetry
@@ -34,11 +34,11 @@ NODEJS_DOCKER_COMPOSE         := $(JAVASCRIPT_FOLDER)/docker-compose.yaml
 NODEJS_OTEL_DOCKER_COMPOSE    := $(JAVASCRIPT_FOLDER)/docker-compose-otel.yaml
 NODEJS_ELASTIC_DOCKER_COMPOSE := $(JAVASCRIPT_FOLDER)/docker-compose-elastic.yaml
 
-CALIBRATOR_DOCKER_COMPOSE        := rps-calibrator/docker-compose.yaml
-CALIBRATOR_NODEJS_DOCKER_COMPOSE := rps-calibrator/docker-compose-nodejs.yaml
-CALIBRATOR_PYTHON_DOCKER_COMPOSE := rps-calibrator/docker-compose-python.yaml
-CALIBRATOR_JAVA_DOCKER_COMPOSE := rps-calibrator/docker-compose-java.yaml
-CALIBRATOR_GO_DOCKER_COMPOSE := rps-calibrator/docker-compose-go.yaml
+CALIBRATOR_DOCKER_COMPOSE        := throughput/docker-compose.yaml
+CALIBRATOR_NODEJS_DOCKER_COMPOSE := throughput/docker-compose-nodejs.yaml
+CALIBRATOR_PYTHON_DOCKER_COMPOSE := throughput/docker-compose-python.yaml
+CALIBRATOR_JAVA_DOCKER_COMPOSE := throughput/docker-compose-java.yaml
+CALIBRATOR_GO_DOCKER_COMPOSE := throughput/docker-compose-go.yaml
 
 # Helper to build docker-compose
 define docker_build
@@ -138,23 +138,23 @@ nodejs-elastic:
 
 nodejs-all: nodejs nodejs-otel nodejs-elastic
 
-rps-calibrator:
+throughput:
 	$(call docker_build,$(CALIBRATOR_DOCKER_COMPOSE))
 	$(call docker_compose,$(CALIBRATOR_DOCKER_COMPOSE))
 
-rps-calibrator-nodejs:
+throughput-nodejs:
 	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
 	$(call docker_compose,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
 
-rps-calibrator-python:
+throughput-python:
 	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
 	$(call docker_compose,$(CALIBRATOR_PYTHON_DOCKER_COMPOSE))
 
-rps-calibrator-java:
+throughput-java:
 	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
 	$(call docker_compose,$(CALIBRATOR_JAVA_DOCKER_COMPOSE))
 
-rps-calibrator-go:
+throughput-go:
 	$(call docker_build,$(CALIBRATOR_NODEJS_DOCKER_COMPOSE))
 	$(call docker_compose,$(CALIBRATOR_GO_DOCKER_COMPOSE))
 
